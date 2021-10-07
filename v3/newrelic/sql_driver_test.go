@@ -3,7 +3,7 @@
 
 // +build go1.10
 
-package newrelic
+package oldfritter
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/newrelic/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal"
 )
 
 var (

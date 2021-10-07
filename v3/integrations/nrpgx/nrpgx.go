@@ -29,14 +29,14 @@
 //	import (
 //      "database/sql"
 //
-//		_ "github.com/newrelic/go-agent/v3/integrations/nrpgx"
+//		_ "github.com/oldfritter/go-agent/v3/integrations/nrpgx"
 //	)
 //
 //	func main() {
 //		db, err := sql.Open("nrpgx", "user=pqgotest dbname=pqgotest sslmode=verify-full")
 //	}
 //
-// Next, provide a context containing a newrelic.Transaction to all exec and query
+// Next, provide a context containing a oldfritter.Transaction to all exec and query
 // methods on sql.DB, sql.Conn, and sql.Tx.  This requires using the
 // context methods ExecContext, QueryContext, and QueryRowContext in place of
 // Exec, Query, and QueryRow respectively.  For example, instead of the
@@ -46,11 +46,11 @@
 //
 // Do this:
 //
-//	ctx := newrelic.NewContext(context.Background(), txn)
+//	ctx := oldfritter.NewContext(context.Background(), txn)
 //	row := db.QueryRowContext(ctx, "SELECT count(*) FROM pg_catalog.pg_tables")
 //
 // A working example is shown here:
-// https://github.com/newrelic/go-agent/tree/master/v3/integrations/nrpgx/example/sql_compat/main.go
+// https://github.com/oldfritter/go-agent/tree/master/v3/integrations/nrpgx/example/sql_compat/main.go
 //
 //
 // USING WITH DIRECT PGX CALLS WITHOUT DATABASE/SQL
@@ -69,15 +69,15 @@ import (
 
 	"github.com/jackc/pgx"
 	"github.com/jackc/pgx/v4/stdlib"
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/newrelic"
-	"github.com/newrelic/go-agent/v3/newrelic/sqlparse"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
+	"github.com/oldfritter/go-agent/v3/oldfritter/sqlparse"
 )
 
 var (
-	baseBuilder = newrelic.SQLDriverSegmentBuilder{
-		BaseSegment: newrelic.DatastoreSegment{
-			Product: newrelic.DatastorePostgres,
+	baseBuilder = oldfritter.SQLDriverSegmentBuilder{
+		BaseSegment: oldfritter.DatastoreSegment{
+			Product: oldfritter.DatastorePostgres,
 		},
 		ParseQuery: sqlparse.ParseQuery,
 		ParseDSN:   parseDSN(os.Getenv),
@@ -85,7 +85,7 @@ var (
 )
 
 func init() {
-	sql.Register("nrpgx", newrelic.InstrumentSQLDriver(&stdlib.Driver{}, baseBuilder))
+	sql.Register("nrpgx", oldfritter.InstrumentSQLDriver(&stdlib.Driver{}, baseBuilder))
 	internal.TrackUsage("integration", "driver", "nrpgx")
 }
 
@@ -222,8 +222,8 @@ var fullParamPattern = regexp.MustCompile(
 // parseDSN returns a function which will set datastore segment attributes to show
 // the database, host, and port as extracted from a supplied DSN string.
 //
-func parseDSN(getenv func(string) string) func(*newrelic.DatastoreSegment, string) {
-	return func(s *newrelic.DatastoreSegment, dsn string) {
+func parseDSN(getenv func(string) string) func(*oldfritter.DatastoreSegment, string) {
+	return func(s *oldfritter.DatastoreSegment, dsn string) {
 
 		cc, err := pgx.ParseConnectionString(dsn)
 		if err != nil {

@@ -11,15 +11,15 @@
 //	// Add the nrgin middleware before other middlewares or routes:
 //	router.Use(nrgin.Middleware(app))
 //
-// Example: https://github.com/newrelic/go-agent/tree/master/_integrations/nrgin/v1/example/main.go
+// Example: https://github.com/oldfritter/go-agent/tree/master/_integrations/nrgin/v1/example/main.go
 package nrgin
 
 import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/internal"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/internal"
 )
 
 func init() { internal.TrackUsage("integration", "framework", "gin", "v1") }
@@ -39,7 +39,7 @@ var _ http.ResponseWriter = &headerResponseWriter{}
 // gin.ResponseWriter.WriteHeader is called.
 type replacementResponseWriter struct {
 	gin.ResponseWriter
-	txn     newrelic.Transaction
+	txn     oldfritter.Transaction
 	code    int
 	written bool
 }
@@ -80,14 +80,14 @@ type Context interface {
 
 // Transaction returns the transaction stored inside the context, or nil if not
 // found.
-func Transaction(c Context) newrelic.Transaction {
+func Transaction(c Context) oldfritter.Transaction {
 	if v := c.Value(internal.GinTransactionContextKey); nil != v {
-		if txn, ok := v.(newrelic.Transaction); ok {
+		if txn, ok := v.(oldfritter.Transaction); ok {
 			return txn
 		}
 	}
 	if v := c.Value(internal.TransactionContextKey); nil != v {
-		if txn, ok := v.(newrelic.Transaction); ok {
+		if txn, ok := v.(oldfritter.Transaction); ok {
 			return txn
 		}
 	}
@@ -100,7 +100,7 @@ func Transaction(c Context) newrelic.Transaction {
 //	// Add the nrgin middleware before other middlewares or routes:
 //	router.Use(nrgin.Middleware(app))
 //
-func Middleware(app newrelic.Application) gin.HandlerFunc {
+func Middleware(app oldfritter.Application) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if app != nil {
 			name := c.HandlerName()

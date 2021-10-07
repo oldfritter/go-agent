@@ -6,7 +6,7 @@ package nrsnowflake
 import (
 	"testing"
 
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 	"github.com/snowflakedb/gosnowflake"
 )
 
@@ -32,7 +32,7 @@ func TestParseDSN(t *testing.T) {
 	}
 
 	for _, test := range testcases {
-		s := &newrelic.DatastoreSegment{}
+		s := &oldfritter.DatastoreSegment{}
 		parseDSN(s, test.dsn)
 		if test.expHost != s.Host {
 			t.Errorf(`incorrect host, expected="%s", actual="%s"`, test.expHost, s.Host)
@@ -69,7 +69,7 @@ func TestParseConfig(t *testing.T) {
 	}
 
 	for _, test := range testcases {
-		s := &newrelic.DatastoreSegment{}
+		s := &oldfritter.DatastoreSegment{}
 		cfg := &gosnowflake.Config{
 			Host:     test.cfgHost,
 			Port:     test.cfgPort,

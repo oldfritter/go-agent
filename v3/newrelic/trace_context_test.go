@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"encoding/base64"
@@ -13,8 +13,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/crossagent"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/crossagent"
 )
 
 type fieldExpect struct {
@@ -259,32 +259,32 @@ func assertTestCaseOutboundHeaders(expect fieldExpect, t *testing.T, hdrs http.H
 		p["tracestate.timestamp"] = sSplit[8]
 	}
 
-	// prepare newrelic header
-	nHdr := hdrs.Get("newrelic")
+	// prepare oldfritter header
+	nHdr := hdrs.Get("oldfritter")
 	decoded, err := base64.StdEncoding.DecodeString(nHdr)
 	if err != nil {
-		t.Error("failure to decode newrelic header: ", err)
+		t.Error("failure to decode oldfritter header: ", err)
 	}
 	nrPayload := struct {
 		Version [2]int  `json:"v"`
 		Data    payload `json:"d"`
 	}{}
 	if err := json.Unmarshal(decoded, &nrPayload); nil != err {
-		t.Error("unable to unmarshall newrelic header: ", err)
+		t.Error("unable to unmarshall oldfritter header: ", err)
 	}
-	p["newrelic.v"] = fmt.Sprintf("%v", nrPayload.Version)
-	p["newrelic.d.ac"] = nrPayload.Data.Account
-	p["newrelic.d.ap"] = nrPayload.Data.App
-	p["newrelic.d.id"] = nrPayload.Data.ID
-	p["newrelic.d.pr"] = fmt.Sprintf("%v", nrPayload.Data.Priority)
-	p["newrelic.d.ti"] = fmt.Sprintf("%v", nrPayload.Data.Timestamp)
-	p["newrelic.d.tr"] = nrPayload.Data.TracedID
-	p["newrelic.d.tx"] = nrPayload.Data.TransactionID
-	p["newrelic.d.ty"] = nrPayload.Data.Type
+	p["oldfritter.v"] = fmt.Sprintf("%v", nrPayload.Version)
+	p["oldfritter.d.ac"] = nrPayload.Data.Account
+	p["oldfritter.d.ap"] = nrPayload.Data.App
+	p["oldfritter.d.id"] = nrPayload.Data.ID
+	p["oldfritter.d.pr"] = fmt.Sprintf("%v", nrPayload.Data.Priority)
+	p["oldfritter.d.ti"] = fmt.Sprintf("%v", nrPayload.Data.Timestamp)
+	p["oldfritter.d.tr"] = nrPayload.Data.TracedID
+	p["oldfritter.d.tx"] = nrPayload.Data.TransactionID
+	p["oldfritter.d.ty"] = nrPayload.Data.Type
 	if *nrPayload.Data.Sampled {
-		p["newrelic.d.sa"] = "1"
+		p["oldfritter.d.sa"] = "1"
 	} else {
-		p["newrelic.d.sa"] = "0"
+		p["oldfritter.d.sa"] = "0"
 	}
 
 	// Affirm that the exact values are in the payload.

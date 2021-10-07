@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	newrelic "github.com/newrelic/go-agent"
+	oldfritter "github.com/oldfritter/go-agent"
 )
 
 func extractTable(s string) string {
@@ -47,7 +47,7 @@ var (
 )
 
 // ParseQuery parses table and operation from the SQL query string.
-func ParseQuery(segment *newrelic.DatastoreSegment, query string) {
+func ParseQuery(segment *oldfritter.DatastoreSegment, query string) {
 	s := cCommentRegex.ReplaceAllString(query, "")
 	s = lineCommentRegex.ReplaceAllString(s, "")
 	s = sqlPrefixRegex.ReplaceAllString(s, "")

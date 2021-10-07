@@ -8,17 +8,17 @@ import (
 	"os"
 	"time"
 
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/_integrations/nrmongo"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/_integrations/nrmongo"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func main() {
-	config := newrelic.NewConfig("Basic Mongo Example", os.Getenv("NEW_RELIC_LICENSE_KEY"))
-	config.Logger = newrelic.NewDebugLogger(os.Stdout)
-	app, err := newrelic.NewApplication(config)
+	config := oldfritter.NewConfig("Basic Mongo Example", os.Getenv("NEW_RELIC_LICENSE_KEY"))
+	config.Logger = oldfritter.NewDebugLogger(os.Stdout)
+	app, err := oldfritter.NewApplication(config)
 	if nil != err {
 		panic(err)
 	}
@@ -38,8 +38,8 @@ func main() {
 	defer client.Disconnect(ctx)
 
 	txn := app.StartTransaction("Mongo txn", nil, nil)
-	// Make sure to add the newrelic.Transaction to the context
-	nrCtx := newrelic.NewContext(context.Background(), txn)
+	// Make sure to add the oldfritter.Transaction to the context
+	nrCtx := oldfritter.NewContext(context.Background(), txn)
 	collection := client.Database("testing").Collection("numbers")
 	_, err = collection.InsertOne(nrCtx, bson.M{"name": "exampleName", "value": "exampleValue"})
 	if err != nil {

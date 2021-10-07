@@ -13,9 +13,9 @@ import (
 
 	elasticsearch "github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/integrationsupport"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/integrationsupport"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func TestParseRequest(t *testing.T) {
@@ -394,7 +394,7 @@ func createTestApp() integrationsupport.ExpectApp {
 func TestInfo(t *testing.T) {
 	app := createTestApp()
 	txn := app.StartTransaction("txnName")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	client, err := elasticsearch.NewClient(elasticsearch.Config{
 		Transport: NewRoundTripper(roundTripperFunc(func(r *http.Request) (*http.Response, error) {
@@ -428,7 +428,7 @@ func TestInfo(t *testing.T) {
 func TestSearch(t *testing.T) {
 	app := createTestApp()
 	txn := app.StartTransaction("txnName")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	client, err := elasticsearch.NewClient(elasticsearch.Config{
 		Transport: NewRoundTripper(roundTripperFunc(func(r *http.Request) (*http.Response, error) {
@@ -470,7 +470,7 @@ func TestInfoRequest(t *testing.T) {
 	// request pattern is used.
 	app := createTestApp()
 	txn := app.StartTransaction("txnName")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	client, err := elasticsearch.NewClient(elasticsearch.Config{
 		Transport: NewRoundTripper(roundTripperFunc(func(r *http.Request) (*http.Response, error) {

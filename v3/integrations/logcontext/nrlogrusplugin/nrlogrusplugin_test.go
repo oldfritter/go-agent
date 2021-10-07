@@ -12,10 +12,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/integrationsupport"
-	"github.com/newrelic/go-agent/v3/internal/sysinfo"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/integrationsupport"
+	"github.com/oldfritter/go-agent/v3/internal/sysinfo"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 	"github.com/sirupsen/logrus"
 )
 
@@ -96,7 +96,7 @@ func BenchmarkWithTransaction(b *testing.B) {
 	app := integrationsupport.NewTestApp(nil, nil)
 	txn := app.StartTransaction("TestLogDistributedTracingDisabled")
 	log := newTestLogger(bytes.NewBuffer([]byte("")))
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	b.ResetTimer()
 	b.ReportAllocs()
@@ -139,7 +139,7 @@ func TestLogDistributedTracingDisabled(t *testing.T) {
 	txn := app.StartTransaction("TestLogDistributedTracingDisabled")
 	out := bytes.NewBuffer([]byte{})
 	log := newTestLogger(out)
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	log.WithTime(testTime).WithContext(ctx).Info("Hello World!")
 	validateOutput(t, out, map[string]interface{}{
 		"entity.name": integrationsupport.SampleAppName,
@@ -160,14 +160,14 @@ func TestLogSampledFalse(t *testing.T) {
 			reply.SetSampleNothing()
 			reply.TraceIDGenerator = internal.NewTraceIDGenerator(12345)
 		},
-		func(cfg *newrelic.Config) {
+		func(cfg *oldfritter.Config) {
 			cfg.DistributedTracer.Enabled = true
 			cfg.CrossApplicationTracer.Enabled = false
 		})
 	txn := app.StartTransaction("TestLogSampledFalse")
 	out := bytes.NewBuffer([]byte{})
 	log := newTestLogger(out)
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	log.WithTime(testTime).WithContext(ctx).Info("Hello World!")
 	validateOutput(t, out, map[string]interface{}{
 		"entity.name": integrationsupport.SampleAppName,
@@ -189,14 +189,14 @@ func TestLogSampledTrue(t *testing.T) {
 			reply.SetSampleEverything()
 			reply.TraceIDGenerator = internal.NewTraceIDGenerator(12345)
 		},
-		func(cfg *newrelic.Config) {
+		func(cfg *oldfritter.Config) {
 			cfg.DistributedTracer.Enabled = true
 			cfg.CrossApplicationTracer.Enabled = false
 		})
 	txn := app.StartTransaction("TestLogSampledTrue")
 	out := bytes.NewBuffer([]byte{})
 	log := newTestLogger(out)
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	log.WithTime(testTime).WithContext(ctx).Info("Hello World!")
 	validateOutput(t, out, map[string]interface{}{
 		"entity.name": integrationsupport.SampleAppName,
@@ -224,12 +224,12 @@ func TestEntryUsedTwice(t *testing.T) {
 			reply.SetSampleEverything()
 			reply.TraceIDGenerator = internal.NewTraceIDGenerator(12345)
 		},
-		func(cfg *newrelic.Config) {
+		func(cfg *oldfritter.Config) {
 			cfg.DistributedTracer.Enabled = true
 			cfg.CrossApplicationTracer.Enabled = false
 		})
 	txn := app.StartTransaction("TestEntryUsedTwice1")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	entry.WithContext(ctx).Info("Hello World!")
 	validateOutput(t, out, map[string]interface{}{
 		"entity.name": integrationsupport.SampleAppName,
@@ -248,11 +248,11 @@ func TestEntryUsedTwice(t *testing.T) {
 	// First log has dt enabled, ensure trace.id and span.id are included
 	out.Reset()
 	app = integrationsupport.NewTestApp(nil,
-		func(cfg *newrelic.Config) {
+		func(cfg *oldfritter.Config) {
 			cfg.DistributedTracer.Enabled = false
 		})
 	txn = app.StartTransaction("TestEntryUsedTwice2")
-	ctx = newrelic.NewContext(context.Background(), txn)
+	ctx = oldfritter.NewContext(context.Background(), txn)
 	entry.WithContext(ctx).Info("Hello World! Again!")
 	validateOutput(t, out, map[string]interface{}{
 		"entity.name": integrationsupport.SampleAppName,
@@ -272,7 +272,7 @@ func TestEntryError(t *testing.T) {
 	txn := app.StartTransaction("TestEntryError")
 	out := bytes.NewBuffer([]byte{})
 	log := newTestLogger(out)
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	log.WithTime(testTime).WithContext(ctx).WithField("func", func() {}).Info("Hello World!")
 	validateOutput(t, out, map[string]interface{}{
 		"entity.name": integrationsupport.SampleAppName,
@@ -294,7 +294,7 @@ func TestWithCustomField(t *testing.T) {
 	txn := app.StartTransaction("TestWithCustomField")
 	out := bytes.NewBuffer([]byte{})
 	log := newTestLogger(out)
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	log.WithTime(testTime).WithContext(ctx).WithField("zip", "zap").Info("Hello World!")
 	validateOutput(t, out, map[string]interface{}{
 		"entity.name": integrationsupport.SampleAppName,

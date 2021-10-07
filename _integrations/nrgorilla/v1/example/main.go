@@ -9,8 +9,8 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
-	newrelic "github.com/newrelic/go-agent"
-	nrgorilla "github.com/newrelic/go-agent/_integrations/nrgorilla/v1"
+	oldfritter "github.com/oldfritter/go-agent"
+	nrgorilla "github.com/oldfritter/go-agent/_integrations/nrgorilla/v1"
 )
 
 func makeHandler(text string) http.Handler {
@@ -27,9 +27,9 @@ func mustGetEnv(key string) string {
 }
 
 func main() {
-	cfg := newrelic.NewConfig("Gorilla App", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
-	cfg.Logger = newrelic.NewDebugLogger(os.Stdout)
-	app, err := newrelic.NewApplication(cfg)
+	cfg := oldfritter.NewConfig("Gorilla App", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
+	cfg.Logger = oldfritter.NewDebugLogger(os.Stdout)
+	app, err := oldfritter.NewApplication(cfg)
 	if nil != err {
 		fmt.Println(err)
 		os.Exit(1)

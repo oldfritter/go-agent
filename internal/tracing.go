@@ -11,10 +11,10 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/newrelic/go-agent/internal/cat"
-	"github.com/newrelic/go-agent/internal/jsonx"
-	"github.com/newrelic/go-agent/internal/logger"
-	"github.com/newrelic/go-agent/internal/sysinfo"
+	"github.com/oldfritter/go-agent/internal/cat"
+	"github.com/oldfritter/go-agent/internal/jsonx"
+	"github.com/oldfritter/go-agent/internal/logger"
+	"github.com/oldfritter/go-agent/internal/sysinfo"
 )
 
 // MarshalJSON limits the number of decimals.
@@ -29,7 +29,7 @@ func (p Priority) WriteJSON(buf *bytes.Buffer) {
 
 // TxnEvent represents a transaction.
 // https://source.datanerd.us/agents/agent-specs/blob/master/Transaction-Events-PORTED.md
-// https://newrelic.atlassian.net/wiki/display/eng/Agent+Support+for+Synthetics%3A+Forced+Transaction+Traces+and+Analytic+Events
+// https://oldfritter.atlassian.net/wiki/display/eng/Agent+Support+for+Synthetics%3A+Forced+Transaction+Traces+and+Analytic+Events
 type TxnEvent struct {
 	FinalName string
 	Start     time.Time
@@ -290,7 +290,7 @@ var (
 	errMalformedSegment = errors.New("segment identifier malformed: perhaps unsafe code has modified it?")
 	errSegmentOrder     = errors.New(`improper segment use: the Transaction must be used ` +
 		`in a single goroutine and segments must be ended in "last started first ended" order: ` +
-		`see https://github.com/newrelic/go-agent/blob/master/GUIDE.md#segments`)
+		`see https://github.com/oldfritter/go-agent/blob/master/GUIDE.md#segments`)
 )
 
 func endSegment(t *TxnData, thread *Thread, start SegmentStartTime, now time.Time) (segmentEnd, error) {

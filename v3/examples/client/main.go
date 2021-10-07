@@ -9,16 +9,16 @@ import (
 	"os"
 	"time"
 
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
-func doRequest(txn *newrelic.Transaction) error {
+func doRequest(txn *oldfritter.Transaction) error {
 	req, err := http.NewRequest("GET", "http://localhost:8000/segments", nil)
 	if nil != err {
 		return err
 	}
 	client := &http.Client{}
-	seg := newrelic.StartExternalSegment(txn, req)
+	seg := oldfritter.StartExternalSegment(txn, req)
 	defer seg.End()
 	resp, err := client.Do(req)
 	if nil != err {
@@ -29,11 +29,11 @@ func doRequest(txn *newrelic.Transaction) error {
 }
 
 func main() {
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("Client App"),
-		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-		newrelic.ConfigDebugLogger(os.Stdout),
-		newrelic.ConfigDistributedTracerEnabled(true),
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("Client App"),
+		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		oldfritter.ConfigDebugLogger(os.Stdout),
+		oldfritter.ConfigDistributedTracerEnabled(true),
 	)
 	if nil != err {
 		fmt.Println(err)

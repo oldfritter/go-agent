@@ -5,11 +5,11 @@ their own copyright notices and license terms. These notices are provided
 below.
 
 In the event that a required notice is missing or incorrect, please notify us
-either by [opening an issue](https://github.com/newrelic/go-agent/issues/new),
-or by e-mailing [open-source@newrelic.com](mailto:open-source@newrelic.com).
+either by [opening an issue](https://github.com/oldfritter/go-agent/issues/new),
+or by e-mailing [open-source@oldfritter.com](mailto:open-source@oldfritter.com).
 
 For any licenses that require the disclosure of source code, the source code
-can be found at https://github.com/newrelic/go-agent/.
+can be found at https://github.com/oldfritter/go-agent/.
 
 ## Contents
 

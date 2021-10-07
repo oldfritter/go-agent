@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"encoding/json"
@@ -11,8 +11,8 @@ import (
 
 	"errors"
 
-	"github.com/newrelic/go-agent/internal"
-	"github.com/newrelic/go-agent/internal/cat"
+	"github.com/oldfritter/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal/cat"
 )
 
 var (
@@ -39,7 +39,7 @@ func inboundCrossProcessRequestFactory() *http.Request {
 	cfgFn := func(cfg *Config) { cfg.CrossApplicationTracer.Enabled = true }
 	app := testApp(crossProcessReplyFn, cfgFn, nil)
 	clientTxn := app.StartTransaction("client", nil, nil)
-	req, err := http.NewRequest("GET", "newrelic.com", nil)
+	req, err := http.NewRequest("GET", "oldfritter.com", nil)
 	StartExternalSegment(clientTxn, req)
 	if "" == req.Header.Get(cat.NewRelicIDName) {
 		panic("missing cat header NewRelicIDName: " + req.Header.Get(cat.NewRelicIDName))
@@ -82,7 +82,7 @@ func TestCrossProcessWriteHeaderSuccess(t *testing.T) {
 		AgentAttributes: map[string]interface{}{
 			"request.method":   "GET",
 			"httpResponseCode": 200,
-			"request.uri":      "newrelic.com",
+			"request.uri":      "oldfritter.com",
 		},
 		UserAttributes: map[string]interface{}{},
 	}})
@@ -141,7 +141,7 @@ func TestCATRoundTripper(t *testing.T) {
 	}, backgroundErrorMetrics...))
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":       "newrelic.myError",
+			"error.class":       "oldfritter.myError",
 			"error.message":     "my msg",
 			"transactionName":   "OtherTransaction/Go/hello",
 			"externalCallCount": 1,

@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/newrelic/go-agent/v3/internal/utilization"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal/utilization"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func main() {
@@ -20,7 +20,7 @@ func main() {
 		DetectPCF:        true,
 		DetectGCP:        true,
 		DetectKubernetes: true,
-	}, newrelic.NewDebugLogger(os.Stdout))
+	}, oldfritter.NewDebugLogger(os.Stdout))
 
 	js, err := json.MarshalIndent(util, "", "\t")
 	if err != nil {

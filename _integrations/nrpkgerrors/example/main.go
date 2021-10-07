@@ -8,8 +8,8 @@ import (
 	"os"
 	"time"
 
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/_integrations/nrpkgerrors"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/_integrations/nrpkgerrors"
 	"github.com/pkg/errors"
 )
 
@@ -39,9 +39,9 @@ func mustGetEnv(key string) string {
 }
 
 func main() {
-	cfg := newrelic.NewConfig("pkg/errors app", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
-	cfg.Logger = newrelic.NewDebugLogger(os.Stdout)
-	app, err := newrelic.NewApplication(cfg)
+	cfg := oldfritter.NewConfig("pkg/errors app", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
+	cfg.Logger = oldfritter.NewDebugLogger(os.Stdout)
+	app, err := oldfritter.NewApplication(cfg)
 	if nil != err {
 		fmt.Println(err)
 		os.Exit(1)

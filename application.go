@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"net/http"
@@ -32,7 +32,7 @@ type Application interface {
 	// more than 64 attributes.  For more information, and a set of
 	// restricted keywords, see:
 	//
-	// https://docs.newrelic.com/docs/insights/new-relic-insights/adding-querying-data/inserting-custom-events-new-relic-apm-agents
+	// https://docs.oldfritter.com/docs/insights/new-relic-insights/adding-querying-data/inserting-custom-events-new-relic-apm-agents
 	//
 	// An error is returned if event type or params is invalid.
 	RecordCustomEvent(eventType string, params map[string]interface{}) error
@@ -41,7 +41,7 @@ type Application interface {
 	// provide will be prefixed by "Custom/".  Custom metrics are not
 	// currently supported in serverless mode.
 	//
-	// https://docs.newrelic.com/docs/agents/manage-apm-agents/agent-data/collect-custom-metrics
+	// https://docs.oldfritter.com/docs/agents/manage-apm-agents/agent-data/collect-custom-metrics
 	RecordCustomMetric(name string, value float64) error
 
 	// WaitForConnection blocks until the application is connected, is

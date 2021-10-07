@@ -13,9 +13,9 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/internal"
-	"github.com/newrelic/go-agent/internal/integrationsupport"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal/integrationsupport"
 )
 
 func accessTransactionContextContext(c *gin.Context) {
@@ -56,7 +56,7 @@ func TestContextContextTransaction(t *testing.T) {
 func accessTransactionFromContext(c *gin.Context) {
 	// This tests that FromContext will find the transaction added to a
 	// *gin.Context and by nrgin.Middleware.
-	if txn := newrelic.FromContext(c); nil != txn {
+	if txn := oldfritter.FromContext(c); nil != txn {
 		txn.NoticeError(errors.New("problem"))
 	}
 	c.Writer.WriteString("accessTransactionFromContext")
@@ -101,10 +101,10 @@ func TestContextWithoutTransaction(t *testing.T) {
 
 func TestNewContextTransaction(t *testing.T) {
 	// This tests that nrgin.Transaction will find a transaction added to
-	// to a context using newrelic.NewContext.
+	// to a context using oldfritter.NewContext.
 	app := integrationsupport.NewBasicTestApp()
 	txn := app.StartTransaction("name", nil, nil)
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	if tx := Transaction(ctx); nil != tx {
 		tx.NoticeError(errors.New("problem"))
 	}

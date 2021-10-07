@@ -10,9 +10,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/newrelic/go-agent/v3/integrations/nrgrpc"
-	sampleapp "github.com/newrelic/go-agent/v3/integrations/nrgrpc/example/sampleapp"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/nrgrpc"
+	sampleapp "github.com/oldfritter/go-agent/v3/integrations/nrgrpc/example/sampleapp"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 	"google.golang.org/grpc"
 )
 
@@ -90,10 +90,10 @@ func doStreamStream(ctx context.Context, client sampleapp.SampleApplicationClien
 }
 
 func main() {
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("gRPC Client"),
-		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-		newrelic.ConfigDebugLogger(os.Stdout),
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("gRPC Client"),
+		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		oldfritter.ConfigDebugLogger(os.Stdout),
 	)
 	if nil != err {
 		panic(err)
@@ -120,7 +120,7 @@ func main() {
 	defer conn.Close()
 
 	client := sampleapp.NewSampleApplicationClient(conn)
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	doUnaryUnary(ctx, client)
 	doUnaryStream(ctx, client)

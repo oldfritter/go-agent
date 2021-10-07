@@ -9,9 +9,9 @@
 // Lambda sends that data to us.
 //
 // Monitoring AWS Lambda requires several steps shown here:
-// https://docs.newrelic.com/docs/serverless-function-monitoring/aws-lambda-monitoring/get-started/enable-new-relic-monitoring-aws-lambda
+// https://docs.oldfritter.com/docs/serverless-function-monitoring/aws-lambda-monitoring/get-started/enable-new-relic-monitoring-aws-lambda
 //
-// Example: https://github.com/newrelic/go-agent/tree/master/_integrations/nrlambda/example/main.go
+// Example: https://github.com/oldfritter/go-agent/tree/master/_integrations/nrlambda/example/main.go
 package nrlambda
 
 import (
@@ -24,9 +24,9 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-lambda-go/lambda/handlertrace"
 	"github.com/aws/aws-lambda-go/lambdacontext"
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/internal"
-	"github.com/newrelic/go-agent/internal/integrationsupport"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal/integrationsupport"
 )
 
 type response struct {
@@ -41,7 +41,7 @@ func (r *response) Write([]byte) (int, error) { return 0, nil }
 func (r *response) WriteHeader(int)           {}
 
 func requestEvent(ctx context.Context, event interface{}) {
-	txn := newrelic.FromContext(ctx)
+	txn := oldfritter.FromContext(ctx)
 
 	if nil == txn {
 		return
@@ -57,7 +57,7 @@ func requestEvent(ctx context.Context, event interface{}) {
 }
 
 func responseEvent(ctx context.Context, event interface{}) {
-	txn := newrelic.FromContext(ctx)
+	txn := oldfritter.FromContext(ctx)
 	if nil == txn {
 		return
 	}
@@ -85,7 +85,7 @@ func (h *wrappedHandler) Invoke(ctx context.Context, payload []byte) ([]byte, er
 		integrationsupport.AddAgentAttribute(txn, internal.AttributeAWSLambdaColdStart, "", true)
 	})
 
-	ctx = newrelic.NewContext(ctx, txn)
+	ctx = oldfritter.NewContext(ctx, txn)
 	ctx = handlertrace.NewContext(ctx, handlertrace.HandlerTrace{
 		RequestEvent:  requestEvent,
 		ResponseEvent: responseEvent,
@@ -102,7 +102,7 @@ func (h *wrappedHandler) Invoke(ctx context.Context, payload []byte) ([]byte, er
 
 type wrappedHandler struct {
 	original lambda.Handler
-	app      newrelic.Application
+	app      oldfritter.Application
 	// functionName is copied from lambdacontext.FunctionName for
 	// deterministic tests that don't depend on environment variables.
 	functionName string
@@ -119,7 +119,7 @@ type wrappedHandler struct {
 // instrumentation. StartHandler should generally be used in place of
 // WrapHandler: this function is exposed for consumers who are chaining
 // middlewares.
-func WrapHandler(handler lambda.Handler, app newrelic.Application) lambda.Handler {
+func WrapHandler(handler lambda.Handler, app oldfritter.Application) lambda.Handler {
 	if nil == app {
 		return handler
 	}
@@ -133,7 +133,7 @@ func WrapHandler(handler lambda.Handler, app newrelic.Application) lambda.Handle
 
 // Wrap wraps the provided handler and returns a new handler with
 // instrumentation.  Start should generally be used in place of Wrap.
-func Wrap(handler interface{}, app newrelic.Application) lambda.Handler {
+func Wrap(handler interface{}, app oldfritter.Application) lambda.Handler {
 	return WrapHandler(lambda.NewHandler(handler), app)
 }
 
@@ -145,7 +145,7 @@ func Wrap(handler interface{}, app newrelic.Application) lambda.Handler {
 //
 //	nrlambda.Start(myhandler, app)
 //
-func Start(handler interface{}, app newrelic.Application) {
+func Start(handler interface{}, app oldfritter.Application) {
 	lambda.StartHandler(Wrap(handler, app))
 }
 
@@ -157,6 +157,6 @@ func Start(handler interface{}, app newrelic.Application) {
 //
 //	nrlambda.StartHandler(myhandler, app)
 //
-func StartHandler(handler lambda.Handler, app newrelic.Application) {
+func StartHandler(handler lambda.Handler, app oldfritter.Application) {
 	lambda.StartHandler(WrapHandler(handler, app))
 }

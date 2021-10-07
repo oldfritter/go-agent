@@ -8,13 +8,13 @@ import (
 	"net/http"
 	"strings"
 
-	newrelic "github.com/newrelic/go-agent"
+	oldfritter "github.com/oldfritter/go-agent"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
-func startTransaction(ctx context.Context, app newrelic.Application, fullMethod string) newrelic.Transaction {
+func startTransaction(ctx context.Context, app oldfritter.Application, fullMethod string) oldfritter.Transaction {
 	method := strings.TrimPrefix(fullMethod, "/")
 
 	var hdrs http.Header
@@ -30,7 +30,7 @@ func startTransaction(ctx context.Context, app newrelic.Application, fullMethod 
 	target := hdrs.Get(":authority")
 	url := getURL(method, target)
 
-	webReq := newrelic.NewStaticWebRequest(hdrs, url, method, newrelic.TransportHTTP)
+	webReq := oldfritter.NewStaticWebRequest(hdrs, url, method, oldfritter.TransportHTTP)
 	txn := app.StartTransaction(method, nil, nil)
 	txn.SetWebRequest(webReq)
 
@@ -39,7 +39,7 @@ func startTransaction(ctx context.Context, app newrelic.Application, fullMethod 
 
 // UnaryServerInterceptor instruments server unary RPCs.
 //
-// Use this function with grpc.UnaryInterceptor and a newrelic.Application to
+// Use this function with grpc.UnaryInterceptor and a oldfritter.Application to
 // create a grpc.ServerOption to pass to grpc.NewServer.  This interceptor
 // records each unary call with a transaction.  You must use both
 // UnaryServerInterceptor and StreamServerInterceptor to instrument unary and
@@ -47,20 +47,20 @@ func startTransaction(ctx context.Context, app newrelic.Application, fullMethod 
 //
 // Example:
 //
-//	cfg := newrelic.NewConfig("gRPC Server", os.Getenv("NEW_RELIC_LICENSE_KEY"))
-//	app, _ := newrelic.NewApplication(cfg)
+//	cfg := oldfritter.NewConfig("gRPC Server", os.Getenv("NEW_RELIC_LICENSE_KEY"))
+//	app, _ := oldfritter.NewApplication(cfg)
 //	server := grpc.NewServer(
 //		grpc.UnaryInterceptor(nrgrpc.UnaryServerInterceptor(app)),
 //		grpc.StreamInterceptor(nrgrpc.StreamServerInterceptor(app)),
 //	)
 //
 // These interceptors add the transaction to the call context so it may be
-// accessed in your method handlers using newrelic.FromContext.
+// accessed in your method handlers using oldfritter.FromContext.
 //
 // Full example:
-// https://github.com/newrelic/go-agent/blob/master/_integrations/nrgrpc/example/server/server.go
+// https://github.com/oldfritter/go-agent/blob/master/_integrations/nrgrpc/example/server/server.go
 //
-func UnaryServerInterceptor(app newrelic.Application) grpc.UnaryServerInterceptor {
+func UnaryServerInterceptor(app oldfritter.Application) grpc.UnaryServerInterceptor {
 	if nil == app {
 		return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 			return handler(ctx, req)
@@ -71,7 +71,7 @@ func UnaryServerInterceptor(app newrelic.Application) grpc.UnaryServerIntercepto
 		txn := startTransaction(ctx, app, info.FullMethod)
 		defer txn.End()
 
-		ctx = newrelic.NewContext(ctx, txn)
+		ctx = oldfritter.NewContext(ctx, txn)
 		resp, err = handler(ctx, req)
 		txn.WriteHeader(int(status.Code(err)))
 		return
@@ -80,15 +80,15 @@ func UnaryServerInterceptor(app newrelic.Application) grpc.UnaryServerIntercepto
 
 type wrappedServerStream struct {
 	grpc.ServerStream
-	txn newrelic.Transaction
+	txn oldfritter.Transaction
 }
 
 func (s wrappedServerStream) Context() context.Context {
 	ctx := s.ServerStream.Context()
-	return newrelic.NewContext(ctx, s.txn)
+	return oldfritter.NewContext(ctx, s.txn)
 }
 
-func newWrappedServerStream(stream grpc.ServerStream, txn newrelic.Transaction) grpc.ServerStream {
+func newWrappedServerStream(stream grpc.ServerStream, txn oldfritter.Transaction) grpc.ServerStream {
 	return wrappedServerStream{
 		ServerStream: stream,
 		txn:          txn,
@@ -97,7 +97,7 @@ func newWrappedServerStream(stream grpc.ServerStream, txn newrelic.Transaction) 
 
 // StreamServerInterceptor instruments server streaming RPCs.
 //
-// Use this function with grpc.StreamInterceptor and a newrelic.Application to
+// Use this function with grpc.StreamInterceptor and a oldfritter.Application to
 // create a grpc.ServerOption to pass to grpc.NewServer.  This interceptor
 // records each streaming call with a transaction.  You must use both
 // UnaryServerInterceptor and StreamServerInterceptor to instrument unary and
@@ -105,20 +105,20 @@ func newWrappedServerStream(stream grpc.ServerStream, txn newrelic.Transaction) 
 //
 // Example:
 //
-//	cfg := newrelic.NewConfig("gRPC Server", os.Getenv("NEW_RELIC_LICENSE_KEY"))
-//	app, _ := newrelic.NewApplication(cfg)
+//	cfg := oldfritter.NewConfig("gRPC Server", os.Getenv("NEW_RELIC_LICENSE_KEY"))
+//	app, _ := oldfritter.NewApplication(cfg)
 //	server := grpc.NewServer(
 //		grpc.UnaryInterceptor(nrgrpc.UnaryServerInterceptor(app)),
 //		grpc.StreamInterceptor(nrgrpc.StreamServerInterceptor(app)),
 //	)
 //
 // These interceptors add the transaction to the call context so it may be
-// accessed in your method handlers using newrelic.FromContext.
+// accessed in your method handlers using oldfritter.FromContext.
 //
 // Full example:
-// https://github.com/newrelic/go-agent/blob/master/_integrations/nrgrpc/example/server/server.go
+// https://github.com/oldfritter/go-agent/blob/master/_integrations/nrgrpc/example/server/server.go
 //
-func StreamServerInterceptor(app newrelic.Application) grpc.StreamServerInterceptor {
+func StreamServerInterceptor(app oldfritter.Application) grpc.StreamServerInterceptor {
 	if nil == app {
 		return func(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 			return handler(srv, ss)

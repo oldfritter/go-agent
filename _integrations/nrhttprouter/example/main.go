@@ -9,8 +9,8 @@ import (
 	"os"
 
 	"github.com/julienschmidt/httprouter"
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/_integrations/nrhttprouter"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/_integrations/nrhttprouter"
 )
 
 func index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -29,9 +29,9 @@ func mustGetEnv(key string) string {
 }
 
 func main() {
-	cfg := newrelic.NewConfig("httprouter App", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
-	cfg.Logger = newrelic.NewDebugLogger(os.Stdout)
-	app, err := newrelic.NewApplication(cfg)
+	cfg := oldfritter.NewConfig("httprouter App", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
+	cfg.Logger = oldfritter.NewDebugLogger(os.Stdout)
+	app, err := oldfritter.NewApplication(cfg)
 	if nil != err {
 		fmt.Println(err)
 		os.Exit(1)

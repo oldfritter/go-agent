@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/newrelic/go-agent/internal/logger"
+	"github.com/oldfritter/go-agent/internal/logger"
 )
 
 const (
@@ -206,7 +206,7 @@ func decodeUncompress(input string) ([]byte, error) {
 	return out.Bytes(), nil
 }
 
-// ServerlessWriter is implemented by newrelic.Application.
+// ServerlessWriter is implemented by oldfritter.Application.
 type ServerlessWriter interface {
 	ServerlessWrite(arn string, writer io.Writer)
 }

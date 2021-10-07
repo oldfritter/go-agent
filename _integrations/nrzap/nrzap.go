@@ -7,8 +7,8 @@
 package nrzap
 
 import (
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/internal"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/internal"
 	"go.uber.org/zap"
 )
 
@@ -41,5 +41,5 @@ func (s *shim) DebugEnabled() bool {
 	return ce != nil
 }
 
-// Transform turns a *zap.Logger into a newrelic.Logger.
-func Transform(l *zap.Logger) newrelic.Logger { return &shim{logger: l} }
+// Transform turns a *zap.Logger into a oldfritter.Logger.
+func Transform(l *zap.Logger) oldfritter.Logger { return &shim{logger: l} }

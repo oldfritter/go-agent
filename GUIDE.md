@@ -31,40 +31,40 @@
 ## Upgrading
 
 This guide documents version 3.x of the agent which resides in package
-`"github.com/newrelic/go-agent/v3/newrelic"`.
+`"github.com/oldfritter/go-agent/v3/oldfritter"`.
 If you have already been using version 2.X of the agent and are upgrading to
 version 3.0, see our [Migration Guide](MIGRATION.md) for details.
 
 ## Installation
 
-(Also see [GETTING_STARTED](https://github.com/newrelic/go-agent/blob/master/GETTING_STARTED.md) if you are using the Go agent for the first time).
+(Also see [GETTING_STARTED](https://github.com/oldfritter/go-agent/blob/master/GETTING_STARTED.md) if you are using the Go agent for the first time).
 
 In order to install the New Relic Go agent, you need a New Relic license key. 
 Then, installing the Go Agent is the same as installing any other Go library.  The
 simplest way is to run:
 
 ```
-go get github.com/newrelic/go-agent/v3/newrelic
+go get github.com/oldfritter/go-agent/v3/oldfritter
 ```
 
 Then import the package in your application:
 ```go
-import "github.com/newrelic/go-agent/v3/newrelic"
+import "github.com/oldfritter/go-agent/v3/oldfritter"
 ```
 
 Initialize the New Relic Go agent by adding the following `Config` options and `Application` settings in the `main` function or in an `init` block:
 
 ```go
-app, err := newrelic.NewApplication(
-    newrelic.ConfigAppName("Your Application Name"),
-    newrelic.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
+app, err := oldfritter.NewApplication(
+    oldfritter.ConfigAppName("Your Application Name"),
+    oldfritter.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
 )
 ```
 
 This will allow you to see Go runtime information.
 
 Now, add instrumentation to your Go application to get additional performance data:
-* Import any of our [integration packages](https://github.com/newrelic/go-agent#integrations) for out-of-the box support for many popular Go web 
+* Import any of our [integration packages](https://github.com/oldfritter/go-agent#integrations) for out-of-the box support for many popular Go web 
 frameworks and libraries. 
 * [Instrument Transactions](#transactions)
 * [Use Distributed Tracing](#distributed-tracing)
@@ -85,9 +85,9 @@ luck!  Use the `ConfigEnabled` function to disable the agent.  This makes the li
 optional.
 
 ```go
-app, err := newrelic.NewApplication(
-    newrelic.ConfigAppName("Your Application Name"),
-    newrelic.ConfigEnabled(false),
+app, err := oldfritter.NewApplication(
+    oldfritter.ConfigAppName("Your Application Name"),
+    oldfritter.ConfigEnabled(false),
 )
 ```
 
@@ -95,8 +95,8 @@ app, err := newrelic.NewApplication(
 
 ## Full list of `Config` options and `Application` settings
 
-* [Config godoc](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Config)
-* [Application godoc](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Application)
+* [Config godoc](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Config)
+* [Application godoc](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Application)
 
 
 
@@ -105,19 +105,19 @@ app, err := newrelic.NewApplication(
 The agent's logging system is designed to be easily extensible.  By default, no
 logging will occur.  To enable logging, use the following config functions
 with an [io.Writer](https://godoc.org/github.com/pkg/io/#Writer):
-[ConfigInfoLogger](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic/#ConfigInfoLogger),
+[ConfigInfoLogger](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter/#ConfigInfoLogger),
 which logs at info level, and
-[ConfigDebugLogger](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic/#ConfigDebugLogger)
+[ConfigDebugLogger](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter/#ConfigDebugLogger)
 which logs at debug level.
 
 To log at debug level to standard out, set:
 
 ```go
-app, err := newrelic.NewApplication(
-    newrelic.ConfigAppName("Your Application Name"),
-    newrelic.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
+app, err := oldfritter.NewApplication(
+    oldfritter.ConfigAppName("Your Application Name"),
+    oldfritter.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
     // Add debug logging:
-    newrelic.ConfigDebugLogger(os.Stdout),
+    oldfritter.ConfigDebugLogger(os.Stdout),
 )
 ```
 
@@ -126,10 +126,10 @@ To log at info level to a file, set:
 ```go
 w, err := os.OpenFile("my_log_file", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 if nil == err {
-    app, _ := newrelic.NewApplication(
-        newrelic.ConfigAppName("Your Application Name"),
-        newrelic.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
-        newrelic.ConfigInfoLogger(w),
+    app, _ := oldfritter.NewApplication(
+        oldfritter.ConfigAppName("Your Application Name"),
+        oldfritter.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
+        oldfritter.ConfigInfoLogger(w),
     )
 }
 ```
@@ -137,15 +137,15 @@ if nil == err {
 Popular logging libraries `logrus`, `logxi` and `zap` are supported by
 integration packages:
 
-* [v3/integrations/nrlogrus](https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrlogrus/)
-* [v3/integrations/nrlogxi](https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrlogxi/)
-* [v3/integrations/nrzap](https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrzap/)
+* [v3/integrations/nrlogrus](https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrlogrus/)
+* [v3/integrations/nrlogxi](https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrlogxi/)
+* [v3/integrations/nrzap](https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrzap/)
 
 ## Transactions
 
-* [Transaction godoc](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction)
+* [Transaction godoc](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction)
 * [Naming Transactions](#naming-transactions-and-metrics)
-* [More info on Transactions](https://docs.newrelic.com/docs/apm/applications-menu/monitoring/transactions-page)
+* [More info on Transactions](https://docs.oldfritter.com/docs/apm/applications-menu/monitoring/transactions-page)
 
 Transactions time requests and background tasks.  The simplest way to create
 transactions is to use `Application.StartTransaction` and `Transaction.End`.
@@ -159,18 +159,18 @@ If you are instrumenting a background transaction, this is all that is needed. I
 you are instrumenting a web transaction, you will want to use the
  `SetWebRequestHTTP` and `SetWebResponse` methods as well.
 
-[SetWebRequestHTTP](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic/#Transaction.SetWebRequestHTTP)
+[SetWebRequestHTTP](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter/#Transaction.SetWebRequestHTTP)
 marks the transaction as a web transaction. If the [http.Request](https://godoc.org/net/http#Request)
 is non-nil, `SetWebRequestHTTP` will additionally collect details on request
 attributes, url, and method. If headers are present, the agent will look for a
 distributed tracing header.
 
 If you want to mark a transaction as a web transaction, but don't have access
- to an `http.Request`, you can use the [SetWebRequest](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic/#Transaction.SetWebRequest)
-method, using a manually constructed [WebRequest](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic/#WebRequest)
+ to an `http.Request`, you can use the [SetWebRequest](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter/#Transaction.SetWebRequest)
+method, using a manually constructed [WebRequest](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter/#WebRequest)
 object.
 
-[SetWebResponse](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic/#Transaction.SetWebResponse)
+[SetWebResponse](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter/#Transaction.SetWebResponse)
 allows the Transaction to instrument response code and response headers. Pass in
 your [http.ResponseWriter](https://godoc.org/net/http#ResponseWriter) as a
 parameter, and then use the return value of this method in place of the input
@@ -193,14 +193,14 @@ func (h *handler) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 ```
 
 The transaction has helpful methods like `NoticeError` and `SetName`.
-See more in [godocs](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction).
+See more in [godocs](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction).
 
 If you are using [`http.ServeMux`](https://golang.org/pkg/net/http/#ServeMux),
 use `WrapHandle` and `WrapHandleFunc`.  These wrappers automatically start and
 end transactions with the request and response writer.
 
 ```go
-http.HandleFunc(newrelic.WrapHandleFunc(app, "/users", usersHandler))
+http.HandleFunc(oldfritter.WrapHandleFunc(app, "/users", usersHandler))
 ```
 
 To access the transaction in your handler, we recommend getting it from the
@@ -208,7 +208,7 @@ To access the transaction in your handler, we recommend getting it from the
 
 ```go
 func myHandler(w http.ResponseWriter, r *http.Request) {
-    txn := newrelic.FromContext(r.Context())
+    txn := oldfritter.FromContext(r.Context())
     // ... handler code here
 }
 ```
@@ -220,7 +220,7 @@ does not matter if you call `NewGoroutine` before or after the other goroutine
 starts.
 
 ```go
-go func(txn newrelic.Transaction) {
+go func(txn oldfritter.Transaction) {
 	defer txn.StartSegment("async").End()
 	time.Sleep(100 * time.Millisecond)
 }(txn.NewGoroutine())
@@ -235,7 +235,7 @@ segment begins when its `StartTime` field is populated, and finishes when its
 `End` method is called.
 
 ```go
-segment := newrelic.Segment{}
+segment := oldfritter.Segment{}
 segment.Name = "mySegmentName"
 segment.StartTime = txn.StartSegmentNow()
 // ... code you want to time here ...
@@ -273,8 +273,8 @@ A zero value segment may safely be ended.  Therefore, the following code
 is safe even if the conditional fails:
 
 ```go
-var s newrelic.Segment
-txn := newrelic.FromContext(ctx)
+var s oldfritter.Segment
+txn := oldfritter.FromContext(ctx)
 if shouldDoSomething() {
     s.StartTime = txn.StartSegmentNow(),
 }
@@ -287,20 +287,20 @@ s.End()
 Datastore segments appear in the transaction "Breakdown table" and in the
 "Databases" page.
 
-* [More info on Databases page](https://docs.newrelic.com/docs/apm/applications-menu/monitoring/databases-slow-queries-page)
+* [More info on Databases page](https://docs.oldfritter.com/docs/apm/applications-menu/monitoring/databases-slow-queries-page)
 
 Datastore segments are instrumented using
-[DatastoreSegment](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic/#DatastoreSegment).
+[DatastoreSegment](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter/#DatastoreSegment).
 Just like basic segments, datastore segments begin when the `StartTime` field
 is populated and finish when the `End` method is called.  Here is an example:
 
 ```go
-s := newrelic.DatastoreSegment{
+s := oldfritter.DatastoreSegment{
     // Product is the datastore type.  See the constants in
-    // https://github.com/newrelic/go-agent/blob/master/v3/newrelic/datastore.go.  Product
+    // https://github.com/oldfritter/go-agent/blob/master/v3/oldfritter/datastore.go.  Product
     // is one of the fields primarily responsible for the grouping of Datastore
     // metrics.
-    Product: newrelic.DatastoreMySQL,
+    Product: oldfritter.DatastoreMySQL,
     // Collection is the table or group being operated upon in the datastore,
     // e.g. "users_table".  This becomes the db.collection attribute on Span
     // events and Transaction Trace segments.  Collection is one of the fields
@@ -320,9 +320,9 @@ This may be combined into two lines when instrumenting a datastore call
 that spans an entire function call:
 
 ```go
-s := newrelic.DatastoreSegment{
+s := oldfritter.DatastoreSegment{
     StartTime:  txn.StartSegmentNow(),
-    Product:    newrelic.DatastoreMySQL,
+    Product:    oldfritter.DatastoreMySQL,
     Collection: "my_table",
     Operation:  "SELECT",
 }
@@ -336,10 +336,10 @@ If you are using the standard library's
 [SQLite](https://github.com/mattn/go-sqlite3) then you can avoid creating
 DatastoreSegments by hand by using an integration package:
 
-* [v3/integrations/nrpq](https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrpq)
-* [v3/integrations/nrmysql](https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrmysql)
-* [v3/integrations/nrsqlite3](https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrsqlite3)
-* [v3/integrations/nrmongo](https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrmongo)
+* [v3/integrations/nrpq](https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrpq)
+* [v3/integrations/nrmysql](https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrmysql)
+* [v3/integrations/nrsqlite3](https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrsqlite3)
+* [v3/integrations/nrmongo](https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrmongo)
 
 ### External Segments
 
@@ -351,9 +351,9 @@ both sides of the request have traces. Version 2.1.0 of the Go Agent adds
 support for distributed tracing, which lets you see the path a request takes as
 it travels through distributed APM apps.
 
-* [More info on External Services page](https://docs.newrelic.com/docs/apm/applications-menu/monitoring/external-services-page)
-* [More info on Cross-Application Tracing](https://docs.newrelic.com/docs/apm/transactions/cross-application-traces/introduction-cross-application-traces)
-* [More info on Distributed Tracing](https://docs.newrelic.com/docs/apm/distributed-tracing/getting-started/introduction-distributed-tracing)
+* [More info on External Services page](https://docs.oldfritter.com/docs/apm/applications-menu/monitoring/external-services-page)
+* [More info on Cross-Application Tracing](https://docs.oldfritter.com/docs/apm/transactions/cross-application-traces/introduction-cross-application-traces)
+* [More info on Distributed Tracing](https://docs.oldfritter.com/docs/apm/distributed-tracing/getting-started/introduction-distributed-tracing)
 
 External segments are instrumented using `ExternalSegment`. There are three
 ways to use this functionality:
@@ -369,8 +369,8 @@ ways to use this functionality:
    For example:
 
     ```go
-    func external(txn *newrelic.Transaction, req *http.Request) (*http.Response, error) {
-      s := newrelic.StartExternalSegment(txn, req)
+    func external(txn *oldfritter.Transaction, req *http.Request) (*http.Response, error) {
+      s := oldfritter.StartExternalSegment(txn, req)
       response, err := http.DefaultClient.Do(req)
       s.Response = response
       s.End()
@@ -380,7 +380,7 @@ ways to use this functionality:
 
     If the transaction is `nil` then `StartExternalSegment` will look for a
     transaction in the request's context using
-    [FromContext](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic/#FromContext).
+    [FromContext](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter/#FromContext).
 
 2. Using `NewRoundTripper` to get a
    [`http.RoundTripper`](https://golang.org/pkg/net/http/#RoundTripper) that
@@ -390,16 +390,16 @@ ways to use this functionality:
    provided the Go Agent is version 1.11.0, and in distributed tracing support,
    provided the Go Agent is version 2.1.0.  `NewRoundTripper` will look for a
    transaction in the request's context using
-   [FromContext](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic/#FromContext).
+   [FromContext](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter/#FromContext).
 
    For example:
 
     ```go
     client := &http.Client{}
-    client.Transport = newrelic.NewRoundTripper(client.Transport)
+    client.Transport = oldfritter.NewRoundTripper(client.Transport)
     request, _ := http.NewRequest("GET", "http://example.com", nil)
     // Put transaction in the request's context:
-    request = newrelic.RequestWithTransactionContext(request, txn)
+    request = oldfritter.RequestWithTransactionContext(request, txn)
     resp, err := client.Do(request)
     ```
 
@@ -412,8 +412,8 @@ ways to use this functionality:
    For example:
 
     ```go
-    func external(txn newrelic.Transaction, url string) (*http.Response, error) {
-      es := newrelic.ExternalSegment{
+    func external(txn oldfritter.Transaction, url string) (*http.Response, error) {
+      es := oldfritter.ExternalSegment{
         StartTime: txn.StartSegmentNow(),
         URL:   url,
       }
@@ -428,17 +428,17 @@ ways to use this functionality:
 Message producer segments appear in the transaction "Breakdown table".
 
 Message producer segments are instrumented using
-[MessageProducerSegment](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic/#MessageProducerSegment).
+[MessageProducerSegment](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter/#MessageProducerSegment).
 Just like basic segments, message producer segments begin when the `StartTime`
 field is populated and finish when the `End` method is called.  Here is an
 example:
 
 ```go
-s := newrelic.MessageProducerSegment{
+s := oldfritter.MessageProducerSegment{
     // Library is the name of the library instrumented.
     Library: "RabbitMQ",
     // DestinationType is the destination type.
-    DestinationType: newrelic.MessageExchange,
+    DestinationType: oldfritter.MessageExchange,
     // DestinationName is the name of your queue or topic.
     DestinationName: "myExchange",
     // DestinationTemporary must be set to true if destination is temporary
@@ -454,10 +454,10 @@ This may be combined into two lines when instrumenting a message producer
 call that spans an entire function call:
 
 ```go
-s := newrelic.MessageProducerSegment{
+s := oldfritter.MessageProducerSegment{
     StartTime:            txn.StartSegmentNow(),
     Library:              "RabbitMQ",
-    DestinationType:      newrelic.MessageExchange,
+    DestinationType:      oldfritter.MessageExchange,
     DestinationName:      "myExchange",
     DestinationTemporary: false,
 }
@@ -481,31 +481,31 @@ txn.AddAttribute("importantCustomer", true)
 seg.AddAttribute("count", 14)
 ```
 
-* [More info on Custom Attributes](https://docs.newrelic.com/docs/insights/new-relic-insights/decorating-events/insights-custom-attributes)
+* [More info on Custom Attributes](https://docs.oldfritter.com/docs/insights/new-relic-insights/decorating-events/insights-custom-attributes)
 
 Some attributes are recorded automatically.  These are called agent attributes.
 They are listed here:
 
-* [newrelic package constants](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#pkg-constants)
+* [oldfritter package constants](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#pkg-constants)
 
 To disable one of these agents attributes, for example `AttributeHostDisplayName`,
 modify the config like this:
 
 ```go
-app, err := newrelic.NewApplication(
-    newrelic.ConfigAppName("Your Application Name"),    
-    newrelic.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
-    func(cfg *newrelic.Config) {
-        config.Attributes.Exclude = append(config.Attributes.Exclude, newrelic.AttributeHostDisplayName)
+app, err := oldfritter.NewApplication(
+    oldfritter.ConfigAppName("Your Application Name"),    
+    oldfritter.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
+    func(cfg *oldfritter.Config) {
+        config.Attributes.Exclude = append(config.Attributes.Exclude, oldfritter.AttributeHostDisplayName)
     }
 )
 ```
 
-* [More info on Agent Attributes](https://docs.newrelic.com/docs/agents/manage-apm-agents/agent-metrics/agent-attributes)
+* [More info on Agent Attributes](https://docs.oldfritter.com/docs/agents/manage-apm-agents/agent-metrics/agent-attributes)
 
 ## Tracing
 
-New Relic's [distributed tracing](https://docs.newrelic.com/docs/apm/distributed-tracing/getting-started/introduction-distributed-tracing)
+New Relic's [distributed tracing](https://docs.oldfritter.com/docs/apm/distributed-tracing/getting-started/introduction-distributed-tracing)
 is the next generation of the previous cross-application tracing feature.
 Compared to cross-application tracing, distributed tracing gives more detail
 about cross-service activity and provides more complete end-to-end
@@ -515,7 +515,7 @@ tracing in turn.
 ### Distributed Tracing
 
 New Relic's [distributed
-tracing](https://docs.newrelic.com/docs/apm/distributed-tracing/getting-started/introduction-distributed-tracing)
+tracing](https://docs.oldfritter.com/docs/apm/distributed-tracing/getting-started/introduction-distributed-tracing)
 feature lets you see the path that a request takes as it travels through distributed APM
 apps, which is vital for applications implementing a service-oriented or
 microservices architecture. Support for distributed tracing was added in
@@ -527,17 +527,17 @@ incoming requests for distributed tracing headers. Distributed tracing will
 override cross-application tracing.
 
 ```go
-app, err := newrelic.NewApplication(
-    newrelic.ConfigAppName("Your Application Name"),
-    newrelic.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
-    newrelic.ConfigDistributedTracerEnabled(true),  
+app, err := oldfritter.NewApplication(
+    oldfritter.ConfigAppName("Your Application Name"),
+    oldfritter.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
+    oldfritter.ConfigDistributedTracerEnabled(true),  
 )
 ```
 
 ### Cross-Application Tracing [Deprecated]
 
 New Relic's
-[cross-application tracing](https://docs.newrelic.com/docs/apm/transactions/cross-application-traces/introduction-cross-application-traces)
+[cross-application tracing](https://docs.oldfritter.com/docs/apm/transactions/cross-application-traces/introduction-cross-application-traces)
 feature, or CAT for short, links transactions between applications in APM to
 help identify performance problems within your service-oriented architecture.
 Support for CAT was added in version 1.11.0 of the Go Agent. We recommend using
@@ -550,7 +550,7 @@ incoming and outgoing requests.
 ### Tracing Instrumentation
 
 Both distributed tracing and cross-application tracing work by propagating
-[header information](https://docs.newrelic.com/docs/apm/distributed-tracing/getting-started/how-new-relic-distributed-tracing-works#headers)
+[header information](https://docs.oldfritter.com/docs/apm/distributed-tracing/getting-started/how-new-relic-distributed-tracing-works#headers)
 from service to service in a request path. In many scenarios, the Go Agent offers tracing instrumentation
 out-of-the-box, for both distributed tracing and cross-application tracing. For other scenarios customers may implement
 distributed tracing based on the examples provided in this guide.
@@ -590,7 +590,7 @@ For client applications:
 
 #### Manually Implementing Distributed Tracing
 
-Consider [manual instrumentation](https://docs.newrelic.com/docs/apm/distributed-tracing/enable-configure/enable-distributed-tracing#agent-apis)
+Consider [manual instrumentation](https://docs.oldfritter.com/docs/apm/distributed-tracing/enable-configure/enable-distributed-tracing#agent-apis)
 for services not instrumented automatically by the Go Agent. In such scenarios, the
 calling service has to insert the appropriate header(s) into the request headers:
 
@@ -604,7 +604,7 @@ turn invokes the call for accepting the headers:
 
 ```go
 var h http.Headers
-calledTxn.AcceptDistributedTraceHeaders(newrelic.TransportOther, h)
+calledTxn.AcceptDistributedTraceHeaders(oldfritter.TransportOther, h)
 ```
 
 A complete example can be found
@@ -613,9 +613,9 @@ A complete example can be found
 
 ## Custom Metrics
 
-* [More info on Custom Metrics](https://docs.newrelic.com/docs/agents/go-agent/instrumentation/create-custom-metrics-go)
+* [More info on Custom Metrics](https://docs.oldfritter.com/docs/agents/go-agent/instrumentation/create-custom-metrics-go)
 
-You may [create custom metrics](https://docs.newrelic.com/docs/agents/manage-apm-agents/agent-data/collect-custom-metrics)
+You may [create custom metrics](https://docs.oldfritter.com/docs/agents/manage-apm-agents/agent-data/collect-custom-metrics)
 via the `RecordCustomMetric` method.
 
 ```go
@@ -651,7 +651,7 @@ If you are running a load balancer or reverse web proxy then you may configure
 it to add a `X-Queue-Start` header with a Unix timestamp.  This will create a
 band on the application overview chart showing queue time.
 
-* [More info on Request Queuing](https://docs.newrelic.com/docs/apm/applications-menu/features/request-queuing-tracking-front-end-time)
+* [More info on Request Queuing](https://docs.oldfritter.com/docs/apm/applications-menu/features/request-queuing-tracking-front-end-time)
 
 ## Error Reporting
 
@@ -675,10 +675,10 @@ txn.NoticeError(errors.New("my error message"))
 error type interface -- not just `errorStrings` created via `errors.New`.  
 
 If you're interested in sending more than an error *message* to New Relic, the
-Go Agent also offers a `newrelic.Error` struct.
+Go Agent also offers a `oldfritter.Error` struct.
 
 ```go
-txn.NoticeError(newrelic.Error{
+txn.NoticeError(oldfritter.Error{
     Message: "my error message",
     Class:   "IdentifierForError",
     Attributes: map[string]interface{}{
@@ -688,9 +688,9 @@ txn.NoticeError(newrelic.Error{
 })
 ```
 
-Using the `newrelic.Error` struct requires you to manually marshal your error
+Using the `oldfritter.Error` struct requires you to manually marshal your error
 data into the `Message`, `Class`, and `Attributes` fields.  However, there's two
-**advantages** to using the `newrelic.Error` struct.
+**advantages** to using the `oldfritter.Error` struct.
 
 First, by setting an error `Class`, New Relic will be able to aggregate errors
 in the *Error Analytics* section of APM.  Second, the `Attributes` field allows
@@ -704,10 +704,10 @@ panic that occurs, record it as an error, and re-throw it. You can enable this f
 setting the configuration:
 
 ```go
-app, err := newrelic.NewApplication(
-    newrelic.ConfigAppName("Your Application Name"),
-    newrelic.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
-    func(cfg *newrelic.Config) {
+app, err := oldfritter.NewApplication(
+    oldfritter.ConfigAppName("Your Application Name"),
+    oldfritter.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
+    func(cfg *oldfritter.Config) {
         cfg.ErrorCollector.RecordPanics = true
     }
 )
@@ -716,7 +716,7 @@ app, err := newrelic.NewApplication(
 As a result of this configuration, panics may appear to be originating from `Transaction.End`.
 
 ```go
-func unstableTask(app newrelic.Application) {
+func unstableTask(app oldfritter.Application) {
     txn := app.StartTransaction("unstableTask", nil, nil)
     defer txn.End()
 
@@ -745,7 +745,7 @@ returning an erroneous status code may result in redundant errors.
 
 You'll want to think carefully about how you name your transactions and custom
 metrics.  If your program creates too many unique names, you may end up with a
-[Metric Grouping Issue (or MGI)](https://docs.newrelic.com/docs/agents/manage-apm-agents/troubleshooting/metric-grouping-issues).
+[Metric Grouping Issue (or MGI)](https://docs.oldfritter.com/docs/agents/manage-apm-agents/troubleshooting/metric-grouping-issues).
 
 MGIs occur when the granularity of names is too fine, resulting in hundreds or
 thousands of uniquely identified metrics and transactions.  One common cause of
@@ -758,7 +758,7 @@ metric name.
 ## Browser
 
 To enable support for
-[New Relic Browser](https://docs.newrelic.com/docs/browser), your HTML pages
+[New Relic Browser](https://docs.oldfritter.com/docs/browser), your HTML pages
 must include a JavaScript snippet that will load the Browser agent and
 configure it with the correct application name. This snippet is available via
 the `Transaction.BrowserTimingHeader` method.  Include the byte slice returned
@@ -771,7 +771,7 @@ func indexHandler(w http.ResponseWriter, req *http.Request) {
     // The New Relic browser javascript should be placed as high in the
     // HTML as possible.  We suggest including it immediately after the
     // opening <head> tag and any <meta charset> tags.
-    txn := newrelic.FromContext(req.Context())
+    txn := oldfritter.FromContext(req.Context())
     hdr, err := txn.BrowserTimingHeader()
     if nil != err {
         log.Printf("unable to create browser timing header: %v", err)
@@ -790,11 +790,11 @@ func indexHandler(w http.ResponseWriter, req *http.Request) {
 
 There's a variety of places online to learn more about the Go Agent.
 
-[The New Relic docs site](https://docs.newrelic.com/docs/agents/go-agent/get-started/introduction-new-relic-go)
+[The New Relic docs site](https://docs.oldfritter.com/docs/agents/go-agent/get-started/introduction-new-relic-go)
 contains a number of useful code samples and more context about how to use the Go Agent.
 
-[New Relic's discussion forums](https://discuss.newrelic.com) have a dedicated
-public forum [for the Go Agent](https://discuss.newrelic.com/c/support-products-agents/go-agent).
+[New Relic's discussion forums](https://discuss.oldfritter.com) have a dedicated
+public forum [for the Go Agent](https://discuss.oldfritter.com/c/support-products-agents/go-agent).
 
-When in doubt, [the New Relic support site](https://support.newrelic.com/) is
+When in doubt, [the New Relic support site](https://support.oldfritter.com/) is
 the best place to get started troubleshooting an agent issue.

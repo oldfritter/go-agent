@@ -7,20 +7,20 @@ import (
 	"os"
 	"time"
 
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
-// ConfigOption populates a newrelic.Config with correct default settings for a
+// ConfigOption populates a oldfritter.Config with correct default settings for a
 // Lambda serverless environment.  ConfigOption will populate fields based on
 // environment variables common to all New Relic agents that support Lambda.
 // Environment variables NEW_RELIC_ACCOUNT_ID, NEW_RELIC_TRUSTED_ACCOUNT_KEY,
 // and NEW_RELIC_PRIMARY_APPLICATION_ID configure fields required for
 // distributed tracing.  Environment variable NEW_RELIC_APDEX_T may be used to
 // set a custom apdex threshold.
-func ConfigOption() newrelic.ConfigOption { return newConfigInternal(os.Getenv) }
+func ConfigOption() oldfritter.ConfigOption { return newConfigInternal(os.Getenv) }
 
-func newConfigInternal(getenv func(string) string) newrelic.ConfigOption {
-	return func(cfg *newrelic.Config) {
+func newConfigInternal(getenv func(string) string) oldfritter.ConfigOption {
+	return func(cfg *oldfritter.Config) {
 		cfg.ServerlessMode.Enabled = true
 
 		cfg.ServerlessMode.AccountID = getenv("NEW_RELIC_ACCOUNT_ID")

@@ -18,7 +18,7 @@
 // supported.  However, if the field key collides with one of the keys used by
 // the New Relic Formatter, the value will be overwritten.  Reserved keys are
 // those found in the `logcontext` package
-// (https://godoc.org/github.com/newrelic/go-agent/_integrations/logcontext/#pkg-constants).
+// (https://godoc.org/github.com/oldfritter/go-agent/_integrations/logcontext/#pkg-constants).
 //
 // Supported types for `logger.WithField` and `logger.WithFields` field values
 // are numbers, booleans, strings, and errors.  Func types are dropped and all
@@ -43,7 +43,7 @@
 //
 //	log.SetFormatter(nrlogrusplugin.ContextFormatter{})
 //
-// The logger will now look for a newrelic.Transaction inside its context and
+// The logger will now look for a oldfritter.Transaction inside its context and
 // decorate logs accordingly.  Therefore, the Transaction must be added to the
 // context and passed to the logger.  For example, this logging call
 //
@@ -51,7 +51,7 @@
 //
 // must be transformed to include the context, such as:
 //
-//	ctx := newrelic.NewContext(context.Background(), txn)
+//	ctx := oldfritter.NewContext(context.Background(), txn)
 //	logger.WithContext(ctx).Info("Hello New Relic!")
 //
 // Troubleshooting
@@ -71,10 +71,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/_integrations/logcontext"
-	"github.com/newrelic/go-agent/internal"
-	"github.com/newrelic/go-agent/internal/jsonx"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/_integrations/logcontext"
+	"github.com/oldfritter/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal/jsonx"
 	"github.com/sirupsen/logrus"
 )
 
@@ -95,7 +95,7 @@ func (f ContextFormatter) Format(e *logrus.Entry) ([]byte, error) {
 	}
 
 	if ctx := e.Context; nil != ctx {
-		if txn := newrelic.FromContext(ctx); nil != txn {
+		if txn := oldfritter.FromContext(ctx); nil != txn {
 			logcontext.AddLinkingMetadata(data, txn.GetLinkingMetadata())
 		}
 	}

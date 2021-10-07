@@ -6,7 +6,7 @@ package internal
 import (
 	"bytes"
 
-	"github.com/newrelic/go-agent/internal/jsonx"
+	"github.com/oldfritter/go-agent/internal/jsonx"
 )
 
 type jsonWriter interface {

@@ -7,11 +7,11 @@ import (
 	"context"
 
 	elasticsearch "github.com/elastic/go-elasticsearch/v7"
-	nrelasticsearch "github.com/newrelic/go-agent/v3/integrations/nrelasticsearch-v7"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	nrelasticsearch "github.com/oldfritter/go-agent/v3/integrations/nrelasticsearch-v7"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
-func getTransaction() *newrelic.Transaction { return nil }
+func getTransaction() *oldfritter.Transaction { return nil }
 
 func Example() {
 	// Step 1: Use nrelasticsearch.NewRoundTripper to assign the
@@ -24,8 +24,8 @@ func Example() {
 		panic(err)
 	}
 	// Step 2: Ensure that all calls using the elasticsearch client have
-	// a context which includes the newrelic.Transaction.
+	// a context which includes the oldfritter.Transaction.
 	txn := getTransaction()
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	client.Info(client.Info.WithContext(ctx))
 }

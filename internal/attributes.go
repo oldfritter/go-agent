@@ -129,7 +129,7 @@ func (id AgentAttributeID) name() string { return agentAttributeInfo[id].name }
 
 // https://source.datanerd.us/agents/agent-specs/blob/master/Agent-Attributes-PORTED.md
 
-// AttributeDestinationConfig matches newrelic.AttributeDestinationConfig to
+// AttributeDestinationConfig matches oldfritter.AttributeDestinationConfig to
 // avoid circular dependency issues.
 type AttributeDestinationConfig struct {
 	Enabled bool
@@ -263,7 +263,7 @@ func processDest(c *AttributeConfig, includeEnabled bool, dc *AttributeDestinati
 }
 
 // AttributeConfigInput is used as the input to CreateAttributeConfig:  it
-// transforms newrelic.Config settings into an AttributeConfig.
+// transforms oldfritter.Config settings into an AttributeConfig.
 type AttributeConfigInput struct {
 	Attributes        AttributeDestinationConfig
 	ErrorCollector    AttributeDestinationConfig

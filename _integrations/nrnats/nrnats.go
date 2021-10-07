@@ -7,31 +7,31 @@ import (
 	"strings"
 
 	nats "github.com/nats-io/nats.go"
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/internal"
-	"github.com/newrelic/go-agent/internal/integrationsupport"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal/integrationsupport"
 )
 
-// StartPublishSegment creates and starts a `newrelic.MessageProducerSegment`
-// (https://godoc.org/github.com/newrelic/go-agent#MessageProducerSegment) for NATS
+// StartPublishSegment creates and starts a `oldfritter.MessageProducerSegment`
+// (https://godoc.org/github.com/oldfritter/go-agent#MessageProducerSegment) for NATS
 // publishers.  Call this function before calling any method that publishes or
 // responds to a NATS message.  Call `End()`
-// (https://godoc.org/github.com/newrelic/go-agent#MessageProducerSegment.End) on the
-// returned newrelic.MessageProducerSegment when the publish is complete.  The
-// `newrelic.Transaction` and `nats.Conn` parameters are required.  The subject
+// (https://godoc.org/github.com/oldfritter/go-agent#MessageProducerSegment.End) on the
+// returned oldfritter.MessageProducerSegment when the publish is complete.  The
+// `oldfritter.Transaction` and `nats.Conn` parameters are required.  The subject
 // parameter is the subject of the publish call and is used in metric and span
 // names.
-func StartPublishSegment(txn newrelic.Transaction, nc *nats.Conn, subject string) *newrelic.MessageProducerSegment {
+func StartPublishSegment(txn oldfritter.Transaction, nc *nats.Conn, subject string) *oldfritter.MessageProducerSegment {
 	if nil == txn {
 		return nil
 	}
 	if nil == nc {
 		return nil
 	}
-	return &newrelic.MessageProducerSegment{
-		StartTime:            newrelic.StartSegmentNow(txn),
+	return &oldfritter.MessageProducerSegment{
+		StartTime:            oldfritter.StartSegmentNow(txn),
 		Library:              "NATS",
-		DestinationType:      newrelic.MessageTopic,
+		DestinationType:      oldfritter.MessageTopic,
 		DestinationName:      subject,
 		DestinationTemporary: strings.HasPrefix(subject, "_INBOX"),
 	}
@@ -41,16 +41,16 @@ func StartPublishSegment(txn newrelic.Transaction, nc *nats.Conn, subject string
 // or https://godoc.org/github.com/nats-io/go-nats#EncodedConn.Subscribe)
 // and nats.QueueSubscribe (https://godoc.org/github.com/nats-io/go-nats#Conn.QueueSubscribe or
 // https://godoc.org/github.com/nats-io/go-nats#EncodedConn.QueueSubscribe)
-// If the `newrelic.Application` parameter is non-nil, it will create a `newrelic.Transaction` and end the transaction
+// If the `oldfritter.Application` parameter is non-nil, it will create a `oldfritter.Transaction` and end the transaction
 // when the passed function is complete.
-func SubWrapper(app newrelic.Application, f func(msg *nats.Msg)) func(msg *nats.Msg) {
+func SubWrapper(app oldfritter.Application, f func(msg *nats.Msg)) func(msg *nats.Msg) {
 	if app == nil {
 		return f
 	}
 	return func(msg *nats.Msg) {
 		namer := internal.MessageMetricKey{
 			Library:         "NATS",
-			DestinationType: string(newrelic.MessageTopic),
+			DestinationType: string(oldfritter.MessageTopic),
 			DestinationName: msg.Subject,
 			Consumer:        true,
 		}

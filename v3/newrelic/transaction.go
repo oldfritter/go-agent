@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"encoding/json"
@@ -68,7 +68,7 @@ func (txn *Transaction) SetName(name string) {
 
 // NoticeError records an error.  The Transaction saves the first five
 // errors.  For more control over the recorded error fields, see the
-// newrelic.Error type.
+// oldfritter.Error type.
 //
 // In certain situations, using this method may result in an error being
 // recorded twice.  Errors are automatically recorded when
@@ -88,7 +88,7 @@ func (txn *Transaction) SetName(name string) {
 //   // ErrorAttributes sets the errors attributes
 //   ErrorAttributes() map[string]interface{}
 //
-// The newrelic.Error type, which implements these methods, is the recommended
+// The oldfritter.Error type, which implements these methods, is the recommended
 // way to directly control the recorded error's message, class, stacktrace,
 // and attributes.
 func (txn *Transaction) NoticeError(err error) {
@@ -108,7 +108,7 @@ func (txn *Transaction) NoticeError(err error) {
 // number, string, or boolean.
 //
 // For more information, see:
-// https://docs.newrelic.com/docs/agents/manage-apm-agents/agent-metrics/collect-custom-attributes
+// https://docs.oldfritter.com/docs/agents/manage-apm-agents/agent-metrics/collect-custom-attributes
 func (txn *Transaction) AddAttribute(key string, value interface{}) {
 	if nil == txn {
 		return
@@ -209,7 +209,7 @@ func (txn *Transaction) startSegmentAt(at time.Time) SegmentStartTime {
 // StartSegment makes it easy to instrument segments.  To time a function, do
 // the following:
 //
-//	func timeMe(txn newrelic.Transaction) {
+//	func timeMe(txn oldfritter.Transaction) {
 //		defer txn.StartSegment("timeMe").End()
 //		// ... function code here ...
 //	}
@@ -298,8 +298,8 @@ func (txn *Transaction) AcceptDistributedTraceHeadersFromJSON(t TransportType, j
 // languages which may natively handle these header values as JSON strings.
 //
 // For example, given the input string
-//   `{"traceparent": "frob", "tracestate": "blorfl", "newrelic": "xyzzy"}`
-// This will emit an http.Header value with headers "traceparent", "tracestate", and "newrelic".
+//   `{"traceparent": "frob", "tracestate": "blorfl", "oldfritter": "xyzzy"}`
+// This will emit an http.Header value with headers "traceparent", "tracestate", and "oldfritter".
 // Specifically:
 //   http.Header{
 //     "Traceparent": {"frob"},

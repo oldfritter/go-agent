@@ -8,7 +8,7 @@
 // https://github.com/openzipkin/b3-propagation) to outgoing requests.
 //
 // Distributed tracing must be enabled
-// (https://docs.newrelic.com/docs/understand-dependencies/distributed-tracing/enable-configure/enable-distributed-tracing)
+// (https://docs.oldfritter.com/docs/understand-dependencies/distributed-tracing/enable-configure/enable-distributed-tracing)
 // for B3 headers to be added properly.
 //
 // This example demonstrates how to create a Zipkin reporter using the standard
@@ -27,7 +27,7 @@
 //
 //	func main() {
 //		reporter := reporterhttp.NewReporter(
-//			"https://trace-api.newrelic.com/trace/v1",
+//			"https://trace-api.oldfritter.com/trace/v1",
 //			reporterhttp.RequestCallback(func(req *http.Request) {
 //				req.Header.Add("X-Insert-Key", os.Getenv("NEW_RELIC_API_KEY"))
 //				req.Header.Add("Data-Format", "zipkin")

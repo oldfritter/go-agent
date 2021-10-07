@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"bytes"
@@ -17,7 +17,7 @@ var (
 // browserInfo contains the fields that are marshalled into the Browser agent's
 // info hash.
 //
-// https://newrelic.atlassian.net/wiki/spaces/eng/pages/50299103/BAM+Agent+Auto-Instrumentation
+// https://oldfritter.atlassian.net/wiki/spaces/eng/pages/50299103/BAM+Agent+Auto-Instrumentation
 type browserInfo struct {
 	Beacon                string `json:"beacon"`
 	LicenseKey            string `json:"licenseKey"`

@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/integrationsupport"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/integrationsupport"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func TestNewRoundTripperNil(t *testing.T) {
@@ -83,7 +83,7 @@ func TestRoundTripperWithTxnSampled(t *testing.T) {
 	if nil != err {
 		t.Fatal(err)
 	}
-	req = newrelic.RequestWithTransactionContext(req, txn)
+	req = oldfritter.RequestWithTransactionContext(req, txn)
 	_, err = client.Do(req)
 	if nil != err {
 		t.Fatal(err)
@@ -144,7 +144,7 @@ func TestRoundTripperWithTxnNotSampled(t *testing.T) {
 	if nil != err {
 		t.Fatal(err)
 	}
-	req = newrelic.RequestWithTransactionContext(req, txn)
+	req = oldfritter.RequestWithTransactionContext(req, txn)
 	_, err = client.Do(req)
 	if nil != err {
 		t.Fatal(err)

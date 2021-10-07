@@ -8,11 +8,11 @@ import (
 	"fmt"
 
 	redis "github.com/go-redis/redis/v7"
-	nrredis "github.com/newrelic/go-agent/v3/integrations/nrredis-v7"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	nrredis "github.com/oldfritter/go-agent/v3/integrations/nrredis-v7"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
-func getTransaction() *newrelic.Transaction { return nil }
+func getTransaction() *oldfritter.Transaction { return nil }
 
 func Example_client() {
 	opts := &redis.Options{Addr: "localhost:6379"}
@@ -28,7 +28,7 @@ func Example_client() {
 	// the transaction.
 	//
 	txn := getTransaction()
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	pong, err := client.WithContext(ctx).Ping().Result()
 	fmt.Println(pong, err)
 }
@@ -48,7 +48,7 @@ func Example_clusterClient() {
 	// the transaction.
 	//
 	txn := getTransaction()
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	pong, err := client.WithContext(ctx).Ping().Result()
 	fmt.Println(pong, err)
 }

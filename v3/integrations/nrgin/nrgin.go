@@ -11,15 +11,15 @@
 //	// Add the nrgin middleware before other middlewares or routes:
 //	router.Use(nrgin.Middleware(app))
 //
-// Example: https://github.com/newrelic/go-agent/tree/master/v3/integrations/nrgin/example/main.go
+// Example: https://github.com/oldfritter/go-agent/tree/master/v3/integrations/nrgin/example/main.go
 package nrgin
 
 import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/newrelic/go-agent/v3/internal"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func init() { internal.TrackUsage("integration", "framework", "gin", "v1") }
@@ -80,14 +80,14 @@ type Context interface {
 
 // Transaction returns the transaction stored inside the context, or nil if not
 // found.
-func Transaction(c Context) *newrelic.Transaction {
+func Transaction(c Context) *oldfritter.Transaction {
 	if v := c.Value(internal.GinTransactionContextKey); nil != v {
-		if txn, ok := v.(*newrelic.Transaction); ok {
+		if txn, ok := v.(*oldfritter.Transaction); ok {
 			return txn
 		}
 	}
 	if v := c.Value(internal.TransactionContextKey); nil != v {
-		if txn, ok := v.(*newrelic.Transaction); ok {
+		if txn, ok := v.(*oldfritter.Transaction); ok {
 			return txn
 		}
 	}
@@ -119,7 +119,7 @@ func getName(c handlerNamer, useNewNames bool) string {
 // gin.Context.HandlerName if not.  If you are using Gin v1.5.0 and wish to
 // continue using the old transaction names, use
 // nrgin.MiddlewareHandlerTxnNames.
-func Middleware(app *newrelic.Application) gin.HandlerFunc {
+func Middleware(app *oldfritter.Application) gin.HandlerFunc {
 	return middleware(app, true)
 }
 
@@ -134,11 +134,11 @@ func Middleware(app *newrelic.Application) gin.HandlerFunc {
 // in a future release.  Available in Gin v1.5.0 and newer is the
 // gin.Context.FullPath method which allows for much improved transaction
 // names.  Use nrgin.Middleware to take full advantage of this new naming!
-func MiddlewareHandlerTxnNames(app *newrelic.Application) gin.HandlerFunc {
+func MiddlewareHandlerTxnNames(app *oldfritter.Application) gin.HandlerFunc {
 	return middleware(app, false)
 }
 
-func middleware(app *newrelic.Application, useNewNames bool) gin.HandlerFunc {
+func middleware(app *oldfritter.Application, useNewNames bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if app != nil {
 			name := c.Request.Method + " " + getName(c, useNewNames)

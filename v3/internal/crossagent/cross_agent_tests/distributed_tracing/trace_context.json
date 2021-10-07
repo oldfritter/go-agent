@@ -1669,8 +1669,8 @@
     ]
   },
   {
-    "test_name": "w3c_and_newrelic_headers_present",
-    "comment": "outbound newrelic headers are built from w3c headers, ignoring inbound newrelic headers",
+    "test_name": "w3c_and_oldfritter_headers_present",
+    "comment": "outbound oldfritter headers are built from w3c headers, ignoring inbound oldfritter headers",
     "trusted_account_key": "33",
     "account_id": "33",
     "web_transaction": true,
@@ -1683,26 +1683,26 @@
       {
         "traceparent": "00-da8bc8cc6d062849b0efcf3c169afb5a-7d3efb1b173fecfa-01",
         "tracestate": "33@nr=0-0-33-2827902-7d3efb1b173fecfa-e8b91a159289ff74-1-1.23456-1518469636035",
-        "newrelic": "{\"v\":[0,1],\"d\":{\"ty\":\"Mobile\",\"ac\":\"123\",\"ap\":\"51424\",\"id\":\"5f474d64b9cc9b2a\",\"tr\":\"6e2fea0b173fdad0\",\"pr\":0.1234,\"sa\":true,\"ti\":1482959525577,\"tx\":\"27856f70d3d314b7\"}}"
+        "oldfritter": "{\"v\":[0,1],\"d\":{\"ty\":\"Mobile\",\"ac\":\"123\",\"ap\":\"51424\",\"id\":\"5f474d64b9cc9b2a\",\"tr\":\"6e2fea0b173fdad0\",\"pr\":0.1234,\"sa\":true,\"ti\":1482959525577,\"tx\":\"27856f70d3d314b7\"}}"
       }
     ],
     "outbound_payloads": [
       {
         "exact": {
-          "newrelic.v": [0, 1],
-          "newrelic.d.ty": "App",
-          "newrelic.d.ac": "33",
-          "newrelic.d.tr": "da8bc8cc6d062849b0efcf3c169afb5a",
-          "newrelic.d.pr": 1.23456,
-          "newrelic.d.sa": true
+          "oldfritter.v": [0, 1],
+          "oldfritter.d.ty": "App",
+          "oldfritter.d.ac": "33",
+          "oldfritter.d.tr": "da8bc8cc6d062849b0efcf3c169afb5a",
+          "oldfritter.d.pr": 1.23456,
+          "oldfritter.d.sa": true
         },
         "expected": [
-          "newrelic.d.pr",
-          "newrelic.d.ap",
-          "newrelic.d.tx",
-          "newrelic.d.ti",
-          "newrelic.d.id"],
-        "unexpected": ["newrelic.d.tk"]
+          "oldfritter.d.pr",
+          "oldfritter.d.ap",
+          "oldfritter.d.tx",
+          "oldfritter.d.ti",
+          "oldfritter.d.id"],
+        "unexpected": ["oldfritter.d.tk"]
       }
     ],
     "intrinsics": {
@@ -1745,11 +1745,11 @@
     ]
   },
   {
-    "test_name": "w3c_and_newrelic_headers_present_error_parsing_traceparent",
+    "test_name": "w3c_and_oldfritter_headers_present_error_parsing_traceparent",
     "comment": [
       "If the traceparent header is present on an inbound request, conforming agents MUST",
-      "ignore any newrelic header. If the traceparent header is invalid, a new trace MUST",
-      "be started. The newrelic header MUST be used _only_ when traceparent is _missing_."
+      "ignore any oldfritter header. If the traceparent header is invalid, a new trace MUST",
+      "be started. The oldfritter header MUST be used _only_ when traceparent is _missing_."
     ],
     "trusted_account_key": "33",
     "account_id": "33",
@@ -1763,29 +1763,29 @@
       {
         "traceparent": "garbage",
         "tracestate": "33@nr=0-0-33-2827902-7d3efb1b173fecfa-e8b91a159289ff74-1-1.23456-1518469636035",
-        "newrelic": "{\"v\":[0,1],\"d\":{\"ty\":\"Mobile\",\"ac\":\"33\",\"ap\":\"51424\",\"id\":\"5f474d64b9cc9b2a\",\"tr\":\"6e2fea0b173fdad0\",\"pr\":0.1234,\"sa\":true,\"ti\":1482959525577,\"tx\":\"27856f70d3d314b7\"}}"
+        "oldfritter": "{\"v\":[0,1],\"d\":{\"ty\":\"Mobile\",\"ac\":\"33\",\"ap\":\"51424\",\"id\":\"5f474d64b9cc9b2a\",\"tr\":\"6e2fea0b173fdad0\",\"pr\":0.1234,\"sa\":true,\"ti\":1482959525577,\"tx\":\"27856f70d3d314b7\"}}"
       }
     ],
     "outbound_payloads": [
       {
         "exact": {
-          "newrelic.v": [0, 1],
-          "newrelic.d.ty": "App",
-          "newrelic.d.ac": "33",
-          "newrelic.d.sa": true
+          "oldfritter.v": [0, 1],
+          "oldfritter.d.ty": "App",
+          "oldfritter.d.ac": "33",
+          "oldfritter.d.sa": true
         },
         "notequal": {
-          "newrelic.d.tr": "6e2fea0b173fdad0"
+          "oldfritter.d.tr": "6e2fea0b173fdad0"
         },
         "expected": [
-          "newrelic.d.pr",
-          "newrelic.d.ap",
-          "newrelic.d.tx",
-          "newrelic.d.ti",
-          "newrelic.d.id",
-          "newrelic.d.tr"
+          "oldfritter.d.pr",
+          "oldfritter.d.ap",
+          "oldfritter.d.tx",
+          "oldfritter.d.ti",
+          "oldfritter.d.id",
+          "oldfritter.d.tr"
         ],
-        "unexpected": ["newrelic.d.tk"]
+        "unexpected": ["oldfritter.d.tk"]
       }
     ],
     "intrinsics": {
@@ -1803,7 +1803,7 @@
     ]
   },
   {
-    "test_name": "w3c_and_newrelic_headers_present_error_parsing_tracestate",
+    "test_name": "w3c_and_oldfritter_headers_present_error_parsing_tracestate",
     "trusted_account_key": "33",
     "account_id": "33",
     "web_transaction": true,
@@ -1816,26 +1816,26 @@
       {
         "traceparent": "00-da8bc8cc6d062849b0efcf3c169afb5a-7d3efb1b173fecfa-01",
         "tracestate": "33@nr=garbage",
-        "newrelic": "{\"v\":[0,1],\"d\":{\"ty\":\"Mobile\",\"ac\":\"123\",\"ap\":\"51424\",\"id\":\"5f474d64b9cc9b2a\",\"tr\":\"6e2fea0b173fdad0\",\"pr\":0.1234,\"sa\":true,\"ti\":1482959525577,\"tx\":\"27856f70d3d314b7\"}}"
+        "oldfritter": "{\"v\":[0,1],\"d\":{\"ty\":\"Mobile\",\"ac\":\"123\",\"ap\":\"51424\",\"id\":\"5f474d64b9cc9b2a\",\"tr\":\"6e2fea0b173fdad0\",\"pr\":0.1234,\"sa\":true,\"ti\":1482959525577,\"tx\":\"27856f70d3d314b7\"}}"
       }
     ],
     "outbound_payloads": [
       {
         "exact": {
-          "newrelic.v": [0, 1],
-          "newrelic.d.ty": "App",
-          "newrelic.d.ac": "33",
-          "newrelic.d.tr": "da8bc8cc6d062849b0efcf3c169afb5a",
-          "newrelic.d.sa": true
+          "oldfritter.v": [0, 1],
+          "oldfritter.d.ty": "App",
+          "oldfritter.d.ac": "33",
+          "oldfritter.d.tr": "da8bc8cc6d062849b0efcf3c169afb5a",
+          "oldfritter.d.sa": true
         },
         "expected": [
-          "newrelic.d.pr",
-          "newrelic.d.ap",
-          "newrelic.d.tx",
-          "newrelic.d.ti",
-          "newrelic.d.id"
+          "oldfritter.d.pr",
+          "oldfritter.d.ap",
+          "oldfritter.d.tx",
+          "oldfritter.d.ti",
+          "oldfritter.d.id"
         ],
-        "unexpected": ["newrelic.d.tk"]
+        "unexpected": ["oldfritter.d.tk"]
       }
     ],
     "intrinsics": {
@@ -1870,12 +1870,12 @@
     ]
   },
   {
-    "test_name": "newrelic_origin_trace_id_correctly_transformed_for_w3c",
+    "test_name": "oldfritter_origin_trace_id_correctly_transformed_for_w3c",
     "comment": [
-      "Tests correct handling of newrelic headers",
+      "Tests correct handling of oldfritter headers",
       "Agents may receive a traceId in upper-case, or shorter than 32 characters.",
       "In this case, the traceId MUST be left-padded with zeros AND lower-cased",
-      "The outbound newrelic header, if configured, should include the traceId as-received."
+      "The outbound oldfritter header, if configured, should include the traceId as-received."
     ],
     "trusted_account_key": "33",
     "account_id": "33",
@@ -1887,7 +1887,7 @@
     "transport_type": "HTTP",
     "inbound_headers": [
       {
-        "newrelic": "{\"v\":[0,1],\"d\":{\"ty\":\"App\",\"ac\":\"33\",\"ap\":\"51424\",\"id\":\"5f474d64b9cc9b2a\",\"tr\":\"6E2fEA0B173FDAD0\",\"pr\":1.1234321,\"sa\":true,\"ti\":1482959525577,\"tx\":\"27856f70d3d314b7\"}}"
+        "oldfritter": "{\"v\":[0,1],\"d\":{\"ty\":\"App\",\"ac\":\"33\",\"ap\":\"51424\",\"id\":\"5f474d64b9cc9b2a\",\"tr\":\"6E2fEA0B173FDAD0\",\"pr\":1.1234321,\"sa\":true,\"ti\":1482959525577,\"tx\":\"27856f70d3d314b7\"}}"
       }
     ],
     "outbound_payloads": [
@@ -1902,11 +1902,11 @@
           "tracestate.parent_account_id": "33",
           "tracestate.sampled": "1",
           "tracestate.priority": "1.123432",
-          "newrelic.v": [0, 1],
-          "newrelic.d.ty": "App",
-          "newrelic.d.ac": "33",
-          "newrelic.d.tr": "6E2fEA0B173FDAD0",
-          "newrelic.d.sa": true
+          "oldfritter.v": [0, 1],
+          "oldfritter.d.ty": "App",
+          "oldfritter.d.ac": "33",
+          "oldfritter.d.tr": "6E2fEA0B173FDAD0",
+          "oldfritter.d.sa": true
         },
         "expected": [
           "traceparent.parent_id",
@@ -1914,13 +1914,13 @@
           "tracestate.parent_application_id",
           "tracestate.span_id",
           "tracestate.transaction_id",
-          "newrelic.d.ap",
-          "newrelic.d.tx",
-          "newrelic.d.ti",
-          "newrelic.d.id",
-          "newrelic.d.pr"
+          "oldfritter.d.ap",
+          "oldfritter.d.tx",
+          "oldfritter.d.ti",
+          "oldfritter.d.id",
+          "oldfritter.d.pr"
         ],
-        "unexpected": ["newrelic.d.tk"]
+        "unexpected": ["oldfritter.d.tk"]
       }
     ],
     "intrinsics": {
@@ -2084,7 +2084,7 @@
     ]
   },
   {
-    "test_name": "w3c_and_newrelic_headers_present_emit_both_header_types",
+    "test_name": "w3c_and_oldfritter_headers_present_emit_both_header_types",
     "trusted_account_key": "33",
     "account_id": "33",
     "web_transaction": true,
@@ -2097,7 +2097,7 @@
       {
         "traceparent": "00-da8bc8cc6d062849b0efcf3c169afb5a-7d3efb1b173fecfa-01",
         "tracestate": "33@nr=0-0-33-2827902-7d3efb1b173fecfa-e8b91a159289ff74-1-1.23456-1518469636035",
-        "newrelic": "{\"v\":[0,1],\"d\":{\"ty\":\"Mobile\",\"ac\":\"123\",\"ap\":\"51424\",\"id\":\"5f474d64b9cc9b2a\",\"tr\":\"6e2fea0b173fdad0\",\"pr\":0.1234,\"sa\":true,\"ti\":1482959525577,\"tx\":\"27856f70d3d314b7\"}}"
+        "oldfritter": "{\"v\":[0,1],\"d\":{\"ty\":\"Mobile\",\"ac\":\"123\",\"ap\":\"51424\",\"id\":\"5f474d64b9cc9b2a\",\"tr\":\"6e2fea0b173fdad0\",\"pr\":0.1234,\"sa\":true,\"ti\":1482959525577,\"tx\":\"27856f70d3d314b7\"}}"
       }
     ],
     "outbound_payloads": [
@@ -2111,12 +2111,12 @@
           "tracestate.parent_account_id": "33",
           "tracestate.sampled": "1",
           "tracestate.priority": "1.23456",
-          "newrelic.v": [0, 1],
-          "newrelic.d.ty": "App",
-          "newrelic.d.ac": "33",
-          "newrelic.d.tr": "da8bc8cc6d062849b0efcf3c169afb5a",
-          "newrelic.d.sa": true,
-          "newrelic.d.pr": 1.23456
+          "oldfritter.v": [0, 1],
+          "oldfritter.d.ty": "App",
+          "oldfritter.d.ac": "33",
+          "oldfritter.d.tr": "da8bc8cc6d062849b0efcf3c169afb5a",
+          "oldfritter.d.sa": true,
+          "oldfritter.d.pr": 1.23456
         },
         "expected": [
           "traceparent.trace_flags",
@@ -2125,12 +2125,12 @@
           "tracestate.transaction_id",
           "tracestate.parent_application_id",
           "tracestate.timestamp",
-          "newrelic.d.ap",
-          "newrelic.d.tx",
-          "newrelic.d.ti",
-          "newrelic.d.id"
+          "oldfritter.d.ap",
+          "oldfritter.d.tx",
+          "oldfritter.d.ti",
+          "oldfritter.d.id"
         ],
-        "unexpected": ["newrelic.d.tk"]
+        "unexpected": ["oldfritter.d.tk"]
       }
     ],
     "expected_metrics": [
@@ -2170,12 +2170,12 @@
           "tracestate.parent_account_id": "33",
           "tracestate.sampled": "1",
           "tracestate.priority": "1.23456",
-          "newrelic.v": [0, 1],
-          "newrelic.d.ty": "App",
-          "newrelic.d.ac": "33",
-          "newrelic.d.tr": "da8bc8cc6d062849b0efcf3c169afb5a",
-          "newrelic.d.sa": true,
-          "newrelic.d.pr": 1.23456
+          "oldfritter.v": [0, 1],
+          "oldfritter.d.ty": "App",
+          "oldfritter.d.ac": "33",
+          "oldfritter.d.tr": "da8bc8cc6d062849b0efcf3c169afb5a",
+          "oldfritter.d.sa": true,
+          "oldfritter.d.pr": 1.23456
         },
         "expected": [
           "traceparent.trace_flags",
@@ -2184,12 +2184,12 @@
           "tracestate.transaction_id",
           "tracestate.parent_application_id",
           "tracestate.timestamp",
-          "newrelic.d.ap",
-          "newrelic.d.tx",
-          "newrelic.d.ti",
-          "newrelic.d.id"
+          "oldfritter.d.ap",
+          "oldfritter.d.tx",
+          "oldfritter.d.ti",
+          "oldfritter.d.id"
         ],
-        "unexpected": ["newrelic.d.tk"]
+        "unexpected": ["oldfritter.d.tk"]
       }
     ],
     "expected_metrics": [
@@ -2203,7 +2203,7 @@
     ]
   },
   {
-    "test_name": "only_newrelic_headers_present_emit_both_header_types",
+    "test_name": "only_oldfritter_headers_present_emit_both_header_types",
     "trusted_account_key": "33",
     "account_id": "33",
     "web_transaction": true,
@@ -2214,7 +2214,7 @@
     "transport_type": "HTTP",
     "inbound_headers": [
       {
-        "newrelic": "{\"v\":[0,1],\"d\":{\"ty\":\"App\",\"ac\":\"33\",\"ap\":\"2827902\",\"id\":\"5f474d64b9cc9b2a\",\"tr\":\"da8bc8cc6d062849b0efcf3c169afb5a\",\"pr\":1.23456,\"sa\":true,\"ti\":1482959525577,\"tx\":\"27856f70d3d314b7\"}}"
+        "oldfritter": "{\"v\":[0,1],\"d\":{\"ty\":\"App\",\"ac\":\"33\",\"ap\":\"2827902\",\"id\":\"5f474d64b9cc9b2a\",\"tr\":\"da8bc8cc6d062849b0efcf3c169afb5a\",\"pr\":1.23456,\"sa\":true,\"ti\":1482959525577,\"tx\":\"27856f70d3d314b7\"}}"
       }
     ],
     "outbound_payloads": [
@@ -2228,12 +2228,12 @@
           "tracestate.parent_account_id": "33",
           "tracestate.sampled": "1",
           "tracestate.priority": "1.23456",
-          "newrelic.v": [0, 1],
-          "newrelic.d.ty": "App",
-          "newrelic.d.ac": "33",
-          "newrelic.d.tr": "da8bc8cc6d062849b0efcf3c169afb5a",
-          "newrelic.d.sa": true,
-          "newrelic.d.pr": 1.23456
+          "oldfritter.v": [0, 1],
+          "oldfritter.d.ty": "App",
+          "oldfritter.d.ac": "33",
+          "oldfritter.d.tr": "da8bc8cc6d062849b0efcf3c169afb5a",
+          "oldfritter.d.sa": true,
+          "oldfritter.d.pr": 1.23456
         },
         "expected": [
           "traceparent.trace_flags",
@@ -2242,12 +2242,12 @@
           "tracestate.transaction_id",
           "tracestate.parent_application_id",
           "tracestate.timestamp",
-          "newrelic.d.ap",
-          "newrelic.d.tx",
-          "newrelic.d.ti",
-          "newrelic.d.id"
+          "oldfritter.d.ap",
+          "oldfritter.d.tx",
+          "oldfritter.d.ti",
+          "oldfritter.d.id"
         ],
-        "unexpected": ["newrelic.d.tk"]
+        "unexpected": ["oldfritter.d.tk"]
       }
     ],
     "expected_metrics": [

@@ -3,13 +3,13 @@
 
 // +build go1.13
 
-package newrelic
+package oldfritter
 
 import (
 	"fmt"
 	"testing"
 
-	"github.com/newrelic/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal"
 )
 
 func TestNoticedWrappedError(t *testing.T) {

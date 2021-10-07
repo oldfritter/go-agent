@@ -1,14 +1,14 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"net/http"
 	"net/url"
 	"testing"
 
-	"github.com/newrelic/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal"
 )
 
 type customRequest struct {
@@ -25,7 +25,7 @@ func (r customRequest) Transport() TransportType { return r.transport }
 
 var (
 	sampleHTTPRequest = func() *http.Request {
-		req, err := http.NewRequest("GET", "http://www.newrelic.com", nil)
+		req, err := http.NewRequest("GET", "http://www.oldfritter.com", nil)
 		if nil != err {
 			panic(err)
 		}
@@ -36,7 +36,7 @@ var (
 		return req
 	}()
 	sampleCustomRequest = func() customRequest {
-		u, err := url.Parse("http://www.newrelic.com")
+		u, err := url.Parse("http://www.oldfritter.com")
 		if nil != err {
 			panic(err)
 		}
@@ -58,7 +58,7 @@ var (
 		AttributeRequestContentType:   "mycontent",
 		AttributeRequestContentLength: 123,
 		AttributeRequestHost:          "myhost",
-		AttributeRequestURI:           "http://www.newrelic.com",
+		AttributeRequestURI:           "http://www.oldfritter.com",
 	}
 )
 
@@ -263,7 +263,7 @@ func TestSetWebRequestWithDistributedTracing(t *testing.T) {
 	app.ExpectTxnEvents(t, []internal.WantEvent{{
 		AgentAttributes: map[string]interface{}{
 			"request.method": "GET",
-			"request.uri":    "http://www.newrelic.com",
+			"request.uri":    "http://www.oldfritter.com",
 		},
 		Intrinsics: map[string]interface{}{
 			"name":                     "WebTransaction/Go/hello",

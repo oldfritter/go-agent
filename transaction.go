@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"net/http"
@@ -34,7 +34,7 @@ type Transaction interface {
 
 	// NoticeError records an error.  The Transaction saves the first five
 	// errors.  For more control over the recorded error fields, see the
-	// newrelic.Error type.  In certain situations, using this method may
+	// oldfritter.Error type.  In certain situations, using this method may
 	// result in an error being recorded twice:  Errors are automatically
 	// recorded when Transaction.WriteHeader receives a status code above
 	// 400 or below 100 that is not in the IgnoreStatusCodes configuration
@@ -49,7 +49,7 @@ type Transaction interface {
 	// number, string, or boolean.
 	//
 	// For more information, see:
-	// https://docs.newrelic.com/docs/agents/manage-apm-agents/agent-metrics/collect-custom-attributes
+	// https://docs.oldfritter.com/docs/agents/manage-apm-agents/agent-metrics/collect-custom-attributes
 	AddAttribute(key string, value interface{}) error
 
 	// SetWebRequest marks the transaction as a web transaction.  If
@@ -137,18 +137,18 @@ type Transaction interface {
 	// Example passing a new Transaction reference directly to another
 	// goroutine:
 	//
-	//	go func(txn newrelic.Transaction) {
-	//		defer newrelic.StartSegment(txn, "async").End()
+	//	go func(txn oldfritter.Transaction) {
+	//		defer oldfritter.StartSegment(txn, "async").End()
 	//		time.Sleep(100 * time.Millisecond)
 	//	}(txn.NewGoroutine())
 	//
 	// Example passing a new Transaction reference on a channel to another
 	// goroutine:
 	//
-	//	ch := make(chan newrelic.Transaction)
+	//	ch := make(chan oldfritter.Transaction)
 	//	go func() {
 	//		txn := <-ch
-	//		defer newrelic.StartSegment(txn, "async").End()
+	//		defer oldfritter.StartSegment(txn, "async").End()
 	//		time.Sleep(100 * time.Millisecond)
 	//	}()
 	//	ch <- txn.NewGoroutine()
@@ -247,7 +247,7 @@ type LinkingMetadata struct {
 	// SpanID identifies the currently active segment.  This field is empty
 	// if distributed tracing is disabled or the transaction is not sampled.
 	SpanID string
-	// EntityName is the Application name as set on the newrelic.Config.  If
+	// EntityName is the Application name as set on the oldfritter.Config.  If
 	// multiple application names are specified, only the first is returned.
 	EntityName string
 	// EntityType is the type of this entity and is always the string

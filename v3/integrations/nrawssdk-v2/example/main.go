@@ -10,8 +10,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	nraws "github.com/newrelic/go-agent/v3/integrations/nrawssdk-v2"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	nraws "github.com/oldfritter/go-agent/v3/integrations/nrawssdk-v2"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func main() {
@@ -19,11 +19,11 @@ func main() {
 	// Create a New Relic application. This will look for your license key in an
 	// environment variable called NEW_RELIC_LICENSE_KEY. This example turns on
 	// Distributed Tracing, but that's not required.
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigFromEnvironment(),
-		newrelic.ConfigAppName("Example App"),
-		newrelic.ConfigInfoLogger(os.Stdout),
-		newrelic.ConfigDistributedTracerEnabled(true),
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigFromEnvironment(),
+		oldfritter.ConfigAppName("Example App"),
+		oldfritter.ConfigInfoLogger(os.Stdout),
+		oldfritter.ConfigDistributedTracerEnabled(true),
 	)
 	if nil != err {
 		fmt.Println(err)

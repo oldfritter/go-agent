@@ -1,12 +1,12 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"io"
 
-	"github.com/newrelic/go-agent/v3/internal/logger"
+	"github.com/oldfritter/go-agent/v3/internal/logger"
 )
 
 // Logger is the interface that is used for logging in the Go Agent.  Assign
@@ -14,9 +14,9 @@ import (
 // for use in multiple goroutines.  Two Logger implementations are included:
 // NewLogger, which logs at info level, and NewDebugLogger which logs at debug
 // level.  logrus, logxi, and zap are supported by the integration packages
-// https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrlogrus,
-// https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrlogxi,
-// and https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrzap
+// https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrlogrus,
+// https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrlogxi,
+// and https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrzap
 // respectively.
 type Logger interface {
 	Error(msg string, context map[string]interface{})

@@ -9,19 +9,19 @@
 // (Parse, Validation, Execution, ResolveField) to your GraphQL
 // request transactions. Errors in any of these steps will
 // be noticed using NoticeError
-// (https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction.NoticeError)
+// (https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction.NoticeError)
 //
 // Please note that you must also instrument your web request handlers
 // and put the transaction into the context object in order to
 // utilize this instrumentation. For example, you could use
-// newrelic.WrapHandle (https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#WrapHandle)
-// or newrelic.WrapHandleFunc (https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#WrapHandleFunc)
+// oldfritter.WrapHandle (https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#WrapHandle)
+// or oldfritter.WrapHandleFunc (https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#WrapHandleFunc)
 // or you could use a New Relic integration for the web framework you are using
 // if it is available (for example,
-// https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrgorilla)
+// https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrgorilla)
 //
 // For a complete example, including instrumenting a graphql-go-handler, see:
-// https://github.com/newrelic/go-agent/tree/master/v3/integrations/nrgraphqlgo/example/main.go
+// https://github.com/oldfritter/go-agent/tree/master/v3/integrations/nrgraphqlgo/example/main.go
 package nrgraphqlgo
 
 import (
@@ -29,8 +29,8 @@ import (
 
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/graphql/gqlerrors"
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func init() { internal.TrackUsage("integration", "framework", "graphql-go") }
@@ -53,7 +53,7 @@ func (Extension) Name() string {
 
 // ParseDidStart is called before parsing starts
 func (Extension) ParseDidStart(ctx context.Context) (context.Context, graphql.ParseFinishFunc) {
-	txn := newrelic.FromContext(ctx)
+	txn := oldfritter.FromContext(ctx)
 	seg := txn.StartSegment("Parse")
 	return ctx, func(err error) {
 		if err != nil {
@@ -65,7 +65,7 @@ func (Extension) ParseDidStart(ctx context.Context) (context.Context, graphql.Pa
 
 // ValidationDidStart is called before the validation begins
 func (Extension) ValidationDidStart(ctx context.Context) (context.Context, graphql.ValidationFinishFunc) {
-	txn := newrelic.FromContext(ctx)
+	txn := oldfritter.FromContext(ctx)
 	seg := txn.StartSegment("Validation")
 	return ctx, func(errs []gqlerrors.FormattedError) {
 		for _, err := range errs {
@@ -77,7 +77,7 @@ func (Extension) ValidationDidStart(ctx context.Context) (context.Context, graph
 
 // ExecutionDidStart is called before the execution begins
 func (Extension) ExecutionDidStart(ctx context.Context) (context.Context, graphql.ExecutionFinishFunc) {
-	txn := newrelic.FromContext(ctx)
+	txn := oldfritter.FromContext(ctx)
 	seg := txn.StartSegment("Execution")
 	return ctx, func(res *graphql.Result) {
 		// noticing here also captures those during resolve
@@ -90,7 +90,7 @@ func (Extension) ExecutionDidStart(ctx context.Context) (context.Context, graphq
 
 // ResolveFieldDidStart is called at the start of the resolving of a field
 func (Extension) ResolveFieldDidStart(ctx context.Context, i *graphql.ResolveInfo) (context.Context, graphql.ResolveFieldFinishFunc) {
-	seg := newrelic.FromContext(ctx).StartSegment("ResolveField:" + i.FieldName)
+	seg := oldfritter.FromContext(ctx).StartSegment("ResolveField:" + i.FieldName)
 	return ctx, func(interface{}, error) {
 		seg.End()
 	}

@@ -10,9 +10,9 @@ import (
 	"net"
 	"os"
 
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/_integrations/nrgrpc"
-	sampleapp "github.com/newrelic/go-agent/_integrations/nrgrpc/example/sampleapp"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/_integrations/nrgrpc"
+	sampleapp "github.com/oldfritter/go-agent/_integrations/nrgrpc/example/sampleapp"
 	"google.golang.org/grpc"
 )
 
@@ -21,7 +21,7 @@ type Server struct{}
 
 // processMessage processes each incoming Message.
 func processMessage(ctx context.Context, msg *sampleapp.Message) {
-	defer newrelic.StartSegment(newrelic.FromContext(ctx), "processMessage").End()
+	defer oldfritter.StartSegment(oldfritter.FromContext(ctx), "processMessage").End()
 	fmt.Printf("Message received: %s\n", msg.Text)
 }
 
@@ -79,9 +79,9 @@ func mustGetEnv(key string) string {
 }
 
 func main() {
-	cfg := newrelic.NewConfig("gRPC Server", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
-	cfg.Logger = newrelic.NewDebugLogger(os.Stdout)
-	app, err := newrelic.NewApplication(cfg)
+	cfg := oldfritter.NewConfig("gRPC Server", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
+	cfg.Logger = oldfritter.NewDebugLogger(os.Stdout)
+	app, err := oldfritter.NewApplication(cfg)
 	if nil != err {
 		panic(err)
 	}

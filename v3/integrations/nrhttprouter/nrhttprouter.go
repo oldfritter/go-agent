@@ -16,13 +16,13 @@
 //   	"os"
 //
 //   	"github.com/julienschmidt/httprouter"
-//   	newrelic "github.com/newrelic/go-agent/v3/newrelic"
-//   	"github.com/newrelic/go-agent/v3/integrations/nrhttprouter"
+//   	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
+//   	"github.com/oldfritter/go-agent/v3/integrations/nrhttprouter"
 //   )
 //
 //   func main() {
-//   	cfg := newrelic.NewConfig("httprouter App", os.Getenv("NEW_RELIC_LICENSE_KEY"))
-//   	app, _ := newrelic.NewApplication(cfg)
+//   	cfg := oldfritter.NewConfig("httprouter App", os.Getenv("NEW_RELIC_LICENSE_KEY"))
+//   	app, _ := oldfritter.NewApplication(cfg)
 //
 //   	// Create the Router replacement:
 //   	router := nrhttprouter.New(app)
@@ -36,15 +36,15 @@
 //   	http.ListenAndServe(":8000", router)
 //   }
 //
-// Runnable example: https://github.com/newrelic/go-agent/tree/master/v3/integrations/nrhttprouter/example/main.go
+// Runnable example: https://github.com/oldfritter/go-agent/tree/master/v3/integrations/nrhttprouter/example/main.go
 package nrhttprouter
 
 import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/newrelic/go-agent/v3/internal"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func init() { internal.TrackUsage("integration", "framework", "httprouter") }
@@ -54,11 +54,11 @@ func init() { internal.TrackUsage("integration", "framework", "httprouter") }
 type Router struct {
 	*httprouter.Router
 
-	application *newrelic.Application
+	application *oldfritter.Application
 }
 
 // New creates a new Router to be used in place of httprouter.Router.
-func New(app *newrelic.Application) *Router {
+func New(app *oldfritter.Application) *Router {
 	return &Router{
 		Router:      httprouter.New(),
 		application: app,
@@ -78,7 +78,7 @@ func (r *Router) handle(method string, path string, original httprouter.Handle) 
 			w = txn.SetWebResponse(w)
 			defer txn.End()
 
-			req = newrelic.RequestWithTransactionContext(req, txn)
+			req = oldfritter.RequestWithTransactionContext(req, txn)
 
 			original(w, req, ps)
 		}
@@ -128,7 +128,7 @@ func (r *Router) Handle(method, path string, h httprouter.Handle) {
 
 // Handler replaces httprouter.Router.Handler.
 func (r *Router) Handler(method, path string, handler http.Handler) {
-	_, h := newrelic.WrapHandle(r.application, path, handler)
+	_, h := oldfritter.WrapHandle(r.application, path, handler)
 	r.Router.Handler(method, path, h)
 }
 
@@ -145,7 +145,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			txn := r.application.StartTransaction("NotFound")
 			defer txn.End()
 
-			req = newrelic.RequestWithTransactionContext(req, txn)
+			req = oldfritter.RequestWithTransactionContext(req, txn)
 
 			txn.SetWebRequestHTTP(req)
 			w = txn.SetWebResponse(w)

@@ -11,13 +11,13 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/integrationsupport"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/integrationsupport"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 var (
-	pkg = "github.com/newrelic/go-agent/v3/integrations/nrgin"
+	pkg = "github.com/oldfritter/go-agent/v3/integrations/nrgin"
 )
 
 func hello(c *gin.Context) {
@@ -182,7 +182,7 @@ func TestContextTransaction(t *testing.T) {
 }
 
 func TestNilApp(t *testing.T) {
-	var app *newrelic.Application
+	var app *oldfritter.Application
 	router := gin.Default()
 	router.Use(Middleware(app))
 	router.GET("/hello", hello)

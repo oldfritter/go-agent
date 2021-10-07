@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func TestNewConfig(t *testing.T) {
@@ -25,7 +25,7 @@ func TestNewConfig(t *testing.T) {
 			return ""
 		}
 	})
-	cfg := &newrelic.Config{}
+	cfg := &oldfritter.Config{}
 	opt(cfg)
 	if !cfg.ServerlessMode.Enabled {
 		t.Error(cfg.ServerlessMode.Enabled)

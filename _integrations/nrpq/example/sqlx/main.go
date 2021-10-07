@@ -14,10 +14,10 @@
 // Set up your driver
 //
 // If you are using one of our currently supported database drivers (see
-// https://docs.newrelic.com/docs/agents/go-agent/get-started/go-agent-compatibility-requirements#frameworks),
+// https://docs.oldfritter.com/docs/agents/go-agent/get-started/go-agent-compatibility-requirements#frameworks),
 // follow the instructions on installing the driver.
 //
-// As an example, for the `lib/pq` driver, you will use the newrelic
+// As an example, for the `lib/pq` driver, you will use the oldfritter
 // integration's driver in place of the postgres driver.  If your code is using
 // sqlx.Open with `lib/pq` like this:
 //
@@ -35,7 +35,7 @@
 //
 //	import (
 //		"github.com/jmoiron/sqlx"
-//		_ "github.com/newrelic/go-agent/_integrations/nrpq"
+//		_ "github.com/oldfritter/go-agent/_integrations/nrpq"
 //	)
 //
 //	func main() {
@@ -44,14 +44,14 @@
 //
 // If you are not using one of the supported database drivers, use the
 // `InstrumentSQLDriver`
-// (https://godoc.org/github.com/newrelic/go-agent#InstrumentSQLDriver) API.
+// (https://godoc.org/github.com/oldfritter/go-agent#InstrumentSQLDriver) API.
 // See
-// https://github.com/newrelic/go-agent/blob/master/_integrations/nrmysql/nrmysql.go
+// https://github.com/oldfritter/go-agent/blob/master/_integrations/nrmysql/nrmysql.go
 // for a full example.
 //
 // Add context to your database calls
 //
-// Next, you must provide a context containing a newrelic.Transaction to all
+// Next, you must provide a context containing a oldfritter.Transaction to all
 // methods on sqlx.DB, sqlx.NamedStmt, sqlx.Stmt, and sqlx.Tx that make a
 // database call.  For example, instead of the following:
 //
@@ -59,7 +59,7 @@
 //
 // Do this:
 //
-//	ctx := newrelic.NewContext(context.Background(), txn)
+//	ctx := oldfritter.NewContext(context.Background(), txn)
 //	err := db.GetContext(ctx, &jason, "SELECT * FROM person WHERE first_name=$1", "Jason")
 //
 package main
@@ -72,8 +72,8 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	newrelic "github.com/newrelic/go-agent"
-	_ "github.com/newrelic/go-agent/_integrations/nrpq"
+	oldfritter "github.com/oldfritter/go-agent"
+	_ "github.com/oldfritter/go-agent/_integrations/nrpq"
 )
 
 var schema = `
@@ -97,10 +97,10 @@ func mustGetEnv(key string) string {
 	panic(fmt.Sprintf("environment variable %s unset", key))
 }
 
-func createApp() newrelic.Application {
-	cfg := newrelic.NewConfig("SQLx", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
-	cfg.Logger = newrelic.NewDebugLogger(os.Stdout)
-	app, err := newrelic.NewApplication(cfg)
+func createApp() oldfritter.Application {
+	cfg := oldfritter.NewConfig("SQLx", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
+	cfg.Logger = oldfritter.NewDebugLogger(os.Stdout)
+	app, err := oldfritter.NewApplication(cfg)
 	if nil != err {
 		log.Fatalln(err)
 	}
@@ -118,7 +118,7 @@ func main() {
 	txn := app.StartTransaction("main", nil, nil)
 	defer txn.End()
 	// Add transaction to context
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	// Connect to database using the "nrpostgres" driver
 	db, err := sqlx.Connect("nrpostgres", "user=foo dbname=bar sslmode=disable")

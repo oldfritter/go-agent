@@ -10,9 +10,9 @@ import (
 	"testing"
 
 	"github.com/graphql-go/graphql"
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/integrationsupport"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/integrationsupport"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 var schema = func() graphql.Schema {
@@ -61,7 +61,7 @@ func TestExtensionNoTransaction(t *testing.T) {
 func TestExtensionWithTransaction(t *testing.T) {
 	app := integrationsupport.NewBasicTestApp()
 	txn := app.StartTransaction("query")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	query := `{ hello }`
 	params := graphql.Params{
@@ -101,7 +101,7 @@ func TestExtensionWithTransaction(t *testing.T) {
 func TestExtensionResolveError(t *testing.T) {
 	app := integrationsupport.NewBasicTestApp()
 	txn := app.StartTransaction("query")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	query := `{ hello errors }`
 	params := graphql.Params{
@@ -153,7 +153,7 @@ func TestExtensionResolveError(t *testing.T) {
 func TestExtensionParseError(t *testing.T) {
 	app := integrationsupport.NewBasicTestApp()
 	txn := app.StartTransaction("query")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	query := `purple`
 	params := graphql.Params{
@@ -190,7 +190,7 @@ func TestExtensionParseError(t *testing.T) {
 func TestExtensionValidationError(t *testing.T) {
 	app := integrationsupport.NewBasicTestApp()
 	txn := app.StartTransaction("query")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	query := `{ goodbye }`
 	params := graphql.Params{

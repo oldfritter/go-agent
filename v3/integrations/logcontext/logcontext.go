@@ -8,11 +8,11 @@
 // framework that does not already have a New Relic plugin for log decoration,
 // use this package to manually add logging context.
 //
-// See https://github.com/newrelic/newrelic-exporter-specs/tree/master/logging
+// See https://github.com/oldfritter/oldfritter-exporter-specs/tree/master/logging
 // for a complete specification.
 package logcontext
 
-import newrelic "github.com/newrelic/go-agent/v3/newrelic"
+import oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 
 // Keys used for logging context JSON.
 const (
@@ -40,7 +40,7 @@ func metadataMapField(m map[string]interface{}, key, val string) {
 // string fields are included in the map.  The specific key names facilitate
 // agent logs in context.  These keys are: "trace.id", "span.id",
 // "entity.name", "entity.type", "entity.guid", and "hostname".
-func AddLinkingMetadata(m map[string]interface{}, md newrelic.LinkingMetadata) {
+func AddLinkingMetadata(m map[string]interface{}, md oldfritter.LinkingMetadata) {
 	metadataMapField(m, KeyTraceID, md.TraceID)
 	metadataMapField(m, KeySpanID, md.SpanID)
 	metadataMapField(m, KeyEntityName, md.EntityName)

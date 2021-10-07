@@ -9,9 +9,9 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/internal"
-	"github.com/newrelic/go-agent/internal/integrationsupport"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal/integrationsupport"
 )
 
 func makeHandler(text string) http.Handler {
@@ -114,7 +114,7 @@ func TestRouteNotFound(t *testing.T) {
 }
 
 func TestNilApp(t *testing.T) {
-	var app newrelic.Application
+	var app oldfritter.Application
 	r := mux.NewRouter()
 	r.Handle("/alpha", makeHandler("alpha response"))
 	InstrumentRoutes(r, app)

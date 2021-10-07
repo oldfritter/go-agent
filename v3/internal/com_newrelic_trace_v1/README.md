@@ -1,10 +1,10 @@
-# com_newrelic_trace_v1
+# com_oldfritter_trace_v1
 
 To generate the `v1.pb.go` code, run the following from the top level
-`github.com/newrelic/go-agent` package:
+`github.com/oldfritter/go-agent` package:
 
 ```
-protoc --go_out=paths=source_relative,plugins=grpc:. v3/internal/com_newrelic_trace_v1/v1.proto
+protoc --go_out=paths=source_relative,plugins=grpc:. v3/internal/com_oldfritter_trace_v1/v1.proto
 ```
 
 Be mindful which version of `protoc-gen-go` you are using. Upgrade

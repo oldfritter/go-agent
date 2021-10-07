@@ -14,9 +14,9 @@ import (
 	"github.com/micro/go-micro/metadata"
 	"github.com/micro/go-micro/registry"
 	"github.com/micro/go-micro/server"
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/internal"
-	"github.com/newrelic/go-agent/internal/integrationsupport"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal/integrationsupport"
 )
 
 type nrWrapper struct {
@@ -25,11 +25,11 @@ type nrWrapper struct {
 
 var addrMap = make(map[string]string)
 
-func startExternal(ctx context.Context, procedure, host string) (context.Context, newrelic.ExternalSegment) {
-	var seg newrelic.ExternalSegment
-	if txn := newrelic.FromContext(ctx); nil != txn {
-		seg = newrelic.ExternalSegment{
-			StartTime: newrelic.StartSegmentNow(txn),
+func startExternal(ctx context.Context, procedure, host string) (context.Context, oldfritter.ExternalSegment) {
+	var seg oldfritter.ExternalSegment
+	if txn := oldfritter.FromContext(ctx); nil != txn {
+		seg = oldfritter.ExternalSegment{
+			StartTime: oldfritter.StartSegmentNow(txn),
 			Procedure: procedure,
 			Library:   "Micro",
 			Host:      host,
@@ -39,13 +39,13 @@ func startExternal(ctx context.Context, procedure, host string) (context.Context
 	return ctx, seg
 }
 
-func startMessage(ctx context.Context, topic string) (context.Context, *newrelic.MessageProducerSegment) {
-	var seg *newrelic.MessageProducerSegment
-	if txn := newrelic.FromContext(ctx); nil != txn {
-		seg = &newrelic.MessageProducerSegment{
-			StartTime:       newrelic.StartSegmentNow(txn),
+func startMessage(ctx context.Context, topic string) (context.Context, *oldfritter.MessageProducerSegment) {
+	var seg *oldfritter.MessageProducerSegment
+	if txn := oldfritter.FromContext(ctx); nil != txn {
+		seg = &oldfritter.MessageProducerSegment{
+			StartTime:       oldfritter.StartSegmentNow(txn),
 			Library:         "Micro",
-			DestinationType: newrelic.MessageTopic,
+			DestinationType: oldfritter.MessageTopic,
 			DestinationName: topic,
 		}
 		ctx = addDTPayloadToContext(ctx, txn)
@@ -53,12 +53,12 @@ func startMessage(ctx context.Context, topic string) (context.Context, *newrelic
 	return ctx, seg
 }
 
-func addDTPayloadToContext(ctx context.Context, txn newrelic.Transaction) context.Context {
+func addDTPayloadToContext(ctx context.Context, txn oldfritter.Transaction) context.Context {
 	payload := txn.CreateDistributedTracePayload()
 	if txt := payload.Text(); "" != txt {
 		md, _ := metadata.FromContext(ctx)
 		md = metadata.Copy(md)
-		md[newrelic.DistributedTracePayloadHeader] = txt
+		md[oldfritter.DistributedTracePayloadHeader] = txt
 		ctx = metadata.NewContext(ctx, md)
 	}
 	return ctx
@@ -105,9 +105,9 @@ func (n *nrWrapper) Call(ctx context.Context, req client.Request, rsp interface{
 // ClientWrapper wraps a Micro `client.Client`
 // (https://godoc.org/github.com/micro/go-micro/client#Client) instance.  External
 // segments will be created for each call to the client's `Call`, `Publish`, or
-// `Stream` methods.  The `newrelic.Transaction` must be put into the context
-// using `newrelic.NewContext`
-// (https://godoc.org/github.com/newrelic/go-agent#NewContext) when calling one
+// `Stream` methods.  The `oldfritter.Transaction` must be put into the context
+// using `oldfritter.NewContext`
+// (https://godoc.org/github.com/oldfritter/go-agent#NewContext) when calling one
 // of those methods.
 func ClientWrapper() client.Wrapper {
 	return func(c client.Client) client.Client {
@@ -118,9 +118,9 @@ func ClientWrapper() client.Wrapper {
 // CallWrapper wraps the `Call` method of a Micro `client.Client`
 // (https://godoc.org/github.com/micro/go-micro/client#Client) instance.
 // External segments will be created for each call to the client's `Call`
-// method.  The `newrelic.Transaction` must be put into the context using
-// `newrelic.NewContext`
-// (https://godoc.org/github.com/newrelic/go-agent#NewContext) when calling
+// method.  The `oldfritter.Transaction` must be put into the context using
+// `oldfritter.NewContext`
+// (https://godoc.org/github.com/oldfritter/go-agent#NewContext) when calling
 // `Call`.
 func CallWrapper() client.CallWrapper {
 	return func(cf client.CallFunc) client.CallFunc {
@@ -137,18 +137,18 @@ func CallWrapper() client.CallWrapper {
 //
 // This wrapper creates transactions for inbound calls.  The transaction is
 // added to the call context and can be accessed in your method handlers using
-// `newrelic.FromContext`
-// (https://godoc.org/github.com/newrelic/go-agent#FromContext).
+// `oldfritter.FromContext`
+// (https://godoc.org/github.com/oldfritter/go-agent#FromContext).
 //
 // When an error is returned and it is of type Micro `errors.Error`
 // (https://godoc.org/github.com/micro/go-micro/errors#Error), the error that
 // is recorded is based on the HTTP response code (found in the Code field).
 // Values above 400 or below 100 that are not in the IgnoreStatusCodes
-// (https://godoc.org/github.com/newrelic/go-agent#Config) configuration list
+// (https://godoc.org/github.com/oldfritter/go-agent#Config) configuration list
 // are recorded as errors. A 500 response code and corresponding error is
 // recorded when the error is of any other type. A 200 response code is
 // recorded if no error is returned.
-func HandlerWrapper(app newrelic.Application) server.HandlerWrapper {
+func HandlerWrapper(app oldfritter.Application) server.HandlerWrapper {
 	return func(fn server.HandlerFunc) server.HandlerFunc {
 		if app == nil {
 			return fn
@@ -156,7 +156,7 @@ func HandlerWrapper(app newrelic.Application) server.HandlerWrapper {
 		return func(ctx context.Context, req server.Request, rsp interface{}) error {
 			txn := startWebTransaction(ctx, app, req)
 			defer txn.End()
-			err := fn(newrelic.NewContext(ctx, txn), req, rsp)
+			err := fn(oldfritter.NewContext(ctx, txn), req, rsp)
 			var code int
 			if err != nil {
 				if t, ok := err.(*errors.Error); ok {
@@ -178,8 +178,8 @@ func HandlerWrapper(app newrelic.Application) server.HandlerWrapper {
 //
 // This wrapper creates background transactions for inbound calls.  The
 // transaction is added to the subscriber context and can be accessed in your
-// subscriber handlers using `newrelic.FromContext`
-// (https://godoc.org/github.com/newrelic/go-agent#FromContext).
+// subscriber handlers using `oldfritter.FromContext`
+// (https://godoc.org/github.com/oldfritter/go-agent#FromContext).
 //
 // The attribute `"message.routingKey"` is added to the transaction and will
 // appear on transaction events, transaction traces, error events, and error
@@ -187,7 +187,7 @@ func HandlerWrapper(app newrelic.Application) server.HandlerWrapper {
 // (https://godoc.org/github.com/micro/go-micro/server#Message).
 //
 // If a Subscriber returns an error, it will be recorded and reported.
-func SubscriberWrapper(app newrelic.Application) server.SubscriberWrapper {
+func SubscriberWrapper(app oldfritter.Application) server.SubscriberWrapper {
 	return func(fn server.SubscriberFunc) server.SubscriberFunc {
 		if app == nil {
 			return fn
@@ -195,7 +195,7 @@ func SubscriberWrapper(app newrelic.Application) server.SubscriberWrapper {
 		return func(ctx context.Context, m server.Message) (err error) {
 			namer := internal.MessageMetricKey{
 				Library:         "Micro",
-				DestinationType: string(newrelic.MessageTopic),
+				DestinationType: string(oldfritter.MessageTopic),
 				DestinationName: m.Topic(),
 				Consumer:        true,
 			}
@@ -204,9 +204,9 @@ func SubscriberWrapper(app newrelic.Application) server.SubscriberWrapper {
 			integrationsupport.AddAgentAttribute(txn, internal.AttributeMessageRoutingKey, m.Topic(), nil)
 			md, ok := metadata.FromContext(ctx)
 			if ok {
-				txn.AcceptDistributedTracePayload(newrelic.TransportHTTP, md[newrelic.DistributedTracePayloadHeader])
+				txn.AcceptDistributedTracePayload(oldfritter.TransportHTTP, md[oldfritter.DistributedTracePayloadHeader])
 			}
-			ctx = newrelic.NewContext(ctx, txn)
+			ctx = oldfritter.NewContext(ctx, txn)
 			err = fn(ctx, m)
 			if err != nil {
 				txn.NoticeError(err)
@@ -216,7 +216,7 @@ func SubscriberWrapper(app newrelic.Application) server.SubscriberWrapper {
 	}
 }
 
-func startWebTransaction(ctx context.Context, app newrelic.Application, req server.Request) newrelic.Transaction {
+func startWebTransaction(ctx context.Context, app oldfritter.Application, req server.Request) oldfritter.Transaction {
 	var hdrs http.Header
 	if md, ok := metadata.FromContext(ctx); ok {
 		hdrs = make(http.Header, len(md))
@@ -231,7 +231,7 @@ func startWebTransaction(ctx context.Context, app newrelic.Application, req serv
 		Path:   req.Endpoint(),
 	}
 
-	webReq := newrelic.NewStaticWebRequest(hdrs, u, req.Method(), newrelic.TransportHTTP)
+	webReq := oldfritter.NewStaticWebRequest(hdrs, u, req.Method(), oldfritter.TransportHTTP)
 	txn.SetWebRequest(webReq)
 
 	return txn

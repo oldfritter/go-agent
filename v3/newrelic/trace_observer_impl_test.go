@@ -4,7 +4,7 @@
 // +build go1.9
 // This build tag is necessary because Infinite Tracing is only supported for Go version 1.9 and up
 
-package newrelic
+package oldfritter
 
 import (
 	"context"
@@ -21,9 +21,9 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/test/bufconn"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	v1 "github.com/newrelic/go-agent/v3/internal/com_newrelic_trace_v1"
-	"github.com/newrelic/go-agent/v3/internal/logger"
+	"github.com/oldfritter/go-agent/v3/internal"
+	v1 "github.com/oldfritter/go-agent/v3/internal/com_oldfritter_trace_v1"
+	"github.com/oldfritter/go-agent/v3/internal/logger"
 )
 
 // This file contains helper functions for Trace Observer tests

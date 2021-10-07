@@ -13,8 +13,8 @@ import (
 
 	// 1. Instead of importing github.com/snowflakedb/gosnowflake, import the
 	// nrsnowflake integration
-	_ "github.com/newrelic/go-agent/v3/integrations/nrsnowflake"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	_ "github.com/oldfritter/go-agent/v3/integrations/nrsnowflake"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func main() {
@@ -24,10 +24,10 @@ func main() {
 		panic(err)
 	}
 
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("Snowflake app"),
-		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-		newrelic.ConfigDebugLogger(os.Stdout),
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("Snowflake app"),
+		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		oldfritter.ConfigDebugLogger(os.Stdout),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -38,7 +38,7 @@ func main() {
 	txn := app.StartTransaction("snowflakeQuery")
 	defer txn.End()
 	// 3. Add the transaction to the context
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	// 4. Call methods on the db using the context
 	row := db.QueryRowContext(ctx, "SELECT count(*) from tables")

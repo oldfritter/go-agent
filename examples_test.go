@@ -3,7 +3,7 @@
 
 // +build go1.7
 
-package newrelic
+package oldfritter
 
 import (
 	"fmt"
@@ -144,7 +144,7 @@ func ExampleError() {
 	txn := currentTransaction()
 	username := "gopher"
 	e := fmt.Errorf("error unable to login user %s", username)
-	// txn.NoticeError(newrelic.Error{...}) instead of txn.NoticeError(e)
+	// txn.NoticeError(oldfritter.Error{...}) instead of txn.NoticeError(e)
 	// allows more control over error fields.  Class is how errors are
 	// aggregated and Attributes are added to the error event and error
 	// trace.

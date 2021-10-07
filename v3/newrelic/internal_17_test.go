@@ -1,14 +1,14 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"errors"
 	"net/http"
 	"testing"
 
-	"github.com/newrelic/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal"
 )
 
 func myErrorHandler(w http.ResponseWriter, req *http.Request) {
@@ -33,11 +33,11 @@ func TestWrapHandleFunc(t *testing.T) {
 	app.ExpectErrors(t, []internal.WantError{{
 		TxnName: "WebTransaction/Go/GET /hello",
 		Msg:     "my msg",
-		Klass:   "newrelic.myError",
+		Klass:   "oldfritter.myError",
 	}})
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.myError",
+			"error.class":     "oldfritter.myError",
 			"error.message":   "my msg",
 			"transactionName": "WebTransaction/Go/GET /hello",
 		},
@@ -75,11 +75,11 @@ func TestWrapHandle(t *testing.T) {
 	app.ExpectErrors(t, []internal.WantError{{
 		TxnName: "WebTransaction/Go/GET /hello",
 		Msg:     "my msg",
-		Klass:   "newrelic.myError",
+		Klass:   "oldfritter.myError",
 	}})
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.myError",
+			"error.class":     "oldfritter.myError",
 			"error.message":   "my msg",
 			"transactionName": "WebTransaction/Go/GET /hello",
 		},
@@ -167,7 +167,7 @@ func TestRoundTripper(t *testing.T) {
 	}, backgroundErrorMetrics...))
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":       "newrelic.myError",
+			"error.class":       "oldfritter.myError",
 			"error.message":     "my msg",
 			"spanId":            "4981855ad8681d0d",
 			"transactionName":   "OtherTransaction/Go/hello",
@@ -225,7 +225,7 @@ func TestRoundTripperOldCAT(t *testing.T) {
 	}, backgroundErrorMetrics...))
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":       "newrelic.myError",
+			"error.class":       "oldfritter.myError",
 			"error.message":     "my msg",
 			"transactionName":   "OtherTransaction/Go/hello",
 			"externalCallCount": 1,

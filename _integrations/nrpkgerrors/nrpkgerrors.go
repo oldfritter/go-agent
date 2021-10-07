@@ -11,8 +11,8 @@ package nrpkgerrors
 import (
 	"fmt"
 
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/internal"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/internal"
 	"github.com/pkg/errors"
 )
 
@@ -66,18 +66,18 @@ func (e nrpkgerror) StackTrace() []uintptr {
 }
 
 func (e nrpkgerror) ErrorClass() string {
-	if ec, ok := e.error.(newrelic.ErrorClasser); ok {
+	if ec, ok := e.error.(oldfritter.ErrorClasser); ok {
 		return ec.ErrorClass()
 	}
 	cause := errors.Cause(e.error)
-	if ec, ok := cause.(newrelic.ErrorClasser); ok {
+	if ec, ok := cause.(oldfritter.ErrorClasser); ok {
 		return ec.ErrorClass()
 	}
 	return fmt.Sprintf("%T", cause)
 }
 
 // Wrap wraps a pkg/errors error so that when noticed by
-// newrelic.Transaction.NoticeError it gives an improved stacktrace and class
+// oldfritter.Transaction.NoticeError it gives an improved stacktrace and class
 // type.
 func Wrap(e error) error {
 	return nrpkgerror{e}

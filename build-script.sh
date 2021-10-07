@@ -24,7 +24,7 @@ for dir in $DIRS; do
   cd "$pwd/$dir"
 
   if [ -f "go.mod" ]; then
-    go mod edit -replace github.com/newrelic/go-agent/v3=$pwd/v3
+    go mod edit -replace github.com/oldfritter/go-agent/v3=$pwd/v3
   fi
 
   # go get is necessary for testing v2 integrations since they do not have
@@ -32,7 +32,7 @@ for dir in $DIRS; do
   if [[ $dir =~ "_integrations" ]]; then
     go get -t ./...
   fi
-  # avoid testing v3 code when testing v2 newrelic package
+  # avoid testing v3 code when testing v2 oldfritter package
   if [ $dir == "." ]; then
     rm -rf v3/
   else

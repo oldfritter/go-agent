@@ -8,6 +8,6 @@
 // https://github.com/openzipkin/b3-propagation) to outgoing requests.
 //
 // Distributed tracing must be enabled
-// (https://docs.newrelic.com/docs/understand-dependencies/distributed-tracing/enable-configure/enable-distributed-tracing)
+// (https://docs.oldfritter.com/docs/understand-dependencies/distributed-tracing/enable-configure/enable-distributed-tracing)
 // for B3 headers to be added properly.
 package nrb3

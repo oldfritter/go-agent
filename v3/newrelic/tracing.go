@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"bytes"
@@ -11,15 +11,15 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/cat"
-	"github.com/newrelic/go-agent/v3/internal/jsonx"
-	"github.com/newrelic/go-agent/v3/internal/logger"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/cat"
+	"github.com/oldfritter/go-agent/v3/internal/jsonx"
+	"github.com/oldfritter/go-agent/v3/internal/logger"
 )
 
 // txnEvent represents a transaction.
 // https://source.datanerd.us/agents/agent-specs/blob/master/Transaction-Events-PORTED.md
-// https://newrelic.atlassian.net/wiki/display/eng/Agent+Support+for+Synthetics%3A+Forced+Transaction+Traces+and+Analytic+Events
+// https://oldfritter.atlassian.net/wiki/display/eng/Agent+Support+for+Synthetics%3A+Forced+Transaction+Traces+and+Analytic+Events
 type txnEvent struct {
 	FinalName          string
 	Start              time.Time
@@ -408,7 +408,7 @@ var (
 	// errSegmentOrder indicates that segments have been ended in the
 	// incorrect order.
 	errSegmentOrder = errors.New(`improper segment use: segments must be ended in "last started first ended" order: ` +
-		`use https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction.NewGoroutine to use the transaction in multiple goroutines`)
+		`use https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction.NewGoroutine to use the transaction in multiple goroutines`)
 )
 
 func endSegment(t *txnData, thread *tracingThread, start segmentStartTime, now time.Time) (segmentEnd, error) {

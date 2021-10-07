@@ -10,15 +10,15 @@ import (
 	"time"
 
 	redis "github.com/go-redis/redis/v7"
-	nrredis "github.com/newrelic/go-agent/v3/integrations/nrredis-v7"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	nrredis "github.com/oldfritter/go-agent/v3/integrations/nrredis-v7"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func main() {
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("Redis App"),
-		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-		newrelic.ConfigDebugLogger(os.Stdout),
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("Redis App"),
+		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		oldfritter.ConfigDebugLogger(os.Stdout),
 	)
 	if nil != err {
 		panic(err)
@@ -40,7 +40,7 @@ func main() {
 	// Step 2: Ensure that all client calls contain a context which includes
 	// the transaction.
 	//
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	pipe := client.WithContext(ctx).Pipeline()
 	incr := pipe.Incr("pipeline_counter")
 	pipe.Expire("pipeline_counter", time.Hour)

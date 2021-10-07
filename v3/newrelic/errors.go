@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 // stackTracer can be implemented by errors to provide a stack trace when using
 // Transaction.NoticeError.
@@ -40,7 +40,7 @@ type Error struct {
 	Stack []uintptr
 }
 
-// NewStackTrace generates a stack trace for the newrelic.Error struct's Stack
+// NewStackTrace generates a stack trace for the oldfritter.Error struct's Stack
 // field.
 func NewStackTrace() []uintptr {
 	st := getStackTrace()

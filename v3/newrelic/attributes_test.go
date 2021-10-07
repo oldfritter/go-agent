@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"bytes"
@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/newrelic/go-agent/v3/internal/crossagent"
+	"github.com/oldfritter/go-agent/v3/internal/crossagent"
 )
 
 type AttributeTestcase struct {
@@ -369,7 +369,7 @@ func TestRequestAgentAttributesEmptyInput(t *testing.T) {
 }
 
 func TestRequestAgentAttributesPresent(t *testing.T) {
-	req, err := http.NewRequest("GET", "http://www.newrelic.com?remove=me", nil)
+	req, err := http.NewRequest("GET", "http://www.oldfritter.com?remove=me", nil)
 	if nil != err {
 		t.Fatal(err)
 	}
@@ -394,7 +394,7 @@ func TestRequestAgentAttributesPresent(t *testing.T) {
 		"request.headers.referer":       "http://www.example.com",
 		"request.headers.contentLength": 123,
 		"request.method":                "GET",
-		"request.uri":                   "http://www.newrelic.com",
+		"request.uri":                   "http://www.oldfritter.com",
 		"request.headers.accept":        "the-accept",
 	})
 }
@@ -402,7 +402,7 @@ func TestRequestAgentAttributesPresent(t *testing.T) {
 func BenchmarkAgentAttributes(b *testing.B) {
 	cfg := createAttributeConfig(config{Config: defaultConfig()}, true)
 
-	req, err := http.NewRequest("GET", "http://www.newrelic.com", nil)
+	req, err := http.NewRequest("GET", "http://www.oldfritter.com", nil)
 	if nil != err {
 		b.Fatal(err)
 	}
@@ -410,7 +410,7 @@ func BenchmarkAgentAttributes(b *testing.B) {
 	req.Header.Set("Accept", "zap")
 	req.Header.Set("Content-Type", "zap")
 	req.Header.Set("User-Agent", "zap")
-	req.Header.Set("Referer", "http://www.newrelic.com")
+	req.Header.Set("Referer", "http://www.oldfritter.com")
 	req.Header.Set("Content-Length", "123")
 
 	req.Host = "zap"

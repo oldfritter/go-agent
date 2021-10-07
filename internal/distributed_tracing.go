@@ -109,13 +109,13 @@ func (p Payload) text(v distTraceVersion) []byte {
 	return js
 }
 
-// Text implements newrelic.DistributedTracePayload.
+// Text implements oldfritter.DistributedTracePayload.
 func (p Payload) Text() string {
 	t := p.text(currentDistTraceVersion)
 	return string(t)
 }
 
-// HTTPSafe implements newrelic.DistributedTracePayload.
+// HTTPSafe implements oldfritter.DistributedTracePayload.
 func (p Payload) HTTPSafe() string {
 	t := p.text(currentDistTraceVersion)
 	return base64.StdEncoding.EncodeToString(t)

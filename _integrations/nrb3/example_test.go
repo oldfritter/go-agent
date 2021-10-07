@@ -9,12 +9,12 @@ import (
 	"net/http"
 	"os"
 
-	newrelic "github.com/newrelic/go-agent"
+	oldfritter "github.com/oldfritter/go-agent"
 	"github.com/openzipkin/zipkin-go"
 	reporterhttp "github.com/openzipkin/zipkin-go/reporter/http"
 )
 
-func currentTxn() newrelic.Transaction {
+func currentTxn() oldfritter.Transaction {
 	return nil
 }
 
@@ -35,7 +35,7 @@ func ExampleNewRoundTripper() {
 
 	// Be sure to add the transaction to the request context.  This step is
 	// required.
-	req = newrelic.RequestWithTransactionContext(req, txn)
+	req = oldfritter.RequestWithTransactionContext(req, txn)
 	resp, err := client.Do(req)
 	if nil != err {
 		log.Fatalln(err)
@@ -58,7 +58,7 @@ func Example_zipkinReporter() {
 	//    reporterhttp "github.com/openzipkin/zipkin-go/reporter/http"
 	// )
 	reporter := reporterhttp.NewReporter(
-		"https://trace-api.newrelic.com/trace/v1",
+		"https://trace-api.oldfritter.com/trace/v1",
 		reporterhttp.RequestCallback(func(req *http.Request) {
 			req.Header.Add("X-Insert-Key", os.Getenv("NEW_RELIC_API_KEY"))
 			req.Header.Add("Data-Format", "zipkin")

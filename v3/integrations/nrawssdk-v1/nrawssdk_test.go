@@ -18,10 +18,10 @@ import (
 	"github.com/aws/aws-sdk-go/private/protocol/rest"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/lambda"
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/awssupport"
-	"github.com/newrelic/go-agent/v3/internal/integrationsupport"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/awssupport"
+	"github.com/oldfritter/go-agent/v3/internal/integrationsupport"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func testApp() integrationsupport.ExpectApp {
@@ -187,7 +187,7 @@ func TestInstrumentRequestExternal(t *testing.T) {
 
 	req, out := client.InvokeRequest(input)
 	InstrumentHandlers(&req.Handlers)
-	req.HTTPRequest = newrelic.RequestWithTransactionContext(req.HTTPRequest, txn)
+	req.HTTPRequest = oldfritter.RequestWithTransactionContext(req.HTTPRequest, txn)
 
 	err := req.Send()
 	if nil != err {
@@ -215,7 +215,7 @@ func TestInstrumentRequestDatastore(t *testing.T) {
 
 	req, _ := client.DescribeTableRequest(input)
 	InstrumentHandlers(&req.Handlers)
-	req.HTTPRequest = newrelic.RequestWithTransactionContext(req.HTTPRequest, txn)
+	req.HTTPRequest = oldfritter.RequestWithTransactionContext(req.HTTPRequest, txn)
 
 	err := req.Send()
 	if nil != err {
@@ -283,7 +283,7 @@ func TestInstrumentSessionExternal(t *testing.T) {
 	}
 
 	req, out := client.InvokeRequest(input)
-	req.HTTPRequest = newrelic.RequestWithTransactionContext(req.HTTPRequest, txn)
+	req.HTTPRequest = oldfritter.RequestWithTransactionContext(req.HTTPRequest, txn)
 
 	err := req.Send()
 	if nil != err {
@@ -313,7 +313,7 @@ func TestInstrumentSessionDatastore(t *testing.T) {
 	}
 
 	req, _ := client.DescribeTableRequest(input)
-	req.HTTPRequest = newrelic.RequestWithTransactionContext(req.HTTPRequest, txn)
+	req.HTTPRequest = oldfritter.RequestWithTransactionContext(req.HTTPRequest, txn)
 
 	err := req.Send()
 	if nil != err {
@@ -341,7 +341,7 @@ func TestInstrumentSessionExternalNoTxn(t *testing.T) {
 	}
 
 	req, out := client.InvokeRequest(input)
-	req.HTTPRequest = newrelic.RequestWithTransactionContext(req.HTTPRequest, nil)
+	req.HTTPRequest = oldfritter.RequestWithTransactionContext(req.HTTPRequest, nil)
 
 	err := req.Send()
 	if nil != err {
@@ -362,7 +362,7 @@ func TestInstrumentSessionDatastoreNoTxn(t *testing.T) {
 	}
 
 	req, _ := client.DescribeTableRequest(input)
-	req.HTTPRequest = newrelic.RequestWithTransactionContext(req.HTTPRequest, nil)
+	req.HTTPRequest = oldfritter.RequestWithTransactionContext(req.HTTPRequest, nil)
 
 	err := req.Send()
 	if nil != err {
@@ -479,7 +479,7 @@ func TestRetrySend(t *testing.T) {
 
 	req, out := client.InvokeRequest(input)
 	InstrumentHandlers(&req.Handlers)
-	req.HTTPRequest = newrelic.RequestWithTransactionContext(req.HTTPRequest, txn)
+	req.HTTPRequest = oldfritter.RequestWithTransactionContext(req.HTTPRequest, txn)
 
 	err := req.Send()
 	if nil != err {
@@ -511,7 +511,7 @@ func TestRequestSentTwice(t *testing.T) {
 
 	req, out := client.InvokeRequest(input)
 	InstrumentHandlers(&req.Handlers)
-	req.HTTPRequest = newrelic.RequestWithTransactionContext(req.HTTPRequest, txn)
+	req.HTTPRequest = oldfritter.RequestWithTransactionContext(req.HTTPRequest, txn)
 
 	firstErr := req.Send()
 	if nil != firstErr {
@@ -575,7 +575,7 @@ func TestNoRequestIDFound(t *testing.T) {
 
 	req, out := client.InvokeRequest(input)
 	InstrumentHandlers(&req.Handlers)
-	req.HTTPRequest = newrelic.RequestWithTransactionContext(req.HTTPRequest, txn)
+	req.HTTPRequest = oldfritter.RequestWithTransactionContext(req.HTTPRequest, txn)
 
 	err := req.Send()
 	if nil != err {

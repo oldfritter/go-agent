@@ -1,7 +1,7 @@
 # Migration Guide - 3.0
 
-This guide is intended to help with upgrading from version 2.x (`"github.com/newrelic/go-agent"`) to version 3.x (`"github.com/newrelic/go-agent/v3/newrelic"`). This information can also be found on
-[our documentation website](https://docs.newrelic.com/docs/agents/go-agent/installation/update-go-agent).
+This guide is intended to help with upgrading from version 2.x (`"github.com/oldfritter/go-agent"`) to version 3.x (`"github.com/oldfritter/go-agent/v3/oldfritter"`). This information can also be found on
+[our documentation website](https://docs.oldfritter.com/docs/agents/go-agent/installation/update-go-agent).
 
 * [List of all changes](#all-changes)
 * [Checklist for upgrading](#checklist-for-upgrading)
@@ -15,8 +15,8 @@ The minimum required Go version to run the New Relic Go Agent is now 1.7.
 ### Package names
 
 The agent has been placed in a new `/v3` directory, leaving the top level directory with the now deprecated v2 agent. More specifically:
-* The `newrelic` package has moved from `"github.com/newrelic/go-agent"` to `"github.com/newrelic/go-agent/v3/newrelic"`. This makes named imports unnecessary.
-* The underscore in the `_integrations` directory is removed.  Thus the `"github.com/newrelic/go-agent/_integrations/nrlogrus"` import path becomes `"github.com/newrelic/go-agent/v3/integrations/nrlogrus"`.  Some of the integration packages have had other changes as well:
+* The `oldfritter` package has moved from `"github.com/oldfritter/go-agent"` to `"github.com/oldfritter/go-agent/v3/oldfritter"`. This makes named imports unnecessary.
+* The underscore in the `_integrations` directory is removed.  Thus the `"github.com/oldfritter/go-agent/_integrations/nrlogrus"` import path becomes `"github.com/oldfritter/go-agent/v3/integrations/nrlogrus"`.  Some of the integration packages have had other changes as well:
   * `_integrations/nrawssdk/v1` moves to `v3/integrations/nrawssdk-v1`
   * `_integrations/nrawssdk/v2` moves to `v3/integrations/nrawssdk-v2`
   * `_integrations/nrgin/v1` moves to `v3/integrations/nrgin`
@@ -26,16 +26,16 @@ The agent has been placed in a new `/v3` directory, leaving the top level direct
 
 ### Transaction Name Changes
 
-Transaction names created by [`WrapHandle`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#WrapHandle),
-[`WrapHandleFunc`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#WrapHandleFunc),
-[nrecho-v3](https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrecho-v3),
-[nrecho-v4](https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrecho-v4),
-[nrgorilla](https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrgorilla), and
-[nrgin](https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrgin) now
+Transaction names created by [`WrapHandle`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#WrapHandle),
+[`WrapHandleFunc`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#WrapHandleFunc),
+[nrecho-v3](https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrecho-v3),
+[nrecho-v4](https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrecho-v4),
+[nrgorilla](https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrgorilla), and
+[nrgin](https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrgin) now
 include the HTTP method.  For example, the following code:
 
 ```go
-http.HandleFunc(newrelic.WrapHandleFunc(app, "/users", usersHandler))
+http.HandleFunc(oldfritter.WrapHandleFunc(app, "/users", usersHandler))
 ```
 
 now creates a metric called `WebTransaction/Go/GET /users` instead of
@@ -45,30 +45,30 @@ now creates a metric called `WebTransaction/Go/GET /users` instead of
 
 ### Go modules
 
-We have added go module support. The top level `"github.com/newrelic/go-agent/v3/newrelic"` package now has a `go.mod` file. Separate `go.mod` files are also included with each integration in the integrations directory.
+We have added go module support. The top level `"github.com/oldfritter/go-agent/v3/oldfritter"` package now has a `go.mod` file. Separate `go.mod` files are also included with each integration in the integrations directory.
 
 ### Configuration
 
-`NewConfig` was removed and the [`NewApplication`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#NewApplication) signature has changed to:
+`NewConfig` was removed and the [`NewApplication`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#NewApplication) signature has changed to:
 
 ```go
 func NewApplication(opts ...ConfigOption) (*Application, error)
 `````
 
-New [`ConfigOption`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#ConfigOption) functions are provided to modify the [`Config`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Config). Here's what your Application creation will look like:
+New [`ConfigOption`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#ConfigOption) functions are provided to modify the [`Config`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Config). Here's what your Application creation will look like:
 
 ```go
-app, err := newrelic.NewApplication(
-    newrelic.ConfigAppName("My Application"),
-    newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+app, err := oldfritter.NewApplication(
+    oldfritter.ConfigAppName("My Application"),
+    oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
 )
 ```
 
-A complete list of `ConfigOption`s can be found in the [Go Docs](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#ConfigOption).
+A complete list of `ConfigOption`s can be found in the [Go Docs](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#ConfigOption).
 
 ### Config.TransactionTracer
 
-The location of two [`Config`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Config) fields have been moved. The `Config.TransactionTracer.SegmentThreshold` field has moved to `Config.TransactionTracer.Segments.Threshold` and the  `Config.TransactionTracer.StackTraceThreshold` field has moved to to `Config.TransactionTracer.Segments.StackTraceThreshold`.
+The location of two [`Config`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Config) fields have been moved. The `Config.TransactionTracer.SegmentThreshold` field has moved to `Config.TransactionTracer.Segments.Threshold` and the  `Config.TransactionTracer.StackTraceThreshold` field has moved to to `Config.TransactionTracer.Segments.StackTraceThreshold`.
 
 ###  Remove API error return values
 
@@ -94,7 +94,7 @@ func (app *Application) RecordCustomMetric(name string, value float64) {...}
 
 ### `Application.StartTransaction` signature change
 
-The signature of [`Application.StartTransaction`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Application.StartTransaction)
+The signature of [`Application.StartTransaction`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Application.StartTransaction)
 has changed to no longer take a `http.ResponseWriter` or `*http.Request`. The new signature just takes a string for
 the transaction name:
 
@@ -122,7 +122,7 @@ txn.SetWebRequestHTTP(req)
 
 ### Application and Transaction
 
-[`Application`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Application) and [`Transaction`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction) have changed from interfaces to structs. All methods on these types have pointer receivers. Methods on these types are now nil-safe. References to these types in your code will need a pointer added. See the [checklist](#checklist-for-upgrading) for examples.
+[`Application`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Application) and [`Transaction`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction) have changed from interfaces to structs. All methods on these types have pointer receivers. Methods on these types are now nil-safe. References to these types in your code will need a pointer added. See the [checklist](#checklist-for-upgrading) for examples.
 
 ### Renamed attributes
 
@@ -141,43 +141,43 @@ This version introduces a new configuration option, `Config.ErrorCollector.Recor
 
 ### New config option for getting data from environment variables
 
-Along with the new format for configuring an application, there is now an option to populate the configuration from environment variables. The full list of environment variables that are considered are included in the [Go Docs](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#ConfigFromEnvironment). The new configuration function is used as follows:
+Along with the new format for configuring an application, there is now an option to populate the configuration from environment variables. The full list of environment variables that are considered are included in the [Go Docs](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#ConfigFromEnvironment). The new configuration function is used as follows:
 
 ```go
-app, err := newrelic.NewApplication(newrelic.ConfigFromEnvironment())
+app, err := oldfritter.NewApplication(oldfritter.ConfigFromEnvironment())
 ```
 
 ### `Transaction` no longer implements `http.ResponseWriter`.
 
-As mentioned above, the [`Application.StartTransaction`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Application.StartTransaction) no longer takes a `http.ResponseWriter` or `http.Request`; instead, after you start the transaction, you can set the `ResponseWriter` by calling [`Transaction.SetWebResponse`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction.SetWebResponse):
+As mentioned above, the [`Application.StartTransaction`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Application.StartTransaction) no longer takes a `http.ResponseWriter` or `http.Request`; instead, after you start the transaction, you can set the `ResponseWriter` by calling [`Transaction.SetWebResponse`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction.SetWebResponse):
 
 ```go
 txn := h.App.StartTransaction("server-txn")
 writer = txn.SetWebResponse(writer)
 ```
 
-The [`Transaction.SetWebResponse`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction.SetWebResponse) method now returns a replacement `http.ResponseWriter` that implements the combination of `http.CloseNotifier`, `http.Flusher`, `http.Hijacker`, and `io.ReaderFrom` implemented by the input `http.ResponseWriter`.
+The [`Transaction.SetWebResponse`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction.SetWebResponse) method now returns a replacement `http.ResponseWriter` that implements the combination of `http.CloseNotifier`, `http.Flusher`, `http.Hijacker`, and `io.ReaderFrom` implemented by the input `http.ResponseWriter`.
 
 ### The `WebRequest` type has changed from an interface to a struct
 
-[`WebRequest`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#WebRequest) has changed from an interface to a struct, which can be created via code like this:
+[`WebRequest`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#WebRequest) has changed from an interface to a struct, which can be created via code like this:
 
 ```go
-webReq := newrelic.WebRequest{
+webReq := oldfritter.WebRequest{
 	Header:    hdrs,
 	URL:       url,
 	Method:    method,
-	Transport: newrelic.TransportHTTP,
+	Transport: oldfritter.TransportHTTP,
 }
 ```
 
-The [`Transaction.SetWebRequest`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction.SetWebRequest) method takes one of these structs.
+The [`Transaction.SetWebRequest`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction.SetWebRequest) method takes one of these structs.
 
 ### `SetWebRequestHTTP` method added
 
-In addition to the [`Transaction.SetWebRequest`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction.SetWebRequest) method discussed in the section above, we have added a method [`Transaction.SetWebRequestHTTP`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction.SetWebRequestHTTP) that takes an `*http.Request` and sets the appropriate fields.
+In addition to the [`Transaction.SetWebRequest`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction.SetWebRequest) method discussed in the section above, we have added a method [`Transaction.SetWebRequestHTTP`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction.SetWebRequestHTTP) that takes an `*http.Request` and sets the appropriate fields.
 
-As described in the [earlier section](#applicationstarttransaction-signature-change), this can be used in your code as part of the signature change of [`Application.StartTransaction`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Application.StartTransaction):
+As described in the [earlier section](#applicationstarttransaction-signature-change), this can be used in your code as part of the signature change of [`Application.StartTransaction`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Application.StartTransaction):
 
 ```go
 var writer http.ResponseWriter
@@ -189,25 +189,25 @@ txn.SetWebRequestHTTP(req)
 
 ### `NewRoundTripper`
 
-The transaction parameter to [`NewRoundTripper`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#NewRoundTripper) has been removed. The function signature is now:
+The transaction parameter to [`NewRoundTripper`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#NewRoundTripper) has been removed. The function signature is now:
 
 ```go
 func NewRoundTripper(t http.RoundTripper) http.RoundTripper
 ```
 
-[`NewRoundTripper`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#NewRoundTripper) will look for a transaction in the request's context using [`FromContext`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#FromContext).
+[`NewRoundTripper`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#NewRoundTripper) will look for a transaction in the request's context using [`FromContext`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#FromContext).
 
 ### Distributed Trace methods
 
 When manually creating or accepting Distributed Tracing payloads, the method signatures have changed.
 
-This [`Transaction.InsertDistributedTraceHeaders`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction.InsertDistributedTraceHeaders) method will insert the Distributed Tracing headers into the `http.Header` object passed as a parameter:
+This [`Transaction.InsertDistributedTraceHeaders`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction.InsertDistributedTraceHeaders) method will insert the Distributed Tracing headers into the `http.Header` object passed as a parameter:
 
 ```go
 func (txn *Transaction) InsertDistributedTraceHeaders(hdrs http.Header)
 ```
 
-This [`Transaction.AcceptDistributedTraceHeaders`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction.AcceptDistributedTraceHeaders) method takes a [`TransportType`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#TransportType) and an `http.Header` object that contains Distributed Tracing header(s) and links this transaction to other transactions specified in the headers:
+This [`Transaction.AcceptDistributedTraceHeaders`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction.AcceptDistributedTraceHeaders) method takes a [`TransportType`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#TransportType) and an `http.Header` object that contains Distributed Tracing header(s) and links this transaction to other transactions specified in the headers:
 
 ```go
 func (txn *Transaction) AcceptDistributedTraceHeaders(t TransportType, hdrs http.Header)
@@ -217,13 +217,13 @@ Additionally, the `DistributedTracePayload` struct is no longer needed and has b
 
 ### Several functions marked as deprecated
 
-The functions [`StartSegmentNow`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#StartSegmentNow) and [`StartSegment`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#StartSegment) have been marked as deprecated.  The preferred new method of starting a segment have moved to [`Transaction.StartSegmentNow`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction.StartSegmentNow) and [`Transaction.StartSegment`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction.StartSegment) respectively.
+The functions [`StartSegmentNow`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#StartSegmentNow) and [`StartSegment`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#StartSegment) have been marked as deprecated.  The preferred new method of starting a segment have moved to [`Transaction.StartSegmentNow`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction.StartSegmentNow) and [`Transaction.StartSegment`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction.StartSegment) respectively.
 
 ```go
 // DEPRECATED:
-startTime := newrelic.StartSegmentNow(txn)
+startTime := oldfritter.StartSegmentNow(txn)
 // and
-sgmt := newrelic.StartSegment(txn, "segment1")
+sgmt := oldfritter.StartSegment(txn, "segment1")
 ```
 
 ```go
@@ -233,39 +233,39 @@ startTime := txn.StartSegmentNow()
 sgmt := txn.StartSegment("segment1")
 ```
 
-Additionally the functions [`NewLogger`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#NewLogger) and [`NewDebugLogger`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#NewDebugLogger) have been marked as deprecated.  The preferred new method of configuring agent logging is using the [`ConfigInfoLogger`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#ConfigInfoLogger) and [`ConfigDebugLogger`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#ConfigDebugLogger) `ConfigOptions` respectively.
+Additionally the functions [`NewLogger`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#NewLogger) and [`NewDebugLogger`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#NewDebugLogger) have been marked as deprecated.  The preferred new method of configuring agent logging is using the [`ConfigInfoLogger`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#ConfigInfoLogger) and [`ConfigDebugLogger`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#ConfigDebugLogger) `ConfigOptions` respectively.
 
   ```go
   // DEPRECATED:
-  app, err := newrelic.NewApplication(
+  app, err := oldfritter.NewApplication(
       ...
-      func(cfg *newrelic.Config) {
-          cfg.Logger = newrelic.NewLogger(os.Stdout)
+      func(cfg *oldfritter.Config) {
+          cfg.Logger = oldfritter.NewLogger(os.Stdout)
       }
   )
 
   // or
 
-  app, err := newrelic.NewApplication(
+  app, err := oldfritter.NewApplication(
       ...
-      func(cfg *newrelic.Config) {
-          cfg.Logger = newrelic.NewDebugLogger(os.Stdout)
+      func(cfg *oldfritter.Config) {
+          cfg.Logger = oldfritter.NewDebugLogger(os.Stdout)
       }
   )
   ```
 
   ```go
   // NEW, PREFERRED WAY:
-  app, err := newrelic.NewApplication(
+  app, err := oldfritter.NewApplication(
       ...
-      newrelic.ConfigInfoLogger(os.Stdout),
+      oldfritter.ConfigInfoLogger(os.Stdout),
   )
 
   // or
 
-  app, err := newrelic.NewApplication(
+  app, err := oldfritter.NewApplication(
       ...
-      newrelic.ConfigDebugLogger(os.Stdout),
+      oldfritter.ConfigDebugLogger(os.Stdout),
   )
   ```
 
@@ -276,7 +276,7 @@ The interfaces `ErrorAttributer`, `ErrorClasser`, `StackTracer` are no longer ex
 ```go
 // This will no longer compile.
 type MyErrorType struct{}
-var _ newrelic.ErrorAttributer = MyErrorType{}
+var _ oldfritter.ErrorAttributer = MyErrorType{}
 ```
 
 ### Changed Distributed Tracing Constant
@@ -285,24 +285,24 @@ var _ newrelic.ErrorAttributer = MyErrorType{}
 
 ### `TransportType`
 
-[`TransportType`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#TransportType) type is changed from a struct to a string.
+[`TransportType`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#TransportType) type is changed from a struct to a string.
 
 ## Checklist for upgrading
 
 - [ ] Ensure your Go version is at least 1.7 (older versions are no longer supported).
 
-- [ ] Update imports. The v3.x agent now lives at "github.com/newrelic/go-agent/v3/newrelic" and no longer requires a named import.
+- [ ] Update imports. The v3.x agent now lives at "github.com/oldfritter/go-agent/v3/oldfritter" and no longer requires a named import.
 
   From:
 
   ```go
-  import newrelic "github.com/newrelic/go-agent"
+  import oldfritter "github.com/oldfritter/go-agent"
   ```
 
   To:
 
   ```go
-  import "github.com/newrelic/go-agent/v3/newrelic"
+  import "github.com/oldfritter/go-agent/v3/oldfritter"
   ```
 
   Additionally, if you are using any integrations, they too have moved. Each has its own version which matches the version of the 3rd party package it supports.
@@ -310,21 +310,21 @@ var _ newrelic.ErrorAttributer = MyErrorType{}
   From:
 
   ```go
-  import "github.com/newrelic/go-agent/_integrations/nrlogrus"
+  import "github.com/oldfritter/go-agent/_integrations/nrlogrus"
   ```
 
   To:
 
   ```go
-  import "github.com/newrelic/go-agent/v3/integrations/nrlogrus"
+  import "github.com/oldfritter/go-agent/v3/integrations/nrlogrus"
   ```
 
-- [ ] Update how you configure your application. The [`NewApplication`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#NewApplication) function now accepts [`ConfigOption`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#ConfigOption)s a list of which can be [found here](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#ConfigOption). If a [`ConfigOption`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#ConfigOption) is not available for your setting, create one yourself!
+- [ ] Update how you configure your application. The [`NewApplication`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#NewApplication) function now accepts [`ConfigOption`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#ConfigOption)s a list of which can be [found here](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#ConfigOption). If a [`ConfigOption`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#ConfigOption) is not available for your setting, create one yourself!
 
   From:
 
   ```go
-  cfg := newrelic.NewConfig("appName", "__license__")
+  cfg := oldfritter.NewConfig("appName", "__license__")
   cfg.CrossApplicationTracer.Enabled = false
   cfg.CustomInsightsEvents.Enabled = false
   cfg.ErrorCollector.IgnoreStatusCodes = []int{404, 418}
@@ -332,16 +332,16 @@ var _ newrelic.ErrorAttributer = MyErrorType{}
   cfg.DistributedTracer.Enabled = true
   cfg.TransactionTracer.Threshold.Duration = 2
   cfg.TransactionTracer.Threshold.IsApdexFailing = false
-  app, err := newrelic.NewApplication(cfg)
+  app, err := oldfritter.NewApplication(cfg)
   ````
 
   To:
 
   ```go
-  app, err := newrelic.NewApplication(
-      newrelic.ConfigAppName("appName"),
-      newrelic.ConfigLicense("__license__"),
-      func(cfg *newrelic.Config) {
+  app, err := oldfritter.NewApplication(
+      oldfritter.ConfigAppName("appName"),
+      oldfritter.ConfigLicense("__license__"),
+      func(cfg *oldfritter.Config) {
           cfg.CrossApplicationTracer.Enabled = false
           cfg.CustomInsightsEvents.Enabled = false
           cfg.ErrorCollector.IgnoreStatusCodes = []int{404, 418}
@@ -353,10 +353,10 @@ var _ newrelic.ErrorAttributer = MyErrorType{}
   )
   ```
 
-  You can use [`ConfigFromEnvironment`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#ConfigFromEnvironment) to provide configuration from environment variables:
+  You can use [`ConfigFromEnvironment`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#ConfigFromEnvironment) to provide configuration from environment variables:
 
   ```go
-  app, err := newrelic.NewApplication(newrelic.ConfigFromEnvironment())
+  app, err := oldfritter.NewApplication(oldfritter.ConfigFromEnvironment())
   ```
 
 - [ ] Update the Transaction Tracer configuration. Change the fields for the two changed configuration options.
@@ -366,9 +366,9 @@ var _ newrelic.ErrorAttributer = MyErrorType{}
   | `Config.TransactionTracer.SegmentThreshold`    | `Config.TransactionTracer.Segments.Threshold`           |
   | `Config.TransactionTracer.StackTraceThreshold` | `Config.TransactionTracer.Segments.StackTraceThreshold` |
 
-- [ ] If you choose, set the `Config.ErrorCollector.RecordPanics` configuration option. This is a new configuration option that controls whether or not a deferred [`Transaction.End`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction.End) will attempt to recover panics, record them as errors, and then re-panic them. Previously, the agent acted as though this option was set to `true`; with the new configuration it defaults to `false`.  If you wish to maintain the old agent behavior with regards to panics, be sure to set this to `true`.
+- [ ] If you choose, set the `Config.ErrorCollector.RecordPanics` configuration option. This is a new configuration option that controls whether or not a deferred [`Transaction.End`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction.End) will attempt to recover panics, record them as errors, and then re-panic them. Previously, the agent acted as though this option was set to `true`; with the new configuration it defaults to `false`.  If you wish to maintain the old agent behavior with regards to panics, be sure to set this to `true`.
 
-- [ ] Update code to use the new [`Application.StartTransaction`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Application.StartTransaction) signature.
+- [ ] Update code to use the new [`Application.StartTransaction`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Application.StartTransaction) signature.
 
   From:
 
@@ -398,9 +398,9 @@ var _ newrelic.ErrorAttributer = MyErrorType{}
   writer.WriteHeader(500)
   ```
 
-  Notice too that the [`Transaction`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction) no longer fulfills the `http.ResponseWriter` interface. Instead, the writer returned from [`Transaction.SetWebResponse`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction.SetWebResponse) should be used.
+  Notice too that the [`Transaction`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction) no longer fulfills the `http.ResponseWriter` interface. Instead, the writer returned from [`Transaction.SetWebResponse`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction.SetWebResponse) should be used.
 
-- [ ] Update code to no longer expect an error returned from these updated methods. Instead, check the agent logs for errors by using one of the [`ConfigLogger`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#ConfigLogger), [`ConfigInfoLogger`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#ConfigInfoLogger), or [`ConfigDebugLogger`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#ConfigDebugLogger) configuration options.
+- [ ] Update code to no longer expect an error returned from these updated methods. Instead, check the agent logs for errors by using one of the [`ConfigLogger`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#ConfigLogger), [`ConfigInfoLogger`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#ConfigInfoLogger), or [`ConfigDebugLogger`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#ConfigDebugLogger) configuration options.
 
   ```go
   func (txn *Transaction) End() {...}
@@ -420,41 +420,41 @@ var _ newrelic.ErrorAttributer = MyErrorType{}
   func (app *Application) RecordCustomMetric(name string, value float64) {...}
   ```
 
-- [ ] Update uses of [`Application`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Application) and [`Transaction`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction) to be pointers, instead of direct references.
+- [ ] Update uses of [`Application`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Application) and [`Transaction`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction) to be pointers, instead of direct references.
 
   From:
 
   ```go
-  func doSomething(txn newrelic.Transaction) {...}
-  func instrumentSomething(app newrelic.Application, h http.Handler, name string) {...}
+  func doSomething(txn oldfritter.Transaction) {...}
+  func instrumentSomething(app oldfritter.Application, h http.Handler, name string) {...}
   ```
 
   To:
 
   ```go
-  func doSomething(txn *newrelic.Transaction) {...}
-  func instrumentSomething(app *newrelic.Application, h http.Handler,  name string) {...}
+  func doSomething(txn *oldfritter.Transaction) {...}
+  func instrumentSomething(app *oldfritter.Application, h http.Handler,  name string) {...}
   ```
 
-- [ ] If you are using a [`WebRequest`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#WebRequest) type, it has changed from an interface to a struct. You can use it as follows:
+- [ ] If you are using a [`WebRequest`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#WebRequest) type, it has changed from an interface to a struct. You can use it as follows:
 
   ```go
-  wr := newrelic.WebRequest{
+  wr := oldfritter.WebRequest{
       Header:    r.Header,
       URL:       r.URL,
       Method:    r.Method,
-      Transport: newrelic.TransportHTTP,
+      Transport: oldfritter.TransportHTTP,
   }
   txn.SetWebRequest(wr)
   ```
 
-- [ ] Remove the `Transaction` parameter from the [`NewRoundTripper`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#NewRoundTripper), and instead ensure that the transaction is available via the request's context, using [`RequestWithTransactionContext`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#RequestWithTransactionContext).
+- [ ] Remove the `Transaction` parameter from the [`NewRoundTripper`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#NewRoundTripper), and instead ensure that the transaction is available via the request's context, using [`RequestWithTransactionContext`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#RequestWithTransactionContext).
 
   From:
 
   ```go
   client := &http.Client{}
-  client.Transport = newrelic.NewRoundTripper(txn, client.Transport)
+  client.Transport = oldfritter.NewRoundTripper(txn, client.Transport)
   req, _ := http.NewRequest("GET", "http://example.com", nil)
   client.Do(req)
   ```
@@ -463,20 +463,20 @@ var _ newrelic.ErrorAttributer = MyErrorType{}
 
   ```go
   client := &http.Client{}
-  client.Transport = newrelic.NewRoundTripper(client.Transport)
+  client.Transport = oldfritter.NewRoundTripper(client.Transport)
   req, _ := http.NewRequest("GET", "http://example.com", nil)
-  req = newrelic.RequestWithTransactionContext(req, txn)
+  req = oldfritter.RequestWithTransactionContext(req, txn)
   client.Do(req)
   ```
 
-- [ ] Update any usage of Distributed Tracing accept/create functions. The method for creating a distributed trace payload has changed to [`Transaction.InsertDistributedTraceHeaders`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction.InsertDistributedTraceHeaders). Instead of returning a payload, it now accepts an `http.Header` and inserts the header(s) directly into it.
+- [ ] Update any usage of Distributed Tracing accept/create functions. The method for creating a distributed trace payload has changed to [`Transaction.InsertDistributedTraceHeaders`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction.InsertDistributedTraceHeaders). Instead of returning a payload, it now accepts an `http.Header` and inserts the header(s) directly into it.
 
   From:
 
   ```go
   hdrs := http.Header{}
   payload := txn.CreateDistributedTracePayload()
-  hdrs.Set(newrelic.DistributedTracePayloadHeader, payload.Text())
+  hdrs.Set(oldfritter.DistributedTracePayloadHeader, payload.Text())
   ```
 
   To:
@@ -486,26 +486,26 @@ var _ newrelic.ErrorAttributer = MyErrorType{}
   txn.InsertDistributedTraceHeaders(hdrs)
   ```
 
-  Similarly, the method for accepting distributed trace payloads has changed to [`Transaction.AcceptDistributedTraceHeaders`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction.AcceptDistributedTraceHeaders). Instead of taking an interface representing the payload value, it now accepts an `http.Header` representing both the keys and values.
+  Similarly, the method for accepting distributed trace payloads has changed to [`Transaction.AcceptDistributedTraceHeaders`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction.AcceptDistributedTraceHeaders). Instead of taking an interface representing the payload value, it now accepts an `http.Header` representing both the keys and values.
 
   From:
 
   ```go
   hdrs := request.Headers()
-  payload := hdrs.Get(newrelic.DistributedTracePayloadHeader)
-  txn.AcceptDistributedTracePayload(newrelic.TransportKafka, payload)
+  payload := hdrs.Get(oldfritter.DistributedTracePayloadHeader)
+  txn.AcceptDistributedTracePayload(oldfritter.TransportKafka, payload)
   ```
 
   To:
 
   ```go
   hdrs := request.Headers()
-  txn.AcceptDistributedTraceHeaders(newrelic.TransportKafka, hdrs)
+  txn.AcceptDistributedTraceHeaders(oldfritter.TransportKafka, hdrs)
   ```
 
   Additionally, the `DistributedTracePayload` struct is no longer needed and has been removed from the agent's API. Instead, distributed tracing information is passed around as key/value pairs in the `http.Header` object. You should remove all references to `DistributedTracePayload` in your code.
 
-- [ ] Change `newrelic.DistributedTracePayloadHeader` to `newrelic.DistributedTraceNewRelicHeader`.
+- [ ] Change `oldfritter.DistributedTracePayloadHeader` to `oldfritter.DistributedTraceNewRelicHeader`.
 
 - [ ] If you have configured your application to **ignore** either attribute described [here](#renamed-attributes), you will now need to specify both the deprecated and the new attribute name in your configuration.
 
@@ -530,8 +530,8 @@ var _ newrelic.ErrorAttributer = MyErrorType{}
   }
   // or
   config.ErrorCollector.Attributes.Exclude = []string{
-      newrelic.AttributeResponseCode,
-      newrelic.AttributeRequestUserAgent,
+      oldfritter.AttributeResponseCode,
+      oldfritter.AttributeRequestUserAgent,
   }
   ```
 
@@ -546,32 +546,32 @@ var _ newrelic.ErrorAttributer = MyErrorType{}
   }
   // or
   config.ErrorCollector.Attributes.Exclude = []string{
-      newrelic.AttributeResponseCode,
-      newrelic.AttributeResponseCodeDeprecated,
-      newrelic.AttributeRequestUserAgent,
-      newrelic.AttributeRequestUserAgentDeprecated,
+      oldfritter.AttributeResponseCode,
+      oldfritter.AttributeResponseCodeDeprecated,
+      oldfritter.AttributeRequestUserAgent,
+      oldfritter.AttributeRequestUserAgentDeprecated,
   }
   ```
 
 - [ ] Update alerts and dashboards with new transaction names:
 
   Transaction names created by
-  [`WrapHandle`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#WrapHandle),
-  [`WrapHandleFunc`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#WrapHandleFunc),
-  [nrecho-v3](https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrecho-v3),
-  [nrecho-v4](https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrecho-v4),
-  [nrgorilla](https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrgorilla), and
-  [nrgin](https://godoc.org/github.com/newrelic/go-agent/v3/integrations/nrgin) now
+  [`WrapHandle`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#WrapHandle),
+  [`WrapHandleFunc`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#WrapHandleFunc),
+  [nrecho-v3](https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrecho-v3),
+  [nrecho-v4](https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrecho-v4),
+  [nrgorilla](https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrgorilla), and
+  [nrgin](https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/nrgin) now
   include the HTTP method.  Thus the transaction name `WebTransaction/Go/users` becomes `WebTransaction/Go/GET /users`.
 
-- [ ] Not required for upgrade, but recommended: update your usages of the now deprecated [`StartSegment`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#StartSegment) and [`StartSegmentNow`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#StartSegmentNow) to use the methods on the transaction: [`Transaction.StartSegment`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction.StartSegment) and [`Transaction.StartSegmentNow`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Trnasaction.StartSEgmentNow) respectively. This step is optional but highly recommended.
+- [ ] Not required for upgrade, but recommended: update your usages of the now deprecated [`StartSegment`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#StartSegment) and [`StartSegmentNow`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#StartSegmentNow) to use the methods on the transaction: [`Transaction.StartSegment`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction.StartSegment) and [`Transaction.StartSegmentNow`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Trnasaction.StartSEgmentNow) respectively. This step is optional but highly recommended.
 
   From:
 
   ```go
-  startTime := newrelic.StartSegmentNow(txn)
+  startTime := oldfritter.StartSegmentNow(txn)
   // and
-  sgmt := newrelic.StartSegment(txn, "segment1")
+  sgmt := oldfritter.StartSegment(txn, "segment1")
   ```
 
   To:
@@ -582,24 +582,24 @@ var _ newrelic.ErrorAttributer = MyErrorType{}
   sgmt := txn.StartSegment("segment1")
   ```
 
-- [ ] Not required for upgrade, but recommended: update your usages of the now deprecated [`NewLogger`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#NewLogger) and [`NewDebugLogger`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#NewDebugLogger).  Instead use the new `ConfigOption`s [`ConfigInfoLogger`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#ConfigInfoLogger) and [`ConfigDebugLogger`](https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#ConfigDebugLogger) respectively.
+- [ ] Not required for upgrade, but recommended: update your usages of the now deprecated [`NewLogger`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#NewLogger) and [`NewDebugLogger`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#NewDebugLogger).  Instead use the new `ConfigOption`s [`ConfigInfoLogger`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#ConfigInfoLogger) and [`ConfigDebugLogger`](https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#ConfigDebugLogger) respectively.
 
   From:
 
   ```go
-  app, err := newrelic.NewApplication(
+  app, err := oldfritter.NewApplication(
       ...
-      func(cfg *newrelic.Config) {
-          cfg.Logger = newrelic.NewLogger(os.Stdout)
+      func(cfg *oldfritter.Config) {
+          cfg.Logger = oldfritter.NewLogger(os.Stdout)
       }
   )
 
   // or
 
-  app, err := newrelic.NewApplication(
+  app, err := oldfritter.NewApplication(
       ...
-      func(cfg *newrelic.Config) {
-          cfg.Logger = newrelic.NewDebugLogger(os.Stdout)
+      func(cfg *oldfritter.Config) {
+          cfg.Logger = oldfritter.NewDebugLogger(os.Stdout)
       }
   )
   ```
@@ -607,15 +607,15 @@ var _ newrelic.ErrorAttributer = MyErrorType{}
   To:
 
   ```go
-  app, err := newrelic.NewApplication(
+  app, err := oldfritter.NewApplication(
       ...
-      newrelic.ConfigInfoLogger(os.Stdout),
+      oldfritter.ConfigInfoLogger(os.Stdout),
   )
 
   // or
 
-  app, err := newrelic.NewApplication(
+  app, err := oldfritter.NewApplication(
       ...
-      newrelic.ConfigDebugLogger(os.Stdout),
+      oldfritter.ConfigDebugLogger(os.Stdout),
   )
   ```

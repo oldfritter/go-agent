@@ -11,9 +11,9 @@ import (
 
 	"github.com/nats-io/nats-server/test"
 	"github.com/nats-io/nats.go"
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/internal"
-	"github.com/newrelic/go-agent/internal/integrationsupport"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal/integrationsupport"
 )
 
 func TestMain(m *testing.M) {
@@ -26,18 +26,18 @@ func testApp() integrationsupport.ExpectApp {
 	return integrationsupport.NewTestApp(integrationsupport.SampleEverythingReplyFn, cfgFn)
 }
 
-var cfgFn = func(cfg *newrelic.Config) {
+var cfgFn = func(cfg *oldfritter.Config) {
 	cfg.Enabled = false
 	cfg.DistributedTracer.Enabled = true
 	cfg.TransactionTracer.SegmentThreshold = 0
 	cfg.TransactionTracer.Threshold.IsApdexFailing = false
 	cfg.TransactionTracer.Threshold.Duration = 0
 	cfg.Attributes.Include = append(cfg.Attributes.Include,
-		newrelic.AttributeMessageRoutingKey,
-		newrelic.AttributeMessageQueueName,
-		newrelic.AttributeMessageExchangeType,
-		newrelic.AttributeMessageReplyTo,
-		newrelic.AttributeMessageCorrelationID,
+		oldfritter.AttributeMessageRoutingKey,
+		oldfritter.AttributeMessageQueueName,
+		oldfritter.AttributeMessageExchangeType,
+		oldfritter.AttributeMessageReplyTo,
+		oldfritter.AttributeMessageCorrelationID,
 	)
 }
 

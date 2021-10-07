@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/newrelic/go-agent/internal/crossagent"
+	"github.com/oldfritter/go-agent/internal/crossagent"
 )
 
 type AttributeTestcase struct {
@@ -376,7 +376,7 @@ func TestRequestAgentAttributesEmptyInput(t *testing.T) {
 }
 
 func TestRequestAgentAttributesPresent(t *testing.T) {
-	req, err := http.NewRequest("GET", "http://www.newrelic.com?remove=me", nil)
+	req, err := http.NewRequest("GET", "http://www.oldfritter.com?remove=me", nil)
 	if nil != err {
 		t.Fatal(err)
 	}
@@ -399,7 +399,7 @@ func TestRequestAgentAttributesPresent(t *testing.T) {
 		"request.headers.referer":       "http://www.example.com",
 		"request.headers.contentLength": 123,
 		"request.method":                "GET",
-		"request.uri":                   "http://www.newrelic.com",
+		"request.uri":                   "http://www.oldfritter.com",
 		"request.headers.accept":        "the-accept",
 	})
 }
@@ -407,7 +407,7 @@ func TestRequestAgentAttributesPresent(t *testing.T) {
 func BenchmarkAgentAttributes(b *testing.B) {
 	cfg := CreateAttributeConfig(sampleAttributeConfigInput, true)
 
-	req, err := http.NewRequest("GET", "http://www.newrelic.com", nil)
+	req, err := http.NewRequest("GET", "http://www.oldfritter.com", nil)
 	if nil != err {
 		b.Fatal(err)
 	}
@@ -416,7 +416,7 @@ func BenchmarkAgentAttributes(b *testing.B) {
 	req.Header.Set("Content-Type", "zap")
 	req.Header.Set("Host", "zap")
 	req.Header.Set("User-Agent", "zap")
-	req.Header.Set("Referer", "http://www.newrelic.com")
+	req.Header.Set("Referer", "http://www.oldfritter.com")
 	req.Header.Set("Content-Length", "123")
 
 	b.ResetTimer()

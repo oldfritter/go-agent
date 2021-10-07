@@ -7,30 +7,30 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func TestNilTransaction(t *testing.T) {
-	var txn *newrelic.Transaction
+	var txn *oldfritter.Transaction
 
-	AddAgentAttribute(txn, newrelic.AttributeHostDisplayName, "hostname", nil)
-	AddAgentSpanAttribute(txn, newrelic.SpanAttributeAWSOperation, "operation")
+	AddAgentAttribute(txn, oldfritter.AttributeHostDisplayName, "hostname", nil)
+	AddAgentSpanAttribute(txn, oldfritter.SpanAttributeAWSOperation, "operation")
 }
 
 func TestEmptyTransaction(t *testing.T) {
-	txn := &newrelic.Transaction{}
+	txn := &oldfritter.Transaction{}
 
-	AddAgentAttribute(txn, newrelic.AttributeHostDisplayName, "hostname", nil)
-	AddAgentSpanAttribute(txn, newrelic.SpanAttributeAWSOperation, "operation")
+	AddAgentAttribute(txn, oldfritter.AttributeHostDisplayName, "hostname", nil)
+	AddAgentSpanAttribute(txn, oldfritter.SpanAttributeAWSOperation, "operation")
 }
 
-func testApp(t *testing.T) *newrelic.Application {
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("appname"),
-		newrelic.ConfigLicense("0123456789012345678901234567890123456789"),
-		newrelic.ConfigEnabled(false),
-		newrelic.ConfigDistributedTracerEnabled(true),
+func testApp(t *testing.T) *oldfritter.Application {
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("appname"),
+		oldfritter.ConfigLicense("0123456789012345678901234567890123456789"),
+		oldfritter.ConfigEnabled(false),
+		oldfritter.ConfigDistributedTracerEnabled(true),
 	)
 	if nil != err {
 		t.Fatal(err)
@@ -45,16 +45,16 @@ func testApp(t *testing.T) *newrelic.Application {
 func TestSuccess(t *testing.T) {
 	app := testApp(t)
 	txn := app.StartTransaction("hello")
-	AddAgentAttribute(txn, newrelic.AttributeHostDisplayName, "hostname", nil)
+	AddAgentAttribute(txn, oldfritter.AttributeHostDisplayName, "hostname", nil)
 	segment := txn.StartSegment("mySegment")
-	AddAgentSpanAttribute(txn, newrelic.SpanAttributeAWSOperation, "operation")
+	AddAgentSpanAttribute(txn, oldfritter.SpanAttributeAWSOperation, "operation")
 	segment.End()
 	txn.End()
 
 	app.Private.(internal.Expect).ExpectTxnEvents(t, []internal.WantEvent{
 		{
 			AgentAttributes: map[string]interface{}{
-				newrelic.AttributeHostDisplayName: "hostname",
+				oldfritter.AttributeHostDisplayName: "hostname",
 			},
 		},
 	})
@@ -66,7 +66,7 @@ func TestSuccess(t *testing.T) {
 				"category": "generic",
 			},
 			AgentAttributes: map[string]interface{}{
-				newrelic.SpanAttributeAWSOperation: "operation",
+				oldfritter.SpanAttributeAWSOperation: "operation",
 			},
 		},
 		{
@@ -92,7 +92,7 @@ func TestConcurrentCalls(t *testing.T) {
 
 	var wg sync.WaitGroup
 	addAttr := func() {
-		AddAgentSpanAttribute(txn, newrelic.SpanAttributeAWSOperation, "operation")
+		AddAgentSpanAttribute(txn, oldfritter.SpanAttributeAWSOperation, "operation")
 		wg.Done()
 	}
 

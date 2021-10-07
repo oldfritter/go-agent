@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"errors"
@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/newrelic/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal"
 )
 
 type appData struct {
@@ -495,7 +495,7 @@ func newTransaction(thd *thread) *Transaction {
 	}
 }
 
-// StartTransaction implements newrelic.Application's StartTransaction.
+// StartTransaction implements oldfritter.Application's StartTransaction.
 func (app *app) StartTransaction(name string) *Transaction {
 	if nil == app {
 		return nil
@@ -510,7 +510,7 @@ var (
 	errCustomEventsRemoteDisabled = errors.New("custom events disabled by server")
 )
 
-// RecordCustomEvent implements newrelic.Application's RecordCustomEvent.
+// RecordCustomEvent implements oldfritter.Application's RecordCustomEvent.
 func (app *app) RecordCustomEvent(eventType string, params map[string]interface{}) error {
 	if nil == app {
 		return nil
@@ -549,7 +549,7 @@ var (
 	errMetricServerless = errors.New("custom metrics are not currently supported in serverless mode")
 )
 
-// RecordCustomMetric implements newrelic.Application's RecordCustomMetric.
+// RecordCustomMetric implements oldfritter.Application's RecordCustomMetric.
 func (app *app) RecordCustomMetric(name string, value float64) error {
 	if nil == app {
 		return nil

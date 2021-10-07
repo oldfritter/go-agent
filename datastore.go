@@ -1,11 +1,11 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 // DatastoreProduct is used to identify your datastore type in New Relic.  It
 // is used in the DatastoreSegment Product field.  See
-// https://github.com/newrelic/go-agent/blob/master/datastore.go for the full
+// https://github.com/oldfritter/go-agent/blob/master/datastore.go for the full
 // list of available DatastoreProducts.
 type DatastoreProduct string
 

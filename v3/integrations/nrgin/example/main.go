@@ -8,8 +8,8 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	nrgin "github.com/newrelic/go-agent/v3/integrations/nrgin"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	nrgin "github.com/oldfritter/go-agent/v3/integrations/nrgin"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func makeGinEndpoint(s string) func(*gin.Context) {
@@ -54,10 +54,10 @@ func endpointAccessTransaction(c *gin.Context) {
 }
 
 func main() {
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("Gin App"),
-		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-		newrelic.ConfigDebugLogger(os.Stdout),
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("Gin App"),
+		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		oldfritter.ConfigDebugLogger(os.Stdout),
 	)
 	if nil != err {
 		fmt.Println(err)

@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"bytes"
@@ -9,7 +9,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/newrelic/go-agent/v3/internal/jsonx"
+	"github.com/oldfritter/go-agent/v3/internal/jsonx"
 )
 
 // See https://source.datanerd.us/agents/agent-specs/blob/master/Transaction-Trace-LEGACY.md

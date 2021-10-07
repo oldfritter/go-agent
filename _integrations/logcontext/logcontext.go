@@ -3,7 +3,7 @@
 
 package logcontext
 
-import newrelic "github.com/newrelic/go-agent"
+import oldfritter "github.com/oldfritter/go-agent"
 
 // Keys used for logging context JSON.
 const (
@@ -31,7 +31,7 @@ func metadataMapField(m map[string]interface{}, key, val string) {
 // string fields are included in the map.  The specific key names facilitate
 // agent logs in context.  These keys are: "trace.id", "span.id",
 // "entity.name", "entity.type", "entity.guid", and "hostname".
-func AddLinkingMetadata(m map[string]interface{}, md newrelic.LinkingMetadata) {
+func AddLinkingMetadata(m map[string]interface{}, md oldfritter.LinkingMetadata) {
 	metadataMapField(m, KeyTraceID, md.TraceID)
 	metadataMapField(m, KeySpanID, md.SpanID)
 	metadataMapField(m, KeyEntityName, md.EntityName)

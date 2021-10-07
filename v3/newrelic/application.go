@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"os"
@@ -32,7 +32,7 @@ func (app *Application) StartTransaction(name string) *Transaction {
 // Keys must be less than 255 bytes.  The params map may not contain
 // more than 64 attributes.  For more information, and a set of
 // restricted keywords, see:
-// https://docs.newrelic.com/docs/insights/new-relic-insights/adding-querying-data/inserting-custom-events-new-relic-apm-agents
+// https://docs.oldfritter.com/docs/insights/new-relic-insights/adding-querying-data/inserting-custom-events-new-relic-apm-agents
 //
 // An error is logged if eventType or params is invalid.
 func (app *Application) RecordCustomEvent(eventType string, params map[string]interface{}) {
@@ -56,7 +56,7 @@ func (app *Application) RecordCustomEvent(eventType string, params map[string]in
 // currently supported in serverless mode.
 //
 // See
-// https://docs.newrelic.com/docs/agents/manage-apm-agents/agent-data/collect-custom-metrics
+// https://docs.oldfritter.com/docs/agents/manage-apm-agents/agent-data/collect-custom-metrics
 // for more information on custom events.
 func (app *Application) RecordCustomMetric(name string, value float64) {
 	if nil == app {

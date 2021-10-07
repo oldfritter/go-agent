@@ -4,7 +4,7 @@
 // +build go1.9
 // This build tag is necessary because GRPC/ProtoBuf libraries only support Go version 1.9 and up.
 
-package newrelic
+package oldfritter
 
 import (
 	"bytes"
@@ -23,8 +23,8 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	v1 "github.com/newrelic/go-agent/v3/internal/com_newrelic_trace_v1"
+	"github.com/oldfritter/go-agent/v3/internal"
+	v1 "github.com/oldfritter/go-agent/v3/internal/com_oldfritter_trace_v1"
 )
 
 type gRPCtraceObserver struct {

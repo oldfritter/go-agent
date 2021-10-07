@@ -10,7 +10,7 @@ import (
 	"net/url"
 	"strings"
 
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )
@@ -34,10 +34,10 @@ func getURL(method, target string) *url.URL {
 
 // startClientSegment starts an ExternalSegment and adds Distributed Trace
 // headers to the outgoing grpc metadata in the context.
-func startClientSegment(ctx context.Context, method, target string) (*newrelic.ExternalSegment, context.Context) {
-	var seg *newrelic.ExternalSegment
-	if txn := newrelic.FromContext(ctx); nil != txn {
-		seg = newrelic.StartExternalSegment(txn, nil)
+func startClientSegment(ctx context.Context, method, target string) (*oldfritter.ExternalSegment, context.Context) {
+	var seg *oldfritter.ExternalSegment
+	if txn := oldfritter.FromContext(ctx); nil != txn {
+		seg = oldfritter.StartExternalSegment(txn, nil)
 
 		method = strings.TrimPrefix(method, "/")
 		seg.Host = getURL(method, target).Host
@@ -76,10 +76,10 @@ func startClientSegment(ctx context.Context, method, target string) (*newrelic.E
 //	)
 //
 // 2. Ensure that calls made with this grpc.ClientConn are done with a context
-// which contains a newrelic.Transaction.
+// which contains a oldfritter.Transaction.
 //
 // Full example:
-// https://github.com/newrelic/go-agent/blob/master/v3/integrations/nrgrpc/example/client/client.go
+// https://github.com/oldfritter/go-agent/blob/master/v3/integrations/nrgrpc/example/client/client.go
 //
 // This interceptor only instruments unary calls.  You must use both
 // UnaryClientInterceptor and StreamClientInterceptor to instrument unary and
@@ -93,7 +93,7 @@ func UnaryClientInterceptor(ctx context.Context, method string, req, reply inter
 
 type wrappedClientStream struct {
 	grpc.ClientStream
-	segment       *newrelic.ExternalSegment
+	segment       *oldfritter.ExternalSegment
 	isUnaryServer bool
 }
 
@@ -118,10 +118,10 @@ func (s wrappedClientStream) RecvMsg(m interface{}) error {
 //	)
 //
 // 2. Ensure that calls made with this grpc.ClientConn are done with a context
-// which contains a newrelic.Transaction.
+// which contains a oldfritter.Transaction.
 //
 // Full example:
-// https://github.com/newrelic/go-agent/blob/master/v3/integrations/nrgrpc/example/client/client.go
+// https://github.com/oldfritter/go-agent/blob/master/v3/integrations/nrgrpc/example/client/client.go
 //
 // This interceptor only instruments streaming calls.  You must use both
 // UnaryClientInterceptor and StreamClientInterceptor to instrument unary and

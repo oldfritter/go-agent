@@ -11,10 +11,10 @@ import (
 
 	"github.com/nats-io/nats-server/test"
 	nats "github.com/nats-io/nats.go"
-	"github.com/newrelic/go-agent/v3/integrations/nrnats"
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/integrationsupport"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/nrnats"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/integrationsupport"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func TestMain(m *testing.M) {
@@ -27,13 +27,13 @@ func testApp() integrationsupport.ExpectApp {
 	return integrationsupport.NewTestApp(integrationsupport.SampleEverythingReplyFn, integrationsupport.ConfigFullTraces, cfgFn)
 }
 
-var cfgFn = func(cfg *newrelic.Config) {
+var cfgFn = func(cfg *oldfritter.Config) {
 	cfg.Attributes.Include = append(cfg.Attributes.Include,
-		newrelic.AttributeMessageRoutingKey,
-		newrelic.AttributeMessageQueueName,
-		newrelic.AttributeMessageExchangeType,
-		newrelic.AttributeMessageReplyTo,
-		newrelic.AttributeMessageCorrelationID,
+		oldfritter.AttributeMessageRoutingKey,
+		oldfritter.AttributeMessageQueueName,
+		oldfritter.AttributeMessageExchangeType,
+		oldfritter.AttributeMessageReplyTo,
+		oldfritter.AttributeMessageCorrelationID,
 	)
 }
 

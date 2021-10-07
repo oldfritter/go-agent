@@ -10,9 +10,9 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/integrationsupport"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/integrationsupport"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func makeHandler(text string) http.Handler {
@@ -115,7 +115,7 @@ func TestRouteNotFound(t *testing.T) {
 }
 
 func TestNilApp(t *testing.T) {
-	var app *newrelic.Application
+	var app *oldfritter.Application
 	r := mux.NewRouter()
 	r.Handle("/alpha", makeHandler("alpha response"))
 	InstrumentRoutes(r, app)
@@ -139,7 +139,7 @@ func TestMiddlewareBasicRoute(t *testing.T) {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			// ensure that the txn is added to the context and accessible by
 			// middlewares
-			newrelic.FromContext(r.Context()).NoticeError(errors.New("oops"))
+			oldfritter.FromContext(r.Context()).NoticeError(errors.New("oops"))
 			next.ServeHTTP(w, r)
 		})
 	})

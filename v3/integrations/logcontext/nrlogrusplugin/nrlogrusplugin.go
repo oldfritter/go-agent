@@ -18,7 +18,7 @@
 // supported.  However, if the field key collides with one of the keys used by
 // the New Relic Formatter, the value will be overwritten.  Reserved keys are
 // those found in the `logcontext` package
-// (https://godoc.org/github.com/newrelic/go-agent/v3/integrations/logcontext/#pkg-constants).
+// (https://godoc.org/github.com/oldfritter/go-agent/v3/integrations/logcontext/#pkg-constants).
 //
 // Supported types for `logger.WithField` and `logger.WithFields` field values
 // are numbers, booleans, strings, and errors.  Func types are dropped and all
@@ -30,10 +30,10 @@
 //
 // For the best linking experience be sure to enable Distributed Tracing:
 //
-//	app, err := newrelic.NewApplication(
-//		newrelic.ConfigAppName("Logs in Context"),
-//		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-//		newrelic.ConfigDistributedTracerEnabled(true),
+//	app, err := oldfritter.NewApplication(
+//		oldfritter.ConfigAppName("Logs in Context"),
+//		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+//		oldfritter.ConfigDistributedTracerEnabled(true),
 //	)
 //
 // To enable log decoration, set your log's formatter to the
@@ -46,7 +46,7 @@
 //
 //	log.SetFormatter(nrlogrusplugin.ContextFormatter{})
 //
-// The logger will now look for a newrelic.Transaction inside its context and
+// The logger will now look for a oldfritter.Transaction inside its context and
 // decorate logs accordingly.  Therefore, the Transaction must be added to the
 // context and passed to the logger.  For example, this logging call
 //
@@ -54,7 +54,7 @@
 //
 // must be transformed to include the context, such as:
 //
-//	ctx := newrelic.NewContext(context.Background(), txn)
+//	ctx := oldfritter.NewContext(context.Background(), txn)
 //	logger.WithContext(ctx).Info("Hello New Relic!")
 //
 // Troubleshooting
@@ -74,10 +74,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/newrelic/go-agent/v3/integrations/logcontext"
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/jsonx"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/logcontext"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/jsonx"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 	"github.com/sirupsen/logrus"
 )
 
@@ -98,7 +98,7 @@ func (f ContextFormatter) Format(e *logrus.Entry) ([]byte, error) {
 	}
 
 	if ctx := e.Context; nil != ctx {
-		if txn := newrelic.FromContext(ctx); nil != txn {
+		if txn := oldfritter.FromContext(ctx); nil != txn {
 			logcontext.AddLinkingMetadata(data, txn.GetLinkingMetadata())
 		}
 	}

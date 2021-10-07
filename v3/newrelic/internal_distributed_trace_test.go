@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"encoding/base64"
@@ -14,8 +14,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/crossagent"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/crossagent"
 )
 
 func distributedTracingReplyFields(reply *internal.ConnectReply) {
@@ -345,7 +345,7 @@ func TestPayloadFromApplicationEmptyTransportType(t *testing.T) {
 	// the TransportType struct is not exported outside of the package so users cannot modify its value.
 	// When they make the attempt, Go reports:
 	//
-	// implicit assignment of unexported field 'name' in newrelic.TransportType literal.
+	// implicit assignment of unexported field 'name' in oldfritter.TransportType literal.
 	//
 	// This test makes sure an empty TransportType resolves to "Unknown"
 	var emptyTransport TransportType
@@ -436,7 +436,7 @@ func TestPayloadParsingError(t *testing.T) {
 		}`
 	txn.AcceptDistributedTraceHeaders(TransportHTTP, headersFromString(p))
 	app.expectSingleLoggedError(t, "unable to accept trace payload", map[string]interface{}{
-		"reason": "unable to unmarshal payload data: json: cannot unmarshal array into Go value of type newrelic.payload",
+		"reason": "unable to unmarshal payload data: json: cannot unmarshal array into Go value of type oldfritter.payload",
 	})
 	txn.End()
 	app.expectNoLoggedErrors(t)
@@ -1894,13 +1894,13 @@ func TestW3CTraceParentWithoutTraceContext(t *testing.T) {
 }
 
 func TestDistributedTraceInteroperabilityErrorFallbacks(t *testing.T) {
-	// Test what happens in varying cases when both w3c and newrelic headers
+	// Test what happens in varying cases when both w3c and oldfritter headers
 	// are found
 
 	// parent.type  = "App"
 	// parentSpanId = "5f474d64b9cc9b2a"
 	// traceId      = "3221bf09aa0bcf0d3221bf09aa0bcf0d"
-	newrelicHdr := `{
+	oldfritterHdr := `{
 		   "v": [0,1],
 		   "d": {
 		     "ty": "App",
@@ -1924,14 +1924,14 @@ func TestDistributedTraceInteroperabilityErrorFallbacks(t *testing.T) {
 		name          string
 		traceparent   string
 		tracestate    string
-		newrelic      string
+		oldfritter      string
 		expIntrinsics map[string]interface{}
 	}{
 		{
-			name:        "w3c present, newrelic absent, failure to parse traceparent",
+			name:        "w3c present, oldfritter absent, failure to parse traceparent",
 			traceparent: "garbage",
 			tracestate:  tracestateHdr,
-			newrelic:    "",
+			oldfritter:    "",
 			expIntrinsics: map[string]interface{}{
 				"guid":     internal.MatchAnything,
 				"priority": internal.MatchAnything,
@@ -1941,10 +1941,10 @@ func TestDistributedTraceInteroperabilityErrorFallbacks(t *testing.T) {
 			},
 		},
 		{
-			name:        "w3c present, newrelic absent, failure to parse tracestate",
+			name:        "w3c present, oldfritter absent, failure to parse tracestate",
 			traceparent: traceparentHdr,
 			tracestate:  "123@nr=garbage",
-			newrelic:    "",
+			oldfritter:    "",
 			expIntrinsics: map[string]interface{}{
 				"guid":                 internal.MatchAnything,
 				"priority":             internal.MatchAnything,
@@ -1956,10 +1956,10 @@ func TestDistributedTraceInteroperabilityErrorFallbacks(t *testing.T) {
 			},
 		},
 		{
-			name:        "w3c present, newrelic present, failure to parse traceparent",
+			name:        "w3c present, oldfritter present, failure to parse traceparent",
 			traceparent: "garbage",
 			tracestate:  tracestateHdr,
-			newrelic:    newrelicHdr,
+			oldfritter:    oldfritterHdr,
 			expIntrinsics: map[string]interface{}{
 				"guid":     internal.MatchAnything,
 				"priority": internal.MatchAnything,
@@ -1969,10 +1969,10 @@ func TestDistributedTraceInteroperabilityErrorFallbacks(t *testing.T) {
 			},
 		},
 		{
-			name:        "w3c present, newrelic present, failure to parse tracestate",
+			name:        "w3c present, oldfritter present, failure to parse tracestate",
 			traceparent: traceparentHdr,
 			tracestate:  "123@nr=garbage",
-			newrelic:    newrelicHdr,
+			oldfritter:    oldfritterHdr,
 			expIntrinsics: map[string]interface{}{
 				"guid":                 internal.MatchAnything,
 				"priority":             internal.MatchAnything,
@@ -1984,10 +1984,10 @@ func TestDistributedTraceInteroperabilityErrorFallbacks(t *testing.T) {
 			},
 		},
 		{
-			name:        "w3c present, newrelic present",
+			name:        "w3c present, oldfritter present",
 			traceparent: traceparentHdr,
 			tracestate:  tracestateHdr,
-			newrelic:    newrelicHdr,
+			oldfritter:    oldfritterHdr,
 			expIntrinsics: map[string]interface{}{
 				"parent.app":               internal.MatchAnything,
 				"parent.transportDuration": internal.MatchAnything,
@@ -2004,10 +2004,10 @@ func TestDistributedTraceInteroperabilityErrorFallbacks(t *testing.T) {
 			},
 		},
 		{
-			name:        "w3c absent, newrelic present",
+			name:        "w3c absent, oldfritter present",
 			traceparent: "",
 			tracestate:  "",
-			newrelic:    newrelicHdr,
+			oldfritter:    oldfritterHdr,
 			expIntrinsics: map[string]interface{}{
 				"parent.app":               internal.MatchAnything,
 				"parent.transportDuration": internal.MatchAnything,
@@ -2018,16 +2018,16 @@ func TestDistributedTraceInteroperabilityErrorFallbacks(t *testing.T) {
 				"parentId":                 internal.MatchAnything,
 				"name":                     internal.MatchAnything,
 				"parent.transportType":     internal.MatchAnything,
-				"parent.type":              "App",                              // from newrelic header
-				"parentSpanId":             "5f474d64b9cc9b2a",                 // from newrelic header
-				"traceId":                  "3221bf09aa0bcf0d3221bf09aa0bcf0d", // from newrelic header
+				"parent.type":              "App",                              // from oldfritter header
+				"parentSpanId":             "5f474d64b9cc9b2a",                 // from oldfritter header
+				"traceId":                  "3221bf09aa0bcf0d3221bf09aa0bcf0d", // from oldfritter header
 			},
 		},
 		{
-			name:        "w3c absent, newrelic absent",
+			name:        "w3c absent, oldfritter absent",
 			traceparent: "",
 			tracestate:  "",
-			newrelic:    "",
+			oldfritter:    "",
 			expIntrinsics: map[string]interface{}{
 				"guid":     internal.MatchAnything,
 				"priority": internal.MatchAnything,
@@ -2052,7 +2052,7 @@ func TestDistributedTraceInteroperabilityErrorFallbacks(t *testing.T) {
 			hdrs := http.Header{}
 			addHdr(hdrs, DistributedTraceW3CTraceParentHeader, tc.traceparent)
 			addHdr(hdrs, DistributedTraceW3CTraceStateHeader, tc.tracestate)
-			addHdr(hdrs, DistributedTraceNewRelicHeader, tc.newrelic)
+			addHdr(hdrs, DistributedTraceNewRelicHeader, tc.oldfritter)
 
 			txn.AcceptDistributedTraceHeaders(TransportHTTP, hdrs)
 			txn.End()
@@ -2246,7 +2246,7 @@ func TestDTHeadersAddedTwice(t *testing.T) {
 	// make sure outbound headers are not added twice
 	assertHdrs := func(hdrs http.Header) {
 		if h := hdrs[DistributedTraceNewRelicHeader]; len(h) != 1 {
-			t.Errorf("incorrect number of newrelic headers: %#v", h)
+			t.Errorf("incorrect number of oldfritter headers: %#v", h)
 		}
 		if h := hdrs[DistributedTraceW3CTraceParentHeader]; len(h) != 1 {
 			t.Errorf("incorrect number of traceparent headers: %#v", h)

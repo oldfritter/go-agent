@@ -3,10 +3,10 @@
 
 // +build !go1.9
 
-package newrelic
+package oldfritter
 
 import (
-	"github.com/newrelic/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal"
 )
 
 func newTraceObserver(runID internal.AgentRunID, requestHeadersMap map[string]string, cfg observerConfig) (traceObserver, error) {

@@ -66,7 +66,7 @@ The `Transaction` block means anything in there should only apply to the transac
 
 The same idea goes for the `outbound_payloads` block but will apply specifically for the outbound `traceparent` header and `tracestate` header.
 
-`outbound_payloads` may also target `newrelic` headers and follow same basic structure inline with trace context headers, for example:
+`outbound_payloads` may also target `oldfritter` headers and follow same basic structure inline with trace context headers, for example:
 ```javascript
   ...
   "outbound_payloads": [
@@ -81,13 +81,13 @@ The same idea goes for the `outbound_payloads` block but will apply specifically
         "tracestate.parent_account_id": "33",
         "tracestate.sampled": true,
         "tracestate.priority": 1.123432,
-        "newrelic.v": [0, 1],
-        "newrelic.d.ty": "App",
-        "newrelic.d.ac": "33",
-        "newrelic.d.ap": "2827902",
-        "newrelic.d.tr": "6E2fEA0B173FDAD0",
-        "newrelic.d.sa": true,
-        "newrelic.d.pr": 1.1234321
+        "oldfritter.v": [0, 1],
+        "oldfritter.d.ty": "App",
+        "oldfritter.d.ac": "33",
+        "oldfritter.d.ap": "2827902",
+        "oldfritter.d.tr": "6E2fEA0B173FDAD0",
+        "oldfritter.d.sa": true,
+        "oldfritter.d.pr": 1.1234321
       },
       "expected": [
         "traceparent.parent_id",
@@ -95,12 +95,12 @@ The same idea goes for the `outbound_payloads` block but will apply specifically
         "tracestate.parent_application_id",
         "tracestate.span_id",
         "tracestate.transaction_id",
-        "newrelic.d.ap", 
-        "newrelic.d.tx", 
-        "newrelic.d.ti", 
-        "newrelic.d.id"
+        "oldfritter.d.ap", 
+        "oldfritter.d.tx", 
+        "oldfritter.d.ti", 
+        "oldfritter.d.id"
       ],
-      "unexpected": ["newrelic.d.tk"]
+      "unexpected": ["oldfritter.d.tk"]
     }
   ],
   ...

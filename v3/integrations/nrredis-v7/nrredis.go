@@ -13,8 +13,8 @@ import (
 	"strings"
 
 	redis "github.com/go-redis/redis/v7"
-	"github.com/newrelic/go-agent/v3/internal"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func init() { internal.TrackUsage("integration", "datastore", "redis") }
@@ -22,7 +22,7 @@ func init() { internal.TrackUsage("integration", "datastore", "redis") }
 type contextKeyType struct{}
 
 type hook struct {
-	segment newrelic.DatastoreSegment
+	segment oldfritter.DatastoreSegment
 }
 
 var (
@@ -36,7 +36,7 @@ var (
 // redis.Client, redis.ClusterClient, and redis.Ring.
 func NewHook(opts *redis.Options) redis.Hook {
 	h := hook{}
-	h.segment.Product = newrelic.DatastoreRedis
+	h.segment.Product = oldfritter.DatastoreRedis
 	if opts != nil {
 		// Per https://godoc.org/github.com/go-redis/redis#Options the
 		// network should either be tcp or unix, and the default is tcp.
@@ -55,7 +55,7 @@ func NewHook(opts *redis.Options) redis.Hook {
 }
 
 func (h hook) before(ctx context.Context, operation string) (context.Context, error) {
-	txn := newrelic.FromContext(ctx)
+	txn := oldfritter.FromContext(ctx)
 	if txn == nil {
 		return ctx, nil
 	}

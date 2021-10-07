@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"bufio"
@@ -9,7 +9,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/newrelic/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal"
 )
 
 func (thd *thread) CloseNotify() <-chan bool {

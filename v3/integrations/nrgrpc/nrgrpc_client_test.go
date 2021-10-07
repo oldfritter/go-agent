@@ -9,10 +9,10 @@ import (
 	"io"
 	"testing"
 
-	"github.com/newrelic/go-agent/v3/integrations/nrgrpc/testapp"
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/integrationsupport"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/nrgrpc/testapp"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/integrationsupport"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -87,7 +87,7 @@ var replyFn = func(reply *internal.ConnectReply) {
 func TestUnaryClientInterceptor(t *testing.T) {
 	app := testApp()
 	txn := app.StartTransaction("UnaryUnary")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	s, conn := newTestServerAndConn(t, nil)
 	defer s.Stop()
@@ -103,7 +103,7 @@ func TestUnaryClientInterceptor(t *testing.T) {
 	if err != nil {
 		t.Fatal("cannot unmarshall client response", err)
 	}
-	if hdr, ok := hdrs["newrelic"]; !ok || len(hdr) != 1 || hdr[0] == "" {
+	if hdr, ok := hdrs["oldfritter"]; !ok || len(hdr) != 1 || hdr[0] == "" {
 		t.Error("distributed trace header not sent", hdrs)
 	}
 	txn.End()
@@ -167,7 +167,7 @@ func TestUnaryClientInterceptor(t *testing.T) {
 func TestUnaryStreamClientInterceptor(t *testing.T) {
 	app := testApp()
 	txn := app.StartTransaction("UnaryStream")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	s, conn := newTestServerAndConn(t, nil)
 	defer s.Stop()
@@ -192,7 +192,7 @@ func TestUnaryStreamClientInterceptor(t *testing.T) {
 		if err != nil {
 			t.Fatal("cannot unmarshall client response", err)
 		}
-		if hdr, ok := hdrs["newrelic"]; !ok || len(hdr) != 1 || hdr[0] == "" {
+		if hdr, ok := hdrs["oldfritter"]; !ok || len(hdr) != 1 || hdr[0] == "" {
 			t.Error("distributed trace header not sent", hdrs)
 		}
 		recved++
@@ -261,7 +261,7 @@ func TestUnaryStreamClientInterceptor(t *testing.T) {
 func TestStreamUnaryClientInterceptor(t *testing.T) {
 	app := testApp()
 	txn := app.StartTransaction("StreamUnary")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	s, conn := newTestServerAndConn(t, nil)
 	defer s.Stop()
@@ -289,7 +289,7 @@ func TestStreamUnaryClientInterceptor(t *testing.T) {
 	if err != nil {
 		t.Fatal("cannot unmarshall client response", err)
 	}
-	if hdr, ok := hdrs["newrelic"]; !ok || len(hdr) != 1 || hdr[0] == "" {
+	if hdr, ok := hdrs["oldfritter"]; !ok || len(hdr) != 1 || hdr[0] == "" {
 		t.Error("distributed trace header not sent", hdrs)
 	}
 	txn.End()
@@ -353,7 +353,7 @@ func TestStreamUnaryClientInterceptor(t *testing.T) {
 func TestStreamStreamClientInterceptor(t *testing.T) {
 	app := testApp()
 	txn := app.StartTransaction("StreamStream")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	s, conn := newTestServerAndConn(t, nil)
 	defer s.Stop()
@@ -381,7 +381,7 @@ func TestStreamStreamClientInterceptor(t *testing.T) {
 			if err != nil {
 				t.Fatal("cannot unmarshall client response", err)
 			}
-			if hdr, ok := hdrs["newrelic"]; !ok || len(hdr) != 1 || hdr[0] == "" {
+			if hdr, ok := hdrs["oldfritter"]; !ok || len(hdr) != 1 || hdr[0] == "" {
 				t.Error("distributed trace header not sent", hdrs)
 			}
 			recved++
@@ -459,11 +459,11 @@ func TestClientUnaryMetadata(t *testing.T) {
 	// Test that metadata on the outgoing request are presevered
 	app := testApp()
 	txn := app.StartTransaction("metadata")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	md := metadata.New(map[string]string{
 		"testing":  "hello world",
-		"newrelic": "payload",
+		"oldfritter": "payload",
 	})
 	ctx = metadata.NewOutgoingContext(ctx, md)
 
@@ -481,7 +481,7 @@ func TestClientUnaryMetadata(t *testing.T) {
 	if err != nil {
 		t.Fatal("cannot unmarshall client response", err)
 	}
-	if hdr, ok := hdrs["newrelic"]; !ok || len(hdr) != 1 || hdr[0] == "" || hdr[0] == "payload" {
+	if hdr, ok := hdrs["oldfritter"]; !ok || len(hdr) != 1 || hdr[0] == "" || hdr[0] == "payload" {
 		t.Error("distributed trace header not sent", hdrs)
 	}
 	if hdr, ok := hdrs["testing"]; !ok || len(hdr) != 1 || hdr[0] != "hello world" {
@@ -504,7 +504,7 @@ func TestNilTxnClientUnary(t *testing.T) {
 	if err != nil {
 		t.Fatal("cannot unmarshall client response", err)
 	}
-	if _, ok := hdrs["newrelic"]; ok {
+	if _, ok := hdrs["oldfritter"]; ok {
 		t.Error("distributed trace header sent", hdrs)
 	}
 }
@@ -536,7 +536,7 @@ func TestNilTxnClientStreaming(t *testing.T) {
 	if err != nil {
 		t.Fatal("cannot unmarshall client response", err)
 	}
-	if _, ok := hdrs["newrelic"]; ok {
+	if _, ok := hdrs["oldfritter"]; ok {
 		t.Error("distributed trace header sent", hdrs)
 	}
 }
@@ -555,7 +555,7 @@ func TestClientStreamingError(t *testing.T) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 0)
 	defer cancel()
-	ctx = newrelic.NewContext(ctx, txn)
+	ctx = oldfritter.NewContext(ctx, txn)
 	_, err := client.DoUnaryStream(ctx, &testapp.Message{})
 	if err == nil {
 		t.Fatal("client call to DoUnaryStream did not return error")

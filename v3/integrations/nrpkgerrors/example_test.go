@@ -4,8 +4,8 @@
 package nrpkgerrors_test
 
 import (
-	"github.com/newrelic/go-agent/v3/integrations/nrpkgerrors"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/nrpkgerrors"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 	"github.com/pkg/errors"
 )
 
@@ -18,7 +18,7 @@ func makeRootError() error {
 }
 
 func Example() {
-	var txn *newrelic.Transaction
+	var txn *oldfritter.Transaction
 	e := errors.Wrap(makeRootError(), "extra information")
 	// Wrap the error to record stack-trace and class type information from
 	// the error's root cause.  Here, "rootError" will be recored as the

@@ -8,11 +8,11 @@ import (
 	"time"
 
 	"github.com/nats-io/nats.go"
-	"github.com/newrelic/go-agent/v3/integrations/nrnats"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/nrnats"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
-func currentTransaction() *newrelic.Transaction { return nil }
+func currentTransaction() *oldfritter.Transaction { return nil }
 
 func ExampleStartPublishSegment() {
 	nc, _ := nats.Connect(nats.DefaultURL)

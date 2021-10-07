@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"encoding/base64"
@@ -14,8 +14,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/newrelic/go-agent/internal"
-	"github.com/newrelic/go-agent/internal/crossagent"
+	"github.com/oldfritter/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal/crossagent"
 )
 
 type PayloadTest struct {
@@ -451,7 +451,7 @@ func TestPayloadFromApplicationEmptyTransportType(t *testing.T) {
 	// the TransportType struct is not exported outside of the package so users cannot modify its value.
 	// When they make the attempt, Go reports:
 	//
-	// implicit assignment of unexported field 'name' in newrelic.TransportType literal.
+	// implicit assignment of unexported field 'name' in oldfritter.TransportType literal.
 	//
 	// This test makes sure an empty TransportType resolves to "Unknown"
 	var emptyTransport TransportType

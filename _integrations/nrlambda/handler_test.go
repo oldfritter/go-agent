@@ -13,8 +13,8 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambdacontext"
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/internal"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/internal"
 )
 
 func dataShouldContain(tb testing.TB, data map[string]json.RawMessage, keys ...string) {
@@ -36,13 +36,13 @@ func dataShouldContain(tb testing.TB, data map[string]json.RawMessage, keys ...s
 	}
 }
 
-func testApp(getenv func(string) string, t *testing.T) newrelic.Application {
+func testApp(getenv func(string) string, t *testing.T) oldfritter.Application {
 	if nil == getenv {
 		getenv = func(string) string { return "" }
 	}
 	cfg := newConfigInternal(getenv)
 
-	app, err := newrelic.NewApplication(cfg)
+	app, err := oldfritter.NewApplication(cfg)
 	if nil != err {
 		t.Fatal(err)
 	}
@@ -257,7 +257,7 @@ func TestSetWebRequest(t *testing.T) {
 	dataShouldContain(t, data, "metric_data", "analytic_event_data", "span_event_data")
 }
 
-func makePayload(app newrelic.Application) string {
+func makePayload(app oldfritter.Application) string {
 	txn := app.StartTransaction("hello", nil, nil)
 	return txn.CreateDistributedTracePayload().Text()
 }
@@ -275,7 +275,7 @@ func TestDistributedTracing(t *testing.T) {
 		Headers: map[string]string{
 			"X-Forwarded-Port":                     "4000",
 			"X-Forwarded-Proto":                    "HTTPS",
-			newrelic.DistributedTracePayloadHeader: makePayload(app),
+			oldfritter.DistributedTracePayloadHeader: makePayload(app),
 		},
 	}
 	reqbytes, err := json.Marshal(req)
@@ -433,7 +433,7 @@ func TestAPIGatewayProxyResponse(t *testing.T) {
 
 func TestCustomEvent(t *testing.T) {
 	originalHandler := func(c context.Context) {
-		if txn := newrelic.FromContext(c); nil != txn {
+		if txn := oldfritter.FromContext(c); nil != txn {
 			txn.Application().RecordCustomEvent("myEvent", map[string]interface{}{
 				"zip": "zap",
 			})

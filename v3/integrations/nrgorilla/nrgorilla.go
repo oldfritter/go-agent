@@ -8,38 +8,38 @@
 // with your router.
 //
 // Complete example:
-// https://github.com/newrelic/go-agent/tree/master/v3/integrations/nrgorilla/example/main.go
+// https://github.com/oldfritter/go-agent/tree/master/v3/integrations/nrgorilla/example/main.go
 package nrgorilla
 
 import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/newrelic/go-agent/v3/internal"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func init() { internal.TrackUsage("integration", "framework", "gorilla", "v1") }
 
 type instrumentedHandler struct {
-	app  *newrelic.Application
+	app  *oldfritter.Application
 	orig http.Handler
 }
 
 func (h instrumentedHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if newrelic.FromContext(r.Context()) == nil {
+	if oldfritter.FromContext(r.Context()) == nil {
 		name := routeName(r)
 		txn := h.app.StartTransaction(name)
 		txn.SetWebRequestHTTP(r)
 		w = txn.SetWebResponse(w)
 		defer txn.End()
-		r = newrelic.RequestWithTransactionContext(r, txn)
+		r = oldfritter.RequestWithTransactionContext(r, txn)
 	}
 
 	h.orig.ServeHTTP(w, r)
 }
 
-func instrumentRoute(h http.Handler, app *newrelic.Application) http.Handler {
+func instrumentRoute(h http.Handler, app *oldfritter.Application) http.Handler {
 	if _, ok := h.(instrumentedHandler); ok {
 		return h
 	}
@@ -68,7 +68,7 @@ func routeName(r *http.Request) string {
 // this after the routes have been added to the router.
 //
 // Deprecated: Use the newer and more complete Middleware method instead.
-func InstrumentRoutes(r *mux.Router, app *newrelic.Application) *mux.Router {
+func InstrumentRoutes(r *mux.Router, app *oldfritter.Application) *mux.Router {
 	if app != nil {
 		r.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 			h := instrumentRoute(route.GetHandler(), app)
@@ -90,15 +90,15 @@ func InstrumentRoutes(r *mux.Router, app *newrelic.Application) *mux.Router {
 //
 // Note that mux.MiddlewareFuncs are not called for the NotFoundHandler or
 // MethodNotAllowedHandler.  To instrument these handlers, use
-// newrelic.WrapHandle
-// (https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#WrapHandle).
+// oldfritter.WrapHandle
+// (https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#WrapHandle).
 //
 // Note that if you are moving from the now deprecated InstrumentRoutes to this
 // Middleware, the reported time of your transactions may increase.  This is
 // expected and nothing to worry about.  This method includes in the
 // transaction total time request time that is spent in other custom
 // middlewares whereas InstrumentRoutes does not.
-func Middleware(app *newrelic.Application) mux.MiddlewareFunc {
+func Middleware(app *oldfritter.Application) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			name := routeName(r)
@@ -106,7 +106,7 @@ func Middleware(app *newrelic.Application) mux.MiddlewareFunc {
 			defer txn.End()
 			txn.SetWebRequestHTTP(r)
 			w = txn.SetWebResponse(w)
-			r = newrelic.RequestWithTransactionContext(r, txn)
+			r = oldfritter.RequestWithTransactionContext(r, txn)
 			next.ServeHTTP(w, r)
 		})
 	}

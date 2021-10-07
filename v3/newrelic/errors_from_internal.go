@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"bytes"
@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/newrelic/go-agent/v3/internal/jsonx"
+	"github.com/oldfritter/go-agent/v3/internal/jsonx"
 )
 
 const (

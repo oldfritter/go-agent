@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"errors"
@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/newrelic/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal"
 )
 
 // Config contains Application and Transaction behavior settings.
@@ -18,23 +18,23 @@ import (
 type Config struct {
 	// AppName is used by New Relic to link data across servers.
 	//
-	// https://docs.newrelic.com/docs/apm/new-relic-apm/installation-configuration/naming-your-application
+	// https://docs.oldfritter.com/docs/apm/new-relic-apm/installation-configuration/naming-your-application
 	AppName string
 
 	// License is your New Relic license key.
 	//
-	// https://docs.newrelic.com/docs/accounts/install-new-relic/account-setup/license-key
+	// https://docs.oldfritter.com/docs/accounts/install-new-relic/account-setup/license-key
 	License string
 
 	// Logger controls go-agent logging.  For info level logging to stdout:
 	//
-	//	cfg.Logger = newrelic.NewLogger(os.Stdout)
+	//	cfg.Logger = oldfritter.NewLogger(os.Stdout)
 	//
 	// For debug level logging to stdout:
 	//
-	//	cfg.Logger = newrelic.NewDebugLogger(os.Stdout)
+	//	cfg.Logger = oldfritter.NewDebugLogger(os.Stdout)
 	//
-	// See https://github.com/newrelic/go-agent/blob/master/GUIDE.md#logging
+	// See https://github.com/oldfritter/go-agent/blob/master/GUIDE.md#logging
 	// for more examples and logging integrations.
 	Logger Logger
 
@@ -46,27 +46,27 @@ type Config struct {
 	// Labels are key value pairs used to roll up applications into specific
 	// categories.
 	//
-	// https://docs.newrelic.com/docs/using-new-relic/user-interface-functions/organize-your-data/labels-categories-organize-apps-monitors
+	// https://docs.oldfritter.com/docs/using-new-relic/user-interface-functions/organize-your-data/labels-categories-organize-apps-monitors
 	Labels map[string]string
 
 	// HighSecurity guarantees that certain agent settings can not be made
 	// more permissive.  This setting must match the corresponding account
 	// setting in the New Relic UI.
 	//
-	// https://docs.newrelic.com/docs/agents/manage-apm-agents/configuration/high-security-mode
+	// https://docs.oldfritter.com/docs/agents/manage-apm-agents/configuration/high-security-mode
 	HighSecurity bool
 
 	// SecurityPoliciesToken enables security policies if set to a non-empty
 	// string.  Only set this if security policies have been enabled on your
 	// account.  This cannot be used in conjunction with HighSecurity.
 	//
-	// https://docs.newrelic.com/docs/agents/manage-apm-agents/configuration/enable-configurable-security-policies
+	// https://docs.oldfritter.com/docs/agents/manage-apm-agents/configuration/enable-configurable-security-policies
 	SecurityPoliciesToken string
 
 	// CustomInsightsEvents controls the behavior of
 	// Application.RecordCustomEvent.
 	//
-	// https://docs.newrelic.com/docs/insights/new-relic-insights/adding-querying-data/inserting-custom-events-new-relic-apm-agents
+	// https://docs.oldfritter.com/docs/insights/new-relic-insights/adding-querying-data/inserting-custom-events-new-relic-apm-agents
 	CustomInsightsEvents struct {
 		// Enabled controls whether RecordCustomEvent will collect
 		// custom analytics events.  High security mode overrides this
@@ -194,7 +194,7 @@ type Config struct {
 	// CrossApplicationTracer and the DistributedTracer cannot be
 	// simultaneously enabled.
 	//
-	// https://docs.newrelic.com/docs/apm/transactions/cross-application-traces/introduction-cross-application-traces
+	// https://docs.oldfritter.com/docs/apm/transactions/cross-application-traces/introduction-cross-application-traces
 	CrossApplicationTracer struct {
 		Enabled bool
 	}
@@ -203,7 +203,7 @@ type Config struct {
 	// available since Go Agent v2.1. The DistributedTracer and the
 	// CrossApplicationTracer cannot be simultaneously enabled.
 	//
-	// https://docs.newrelic.com/docs/apm/distributed-tracing/getting-started/introduction-distributed-tracing
+	// https://docs.oldfritter.com/docs/apm/distributed-tracing/getting-started/introduction-distributed-tracing
 	DistributedTracer struct {
 		Enabled bool
 	}
@@ -255,7 +255,7 @@ type Config struct {
 	// ServerlessMode contains fields which control behavior when running in
 	// AWS Lambda.
 	//
-	// https://docs.newrelic.com/docs/serverless-function-monitoring/aws-lambda-monitoring/get-started/introduction-new-relic-monitoring-aws-lambda
+	// https://docs.oldfritter.com/docs/serverless-function-monitoring/aws-lambda-monitoring/get-started/introduction-new-relic-monitoring-aws-lambda
 	ServerlessMode struct {
 		// Enabling ServerlessMode will print each transaction's data to
 		// stdout.  No agent goroutines will be spawned in serverless mode, and
@@ -266,7 +266,7 @@ type Config struct {
 		// default is 500 milliseconds.  nrlambda.NewConfig populates this
 		// field using the NEW_RELIC_APDEX_T environment variable.
 		//
-		// https://docs.newrelic.com/docs/apm/new-relic-apm/apdex/apdex-measure-user-satisfaction
+		// https://docs.oldfritter.com/docs/apm/new-relic-apm/apdex/apdex-measure-user-satisfaction
 		ApdexThreshold time.Duration
 		// AccountID, TrustedAccountKey, and PrimaryAppID are used for
 		// distributed tracing in ServerlessMode.  AccountID and
@@ -282,7 +282,7 @@ type Config struct {
 
 // AttributeDestinationConfig controls the attributes sent to each destination.
 // For more information, see:
-// https://docs.newrelic.com/docs/agents/manage-apm-agents/agent-data/agent-attributes
+// https://docs.oldfritter.com/docs/agents/manage-apm-agents/agent-data/agent-attributes
 type AttributeDestinationConfig struct {
 	// Enabled controls whether or not this destination will get any
 	// attributes at all.  For example, to prevent any attributes from being
@@ -296,7 +296,7 @@ type AttributeDestinationConfig struct {
 	// example, to prevent the capture of the request URL attribute
 	// "request.uri", set:
 	//
-	//	cfg.Attributes.Exclude = append(cfg.Attributes.Exclude, newrelic.AttributeRequestURI)
+	//	cfg.Attributes.Exclude = append(cfg.Attributes.Exclude, oldfritter.AttributeRequestURI)
 	//
 	// The '*' character acts as a wildcard.  For example, to prevent the
 	// capture of all request related attributes, set:
@@ -381,7 +381,7 @@ var (
 )
 
 // Validate checks the config for improper fields.  If the config is invalid,
-// newrelic.NewApplication returns an error.
+// oldfritter.NewApplication returns an error.
 func (c Config) Validate() error {
 	if c.Enabled && !c.ServerlessMode.Enabled {
 		if len(c.License) != licenseLength {

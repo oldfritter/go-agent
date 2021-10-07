@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func getEventSourceARN(event interface{}) string {
@@ -44,9 +44,9 @@ func getEventSourceARN(event interface{}) string {
 	return ""
 }
 
-func eventWebRequest(event interface{}) *newrelic.WebRequest {
+func eventWebRequest(event interface{}) *oldfritter.WebRequest {
 	var path string
-	var request newrelic.WebRequest
+	var request oldfritter.WebRequest
 	var headers map[string]string
 
 	switch r := event.(type) {
@@ -80,11 +80,11 @@ func eventWebRequest(event interface{}) *newrelic.WebRequest {
 	proto := strings.ToLower(request.Header.Get("X-Forwarded-Proto"))
 	switch proto {
 	case "https":
-		request.Transport = newrelic.TransportHTTPS
+		request.Transport = oldfritter.TransportHTTPS
 	case "http":
-		request.Transport = newrelic.TransportHTTP
+		request.Transport = oldfritter.TransportHTTP
 	default:
-		request.Transport = newrelic.TransportUnknown
+		request.Transport = oldfritter.TransportUnknown
 	}
 
 	return &request

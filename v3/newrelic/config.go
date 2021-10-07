@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"encoding/json"
@@ -13,27 +13,27 @@ import (
 	"strings"
 	"time"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/logger"
-	"github.com/newrelic/go-agent/v3/internal/sysinfo"
-	"github.com/newrelic/go-agent/v3/internal/utilization"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/logger"
+	"github.com/oldfritter/go-agent/v3/internal/sysinfo"
+	"github.com/oldfritter/go-agent/v3/internal/utilization"
 )
 
 // Config contains Application and Transaction behavior settings.
 type Config struct {
 	// AppName is used by New Relic to link data across servers.
 	//
-	// https://docs.newrelic.com/docs/apm/new-relic-apm/installation-configuration/naming-your-application
+	// https://docs.oldfritter.com/docs/apm/new-relic-apm/installation-configuration/naming-your-application
 	AppName string
 
 	// License is your New Relic license key.
 	//
-	// https://docs.newrelic.com/docs/accounts/install-new-relic/account-setup/license-key
+	// https://docs.oldfritter.com/docs/accounts/install-new-relic/account-setup/license-key
 	License string
 
 	// Logger controls Go Agent logging.
 	//
-	// See https://github.com/newrelic/go-agent/blob/master/GUIDE.md#logging
+	// See https://github.com/oldfritter/go-agent/blob/master/GUIDE.md#logging
 	// for more examples and logging integrations.
 	Logger Logger
 
@@ -45,27 +45,27 @@ type Config struct {
 	// Labels are key value pairs used to roll up applications into specific
 	// categories.
 	//
-	// https://docs.newrelic.com/docs/using-new-relic/user-interface-functions/organize-your-data/labels-categories-organize-apps-monitors
+	// https://docs.oldfritter.com/docs/using-new-relic/user-interface-functions/organize-your-data/labels-categories-organize-apps-monitors
 	Labels map[string]string
 
 	// HighSecurity guarantees that certain agent settings can not be made
 	// more permissive.  This setting must match the corresponding account
 	// setting in the New Relic UI.
 	//
-	// https://docs.newrelic.com/docs/agents/manage-apm-agents/configuration/high-security-mode
+	// https://docs.oldfritter.com/docs/agents/manage-apm-agents/configuration/high-security-mode
 	HighSecurity bool
 
 	// SecurityPoliciesToken enables security policies if set to a non-empty
 	// string.  Only set this if security policies have been enabled on your
 	// account.  This cannot be used in conjunction with HighSecurity.
 	//
-	// https://docs.newrelic.com/docs/agents/manage-apm-agents/configuration/enable-configurable-security-policies
+	// https://docs.oldfritter.com/docs/agents/manage-apm-agents/configuration/enable-configurable-security-policies
 	SecurityPoliciesToken string
 
 	// CustomInsightsEvents controls the behavior of
 	// Application.RecordCustomEvent.
 	//
-	// https://docs.newrelic.com/docs/insights/new-relic-insights/adding-querying-data/inserting-custom-events-new-relic-apm-agents
+	// https://docs.oldfritter.com/docs/insights/new-relic-insights/adding-querying-data/inserting-custom-events-new-relic-apm-agents
 	CustomInsightsEvents struct {
 		// Enabled controls whether RecordCustomEvent will collect
 		// custom analytics events.  High security mode overrides this
@@ -214,7 +214,7 @@ type Config struct {
 	// tracing (CAT).  In the case where CrossApplicationTracer and
 	// DistributedTracer are both enabled, DistributedTracer takes precedence.
 	//
-	// https://docs.newrelic.com/docs/apm/transactions/cross-application-traces/introduction-cross-application-traces
+	// https://docs.oldfritter.com/docs/apm/transactions/cross-application-traces/introduction-cross-application-traces
 	CrossApplicationTracer struct {
 		Enabled bool
 	}
@@ -223,7 +223,7 @@ type Config struct {
 	// the case where CrossApplicationTracer and DistributedTracer are both
 	// enabled, DistributedTracer takes precedence.
 	//
-	// https://docs.newrelic.com/docs/apm/distributed-tracing/getting-started/introduction-distributed-tracing
+	// https://docs.oldfritter.com/docs/apm/distributed-tracing/getting-started/introduction-distributed-tracing
 	DistributedTracer struct {
 		Enabled bool
 		// ExcludeNewRelicHeader allows you to choose whether to insert the New
@@ -249,7 +249,7 @@ type Config struct {
 	// sampling.  InfiniteTracing requires that both DistributedTracer and
 	// SpanEvents are enabled.
 	//
-	// https://docs.newrelic.com/docs/understand-dependencies/distributed-tracing/enable-configure/enable-distributed-tracing
+	// https://docs.oldfritter.com/docs/understand-dependencies/distributed-tracing/enable-configure/enable-distributed-tracing
 	InfiniteTracing struct {
 		// TraceObserver controls behavior of connecting to the Trace Observer.
 		TraceObserver struct {
@@ -313,7 +313,7 @@ type Config struct {
 	// ServerlessMode contains fields which control behavior when running in
 	// AWS Lambda.
 	//
-	// https://docs.newrelic.com/docs/serverless-function-monitoring/aws-lambda-monitoring/get-started/introduction-new-relic-monitoring-aws-lambda
+	// https://docs.oldfritter.com/docs/serverless-function-monitoring/aws-lambda-monitoring/get-started/introduction-new-relic-monitoring-aws-lambda
 	ServerlessMode struct {
 		// Enabling ServerlessMode will print each transaction's data to
 		// stdout.  No agent goroutines will be spawned in serverless mode, and
@@ -324,7 +324,7 @@ type Config struct {
 		// default is 500 milliseconds.  nrlambda.NewConfig populates this
 		// field using the NEW_RELIC_APDEX_T environment variable.
 		//
-		// https://docs.newrelic.com/docs/apm/new-relic-apm/apdex/apdex-measure-user-satisfaction
+		// https://docs.oldfritter.com/docs/apm/new-relic-apm/apdex/apdex-measure-user-satisfaction
 		ApdexThreshold time.Duration
 		// AccountID, TrustedAccountKey, and PrimaryAppID are used for
 		// distributed tracing in ServerlessMode.  AccountID and
@@ -348,7 +348,7 @@ type Config struct {
 
 // AttributeDestinationConfig controls the attributes sent to each destination.
 // For more information, see:
-// https://docs.newrelic.com/docs/agents/manage-apm-agents/agent-data/agent-attributes
+// https://docs.oldfritter.com/docs/agents/manage-apm-agents/agent-data/agent-attributes
 type AttributeDestinationConfig struct {
 	// Enabled controls whether or not this destination will get any
 	// attributes at all.  For example, to prevent any attributes from being
@@ -362,7 +362,7 @@ type AttributeDestinationConfig struct {
 	// example, to prevent the capture of the request URL attribute
 	// "request.uri", set:
 	//
-	//	cfg.Attributes.Exclude = append(cfg.Attributes.Exclude, newrelic.AttributeRequestURI)
+	//	cfg.Attributes.Exclude = append(cfg.Attributes.Exclude, oldfritter.AttributeRequestURI)
 	//
 	// The '*' character acts as a wildcard.  For example, to prevent the
 	// capture of all request related attributes, set:
@@ -451,7 +451,7 @@ var (
 )
 
 // validate checks the config for improper fields.  If the config is invalid,
-// newrelic.NewApplication returns an error.
+// oldfritter.NewApplication returns an error.
 func (c Config) validate() error {
 	if c.Enabled && !c.ServerlessMode.Enabled {
 		if len(c.License) != licenseLength {
@@ -649,7 +649,7 @@ func configConnectJSONInternal(c Config, pid int, util *utilization.Data, e envi
 		Labels:          c.Labels,
 		Environment:     e,
 		// This identifier field is provided to avoid:
-		// https://newrelic.atlassian.net/browse/DSCORE-778
+		// https://oldfritter.atlassian.net/browse/DSCORE-778
 		//
 		// This identifier is used by the collector to look up the real
 		// agent. If an identifier isn't provided, the collector will
@@ -692,7 +692,7 @@ type config struct {
 	// than in appRun, to ensure that they are calculated during
 	// NewApplication (instead of at each connect) because some customers
 	// may unset environment variables after startup:
-	// https://github.com/newrelic/go-agent/issues/127
+	// https://github.com/oldfritter/go-agent/issues/127
 	metadata         map[string]string
 	hostname         string
 	traceObserverURL *observerURL
@@ -767,7 +767,7 @@ func (c config) createConnectJSON(securityPolicies *internal.SecurityPolicies) (
 }
 
 var (
-	preconnectHostDefault        = "collector.newrelic.com"
+	preconnectHostDefault        = "collector.oldfritter.com"
 	preconnectRegionLicenseRegex = regexp.MustCompile(`(^.+?)x`)
 )
 

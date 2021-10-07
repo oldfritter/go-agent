@@ -26,7 +26,7 @@
 //
 // Then add the current transaction to the context used in any MongoDB call:
 //
-//	ctx = newrelic.NewContext(context.Background(), txn)
+//	ctx = oldfritter.NewContext(context.Background(), txn)
 //	resp, err := collection.InsertOne(ctx, bson.M{"name": "pi", "value": 3.14159})
 package nrmongo
 
@@ -35,15 +35,15 @@ import (
 	"regexp"
 	"sync"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 	"go.mongodb.org/mongo-driver/event"
 )
 
 func init() { internal.TrackUsage("integration", "datastore", "mongo") }
 
 type mongoMonitor struct {
-	segmentMap  map[int64]*newrelic.DatastoreSegment
+	segmentMap  map[int64]*oldfritter.DatastoreSegment
 	origCommMon *event.CommandMonitor
 	sync.Mutex
 }
@@ -57,8 +57,8 @@ var connIDPattern = regexp.MustCompile(`([^:\[]+)(?::(\d+))?\[-\d+]`)
 // NewCommandMonitor returns a new `*event.CommandMonitor`
 // (https://godoc.org/go.mongodb.org/mongo-driver/event#CommandMonitor).  If
 // provided, the original `*event.CommandMonitor` will be called as well.  The
-// returned `*event.CommandMonitor` creates `newrelic.DatastoreSegment`s
-// (https://godoc.org/github.com/newrelic/go-agent#DatastoreSegment) for each
+// returned `*event.CommandMonitor` creates `oldfritter.DatastoreSegment`s
+// (https://godoc.org/github.com/oldfritter/go-agent#DatastoreSegment) for each
 // database call.
 //
 //	// Use `SetMonitor` to register the CommandMonitor.
@@ -68,7 +68,7 @@ var connIDPattern = regexp.MustCompile(`([^:\[]+)(?::(\d+))?\[-\d+]`)
 //	}
 //
 //	// Add transaction to the context.  This step is required.
-//	ctx = newrelic.NewContext(ctx, txn)
+//	ctx = oldfritter.NewContext(ctx, txn)
 //
 //	collection := client.Database("testing").Collection("numbers")
 //	resp, err := collection.InsertOne(ctx, bson.M{"name": "pi", "value": 3.14159})
@@ -77,7 +77,7 @@ var connIDPattern = regexp.MustCompile(`([^:\[]+)(?::(\d+))?\[-\d+]`)
 //	}
 func NewCommandMonitor(original *event.CommandMonitor) *event.CommandMonitor {
 	m := mongoMonitor{
-		segmentMap:  make(map[int64]*newrelic.DatastoreSegment),
+		segmentMap:  make(map[int64]*oldfritter.DatastoreSegment),
 		origCommMon: original,
 	}
 	return &event.CommandMonitor{
@@ -91,14 +91,14 @@ func (m *mongoMonitor) started(ctx context.Context, e *event.CommandStartedEvent
 	if m.origCommMon != nil && m.origCommMon.Started != nil {
 		m.origCommMon.Started(ctx, e)
 	}
-	txn := newrelic.FromContext(ctx)
+	txn := oldfritter.FromContext(ctx)
 	if txn == nil {
 		return
 	}
 	host, port := calcHostAndPort(e.ConnectionID)
-	sgmt := newrelic.DatastoreSegment{
+	sgmt := oldfritter.DatastoreSegment{
 		StartTime:    txn.StartSegmentNow(),
-		Product:      newrelic.DatastoreMongoDB,
+		Product:      oldfritter.DatastoreMongoDB,
 		Collection:   collName(e),
 		Operation:    e.CommandName,
 		Host:         host,
@@ -114,7 +114,7 @@ func collName(e *event.CommandStartedEvent) string {
 	return collName
 }
 
-func (m *mongoMonitor) addSgmt(e *event.CommandStartedEvent, sgmt *newrelic.DatastoreSegment) {
+func (m *mongoMonitor) addSgmt(e *event.CommandStartedEvent, sgmt *oldfritter.DatastoreSegment) {
 	m.Lock()
 	defer m.Unlock()
 	m.segmentMap[e.RequestID] = sgmt
@@ -138,7 +138,7 @@ func (m *mongoMonitor) endSgmtIfExists(id int64) {
 	m.getAndRemoveSgmt(id).End()
 }
 
-func (m *mongoMonitor) getAndRemoveSgmt(id int64) *newrelic.DatastoreSegment {
+func (m *mongoMonitor) getAndRemoveSgmt(id int64) *oldfritter.DatastoreSegment {
 	m.Lock()
 	defer m.Unlock()
 	sgmt := m.segmentMap[id]

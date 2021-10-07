@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic_test
+package oldfritter_test
 
 import (
 	"context"
@@ -13,16 +13,16 @@ import (
 	"os"
 	"time"
 
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func Example() {
 	// Create your application using your preferred app name, license key, and
 	// any other configuration options.
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("Example Application"),
-		newrelic.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
-		newrelic.ConfigDebugLogger(os.Stdout),
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("Example Application"),
+		oldfritter.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
+		oldfritter.ConfigDebugLogger(os.Stdout),
 	)
 	if nil != err {
 		fmt.Println(err)
@@ -45,7 +45,7 @@ func Example() {
 	// web requests handled by the http standard library without calling
 	// Application.StartTransaction.  Popular framework instrumentation
 	// packages exist in the v3/integrations directory.
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "", func(w http.ResponseWriter, req *http.Request) {
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "", func(w http.ResponseWriter, req *http.Request) {
 		io.WriteString(w, "this is the index page")
 	}))
 	helloHandler := func(w http.ResponseWriter, req *http.Request) {
@@ -53,7 +53,7 @@ func Example() {
 		// inbound request's context.  Access the transaction using
 		// FromContext to add attributes, create segments, and notice.
 		// errors.
-		txn := newrelic.FromContext(req.Context())
+		txn := oldfritter.FromContext(req.Context())
 
 		func() {
 			// Segments help you understand where the time in your
@@ -64,33 +64,33 @@ func Example() {
 
 		io.WriteString(w, "hello world")
 	}
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/hello", helloHandler))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/hello", helloHandler))
 	http.ListenAndServe(":8000", nil)
 }
 
-func currentTransaction() *newrelic.Transaction {
+func currentTransaction() *oldfritter.Transaction {
 	return nil
 }
 
-var txn *newrelic.Transaction
+var txn *oldfritter.Transaction
 
 func ExampleNewRoundTripper() {
 	client := &http.Client{}
 	// The http.RoundTripper returned by NewRoundTripper instruments all
 	// requests done by this client with external segments.
-	client.Transport = newrelic.NewRoundTripper(client.Transport)
+	client.Transport = oldfritter.NewRoundTripper(client.Transport)
 
 	request, _ := http.NewRequest("GET", "http://example.com", nil)
 
 	// Be sure to add the current Transaction to each request's context so
 	// the Transport has access to it.
 	txn := currentTransaction()
-	request = newrelic.RequestWithTransactionContext(request, txn)
+	request = oldfritter.RequestWithTransactionContext(request, txn)
 
 	client.Do(request)
 }
 
-func getApp() *newrelic.Application {
+func getApp() *oldfritter.Application {
 	return nil
 }
 
@@ -100,7 +100,7 @@ func ExampleBrowserTimingHeader() {
 		// The New Relic browser javascript should be placed as high in the
 		// HTML as possible.  We suggest including it immediately after the
 		// opening <head> tag and any <meta charset> tags.
-		txn := newrelic.FromContext(req.Context())
+		txn := oldfritter.FromContext(req.Context())
 		hdr := txn.BrowserTimingHeader()
 		// BrowserTimingHeader() will always return a header whose methods can
 		// be safely called.
@@ -109,17 +109,17 @@ func ExampleBrowserTimingHeader() {
 		}
 		io.WriteString(w, "</head><body>browser header page</body></html>")
 	}
-	http.HandleFunc(newrelic.WrapHandleFunc(getApp(), "/browser", handler))
+	http.HandleFunc(oldfritter.WrapHandleFunc(getApp(), "/browser", handler))
 	http.ListenAndServe(":8000", nil)
 }
 
 func ExampleDatastoreSegment() {
 	txn := currentTransaction()
-	ds := &newrelic.DatastoreSegment{
+	ds := &oldfritter.DatastoreSegment{
 		StartTime: txn.StartSegmentNow(),
 		// Product, Collection, and Operation are the primary metric
 		// aggregation fields which we encourage you to populate.
-		Product:    newrelic.DatastoreMySQL,
+		Product:    oldfritter.DatastoreMySQL,
 		Collection: "users_table",
 		Operation:  "SELECT",
 	}
@@ -129,10 +129,10 @@ func ExampleDatastoreSegment() {
 
 func ExampleMessageProducerSegment() {
 	txn := currentTransaction()
-	seg := &newrelic.MessageProducerSegment{
+	seg := &oldfritter.MessageProducerSegment{
 		StartTime:       txn.StartSegmentNow(),
 		Library:         "RabbitMQ",
-		DestinationType: newrelic.MessageExchange,
+		DestinationType: oldfritter.MessageExchange,
 		DestinationName: "myExchange",
 	}
 	// add message to queue here
@@ -143,11 +143,11 @@ func ExampleError() {
 	txn := currentTransaction()
 	username := "gopher"
 	e := fmt.Errorf("error unable to login user %s", username)
-	// txn.NoticeError(newrelic.Error{...}) instead of txn.NoticeError(e)
+	// txn.NoticeError(oldfritter.Error{...}) instead of txn.NoticeError(e)
 	// allows more control over error fields.  Class is how errors are
 	// aggregated and Attributes are added to the error event and error
 	// trace.
-	txn.NoticeError(newrelic.Error{
+	txn.NoticeError(oldfritter.Error{
 		Message: e.Error(),
 		Class:   "LoginError",
 		Attributes: map[string]interface{}{
@@ -160,7 +160,7 @@ func ExampleExternalSegment() {
 	txn := currentTransaction()
 	client := &http.Client{}
 	request, _ := http.NewRequest("GET", "http://www.example.com", nil)
-	segment := newrelic.StartExternalSegment(txn, request)
+	segment := oldfritter.StartExternalSegment(txn, request)
 	response, _ := client.Do(request)
 	segment.Response = response
 	segment.End()
@@ -171,7 +171,7 @@ func ExampleExternalSegment() {
 // ExternalSegment and control the URL manually.
 func ExampleExternalSegment_url() {
 	txn := currentTransaction()
-	segment := newrelic.ExternalSegment{
+	segment := oldfritter.ExternalSegment{
 		StartTime: txn.StartSegmentNow(),
 		// URL is parsed using url.Parse so it must include the protocol
 		// scheme (eg. "http://").  The host of the URL is used to
@@ -186,7 +186,7 @@ func ExampleStartExternalSegment() {
 	txn := currentTransaction()
 	client := &http.Client{}
 	request, _ := http.NewRequest("GET", "http://www.example.com", nil)
-	segment := newrelic.StartExternalSegment(txn, request)
+	segment := oldfritter.StartExternalSegment(txn, request)
 	response, _ := client.Do(request)
 	segment.Response = response
 	segment.End()
@@ -198,8 +198,8 @@ func ExampleStartExternalSegment_context() {
 
 	// If the transaction is added to the request's context then it does not
 	// need to be provided as a parameter to StartExternalSegment.
-	request = newrelic.RequestWithTransactionContext(request, txn)
-	segment := newrelic.StartExternalSegment(nil, request)
+	request = oldfritter.RequestWithTransactionContext(request, txn)
+	segment := oldfritter.StartExternalSegment(nil, request)
 
 	client := &http.Client{}
 	response, _ := client.Do(request)
@@ -214,7 +214,7 @@ func doSendRequest(*http.Request) int { return 418 }
 func ExampleExternalSegment_SetStatusCode() {
 	txn := currentTransaction()
 	request, _ := http.NewRequest("GET", "http://www.example.com", nil)
-	segment := newrelic.StartExternalSegment(txn, request)
+	segment := oldfritter.StartExternalSegment(txn, request)
 	statusCode := doSendRequest(request)
 	segment.SetStatusCode(statusCode)
 	segment.End()
@@ -223,11 +223,11 @@ func ExampleExternalSegment_SetStatusCode() {
 func ExampleTransaction_SetWebRequest() {
 	app := getApp()
 	txn := app.StartTransaction("My-Transaction")
-	txn.SetWebRequest(newrelic.WebRequest{
+	txn.SetWebRequest(oldfritter.WebRequest{
 		Header:    http.Header{},
 		URL:       &url.URL{Path: "path"},
 		Method:    "GET",
-		Transport: newrelic.TransportHTTP,
+		Transport: oldfritter.TransportHTTP,
 	})
 }
 
@@ -275,7 +275,7 @@ func ExampleTransaction_SetWebResponse() {
 		w = txn.SetWebResponse(w)
 
 		// Add the Transaction to the http.Request's Context.
-		r = newrelic.RequestWithTransactionContext(r, txn)
+		r = oldfritter.RequestWithTransactionContext(r, txn)
 
 		// The http.ResponseWriter passed to ServeHTTP has been replaced with
 		// the new instrumented http.ResponseWriter.
@@ -290,35 +290,35 @@ func ExampleConfigFromEnvironment() {
 
 	// Application is disabled.  Enabled is first set to true from
 	// ConfigFromEnvironment then set to false from ConfigEnabled.
-	_, _ = newrelic.NewApplication(
-		newrelic.ConfigFromEnvironment(),
-		newrelic.ConfigEnabled(false),
+	_, _ = oldfritter.NewApplication(
+		oldfritter.ConfigFromEnvironment(),
+		oldfritter.ConfigEnabled(false),
 	)
 
 	// Application is enabled.  Enabled is first set to false from
 	// ConfigEnabled then set to true from ConfigFromEnvironment.
-	_, _ = newrelic.NewApplication(
-		newrelic.ConfigEnabled(false),
-		newrelic.ConfigFromEnvironment(),
+	_, _ = oldfritter.NewApplication(
+		oldfritter.ConfigEnabled(false),
+		oldfritter.ConfigFromEnvironment(),
 	)
 }
 
 func ExampleNewApplication_configOptionOrder() {
 	// In this case, the Application will be disabled because the disabling
 	// ConfigOption is last.
-	_, _ = newrelic.NewApplication(
-		newrelic.ConfigEnabled(true),
-		newrelic.ConfigEnabled(false),
+	_, _ = oldfritter.NewApplication(
+		oldfritter.ConfigEnabled(true),
+		oldfritter.ConfigEnabled(false),
 	)
 }
 
 // While many ConfigOptions are provided for you, it is also possible to create
 // your own.  This is necessary if you have complex configuration needs.
 func ExampleConfigOption_custom() {
-	_, _ = newrelic.NewApplication(
-		newrelic.ConfigAppName("Example App"),
-		newrelic.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
-		func(cfg *newrelic.Config) {
+	_, _ = oldfritter.NewApplication(
+		oldfritter.ConfigAppName("Example App"),
+		oldfritter.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
+		func(cfg *oldfritter.Config) {
 			// Set specific Config fields inside a custom ConfigOption.
 			cfg.Attributes.Enabled = false
 			cfg.HighSecurity = true
@@ -331,10 +331,10 @@ func ExampleConfigOption_custom() {
 func ExampleConfigOption_errors() {
 	myError := errors.New("oops")
 
-	_, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("Example App"),
-		newrelic.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
-		func(cfg *newrelic.Config) {
+	_, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("Example App"),
+		oldfritter.ConfigLicense("__YOUR_NEW_RELIC_LICENSE_KEY__"),
+		func(cfg *oldfritter.Config) {
 			cfg.Error = myError
 		},
 	)
@@ -345,12 +345,12 @@ func ExampleConfigOption_errors() {
 
 func ExampleTransaction_StartSegmentNow() {
 	txn := currentTransaction()
-	seg := &newrelic.MessageProducerSegment{
+	seg := &oldfritter.MessageProducerSegment{
 		// The value returned from Transaction.StartSegmentNow is used for the
 		// StartTime field on any segment.
 		StartTime:       txn.StartSegmentNow(),
 		Library:         "RabbitMQ",
-		DestinationType: newrelic.MessageExchange,
+		DestinationType: oldfritter.MessageExchange,
 		DestinationName: "myExchange",
 	}
 	// add message to queue here
@@ -359,7 +359,7 @@ func ExampleTransaction_StartSegmentNow() {
 
 // Passing a new Transaction reference directly to another goroutine.
 func ExampleTransaction_NewGoroutine() {
-	go func(txn *newrelic.Transaction) {
+	go func(txn *oldfritter.Transaction) {
 		defer txn.StartSegment("async").End()
 		// Do some work
 		time.Sleep(100 * time.Millisecond)
@@ -368,7 +368,7 @@ func ExampleTransaction_NewGoroutine() {
 
 // Passing a new Transaction reference on a channel to another goroutine.
 func ExampleTransaction_NewGoroutine_channel() {
-	ch := make(chan *newrelic.Transaction)
+	ch := make(chan *oldfritter.Transaction)
 	go func() {
 		txn := <-ch
 		defer txn.StartSegment("async").End()
@@ -384,13 +384,13 @@ func ExampleTransaction_NewGoroutine_channel() {
 func ExampleTransaction_NewGoroutine_insideGoroutines() {
 	// async will always be called using `go async(ctx)`
 	async := func(ctx context.Context) {
-		txn := newrelic.FromContext(ctx)
+		txn := oldfritter.FromContext(ctx)
 		txn = txn.NewGoroutine()
 		defer txn.StartSegment("async").End()
 
 		// Do some work
 		time.Sleep(100 * time.Millisecond)
 	}
-	ctx := newrelic.NewContext(context.Background(), currentTransaction())
+	ctx := oldfritter.NewContext(context.Background(), currentTransaction())
 	go async(ctx)
 }

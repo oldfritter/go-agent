@@ -11,7 +11,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/newrelic/go-agent"
+	"github.com/oldfritter/go-agent"
 )
 
 func mustGetEnv(key string) string {
@@ -21,7 +21,7 @@ func mustGetEnv(key string) string {
 	panic(fmt.Sprintf("environment variable %s unset", key))
 }
 
-func doRequest(txn newrelic.Transaction) error {
+func doRequest(txn oldfritter.Transaction) error {
 	for _, addr := range []string{"segments", "mysql"} {
 		url := fmt.Sprintf("http://localhost:8000/%s", addr)
 		req, err := http.NewRequest("GET", url, nil)
@@ -32,7 +32,7 @@ func doRequest(txn newrelic.Transaction) error {
 
 		// Using NewRoundTripper automatically instruments all request
 		// for Distributed Tracing and Cross Application Tracing.
-		client.Transport = newrelic.NewRoundTripper(txn, nil)
+		client.Transport = oldfritter.NewRoundTripper(txn, nil)
 
 		resp, err := client.Do(req)
 		if nil != err {
@@ -44,10 +44,10 @@ func doRequest(txn newrelic.Transaction) error {
 }
 
 func main() {
-	cfg := newrelic.NewConfig("Client App RoundTripper", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
-	cfg.Logger = newrelic.NewDebugLogger(os.Stdout)
+	cfg := oldfritter.NewConfig("Client App RoundTripper", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
+	cfg.Logger = oldfritter.NewDebugLogger(os.Stdout)
 	cfg.DistributedTracer.Enabled = true
-	app, err := newrelic.NewApplication(cfg)
+	app, err := oldfritter.NewApplication(cfg)
 	if nil != err {
 		fmt.Println(err)
 		os.Exit(1)

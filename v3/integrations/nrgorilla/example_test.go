@@ -7,12 +7,12 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/newrelic/go-agent/v3/integrations/nrgorilla"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/nrgorilla"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 var (
-	app                *newrelic.Application
+	app                *oldfritter.Application
 	MyCustomMiddleware mux.MiddlewareFunc
 )
 
@@ -39,9 +39,9 @@ func ExampleMiddleware_specialHandlers() {
 	r.Use(nrgorilla.Middleware(app))
 
 	// The NotFoundHandler and MethodNotAllowedHandler must be instrumented
-	// separately using newrelic.WrapHandle.  The second argument to
-	// newrelic.WrapHandle is used as the transaction name; the string returned
-	// from newrelic.WrapHandle should be ignored.
-	_, r.NotFoundHandler = newrelic.WrapHandle(app, "NotFoundHandler", makeHandler("not found"))
-	_, r.MethodNotAllowedHandler = newrelic.WrapHandle(app, "MethodNotAllowedHandler", makeHandler("method not allowed"))
+	// separately using oldfritter.WrapHandle.  The second argument to
+	// oldfritter.WrapHandle is used as the transaction name; the string returned
+	// from oldfritter.WrapHandle should be ignored.
+	_, r.NotFoundHandler = oldfritter.WrapHandle(app, "NotFoundHandler", makeHandler("not found"))
+	_, r.MethodNotAllowedHandler = oldfritter.WrapHandle(app, "MethodNotAllowedHandler", makeHandler("method not allowed"))
 }

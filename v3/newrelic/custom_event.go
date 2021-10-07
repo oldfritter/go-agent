@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"bytes"
@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// https://newrelic.atlassian.net/wiki/display/eng/Custom+Events+in+New+Relic+Agents
+// https://oldfritter.atlassian.net/wiki/display/eng/Custom+Events+in+New+Relic+Agents
 
 var (
 	eventTypeRegexRaw = `^[a-zA-Z0-9:_ ]+$`

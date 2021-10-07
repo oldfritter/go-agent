@@ -3,7 +3,7 @@
 
 package internal
 
-// https://newrelic.atlassian.net/wiki/display/eng/Language+agent+transaction+segment+terms+rules
+// https://oldfritter.atlassian.net/wiki/display/eng/Language+agent+transaction+segment+terms+rules
 
 import (
 	"encoding/json"

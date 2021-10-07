@@ -11,10 +11,10 @@
 //
 // In the simplest case, simply add interceptors as in the following example:
 //
-//  app, _ := newrelic.NewApplication(
-//     newrelic.ConfigAppName("gRPC Server"),
-//     newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-//     newrelic.ConfigDebugLogger(os.Stdout),
+//  app, _ := oldfritter.NewApplication(
+//     oldfritter.ConfigAppName("gRPC Server"),
+//     oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+//     oldfritter.ConfigDebugLogger(os.Stdout),
 //  )
 //  server := grpc.NewServer(
 //     grpc.UnaryInterceptor(nrgrpc.UnaryServerInterceptor(app)),
@@ -28,7 +28,7 @@
 // call, or globally via the Configure function.
 //
 // Full example:
-// https://github.com/newrelic/go-agent/blob/master/v3/integrations/nrgrpc/example/server/server.go
+// https://github.com/oldfritter/go-agent/blob/master/v3/integrations/nrgrpc/example/server/server.go
 //
 
 package nrgrpc
@@ -38,14 +38,14 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
-func startTransaction(ctx context.Context, app *newrelic.Application, fullMethod string) *newrelic.Transaction {
+func startTransaction(ctx context.Context, app *oldfritter.Application, fullMethod string) *oldfritter.Transaction {
 	method := strings.TrimPrefix(fullMethod, "/")
 
 	var hdrs http.Header
@@ -61,11 +61,11 @@ func startTransaction(ctx context.Context, app *newrelic.Application, fullMethod
 	target := hdrs.Get(":authority")
 	url := getURL(method, target)
 
-	webReq := newrelic.WebRequest{
+	webReq := oldfritter.WebRequest{
 		Header:    hdrs,
 		URL:       url,
 		Method:    method,
-		Transport: newrelic.TransportHTTP,
+		Transport: oldfritter.TransportHTTP,
 	}
 	txn := app.StartTransaction(method)
 	txn.SetWebRequest(webReq)
@@ -79,7 +79,7 @@ func startTransaction(ctx context.Context, app *newrelic.Application, fullMethod
 // a custom handler may be crafted by the user and installed as a handler
 // if needed.
 //
-type ErrorHandler func(context.Context, *newrelic.Transaction, *status.Status)
+type ErrorHandler func(context.Context, *oldfritter.Transaction, *status.Status)
 
 //
 // Internal registry of handlers associated with various
@@ -137,7 +137,7 @@ type HandlerOption func(statusHandlerMap)
 //
 // Finally, if you have a custom reporting need that isn't covered by the standard
 // handler functions, you can create your own handler function as
-//   func myHandler(ctx context.Context, txn *newrelic.Transaction, s *status.Status) {
+//   func myHandler(ctx context.Context, txn *oldfritter.Transaction, s *status.Status) {
 //      ...
 //   }
 // Within the function, do whatever you need to do with the txn parameter to report the
@@ -172,7 +172,7 @@ func Configure(options ...HandlerOption) {
 // gRPC statuses which we want to ignore (in terms of any gRPC-specific
 // reporting on the transaction).
 //
-func IgnoreInterceptorStatusHandler(_ context.Context, _ *newrelic.Transaction, _ *status.Status) {}
+func IgnoreInterceptorStatusHandler(_ context.Context, _ *oldfritter.Transaction, _ *status.Status) {}
 
 //
 // OKInterceptorStatusHandler is our standard handler for
@@ -182,7 +182,7 @@ func IgnoreInterceptorStatusHandler(_ context.Context, _ *newrelic.Transaction, 
 // This adds no additional attributes on the transaction other than
 // the fact that it was successful.
 //
-func OKInterceptorStatusHandler(ctx context.Context, txn *newrelic.Transaction, s *status.Status) {
+func OKInterceptorStatusHandler(ctx context.Context, txn *oldfritter.Transaction, s *status.Status) {
 	txn.SetWebResponse(nil).WriteHeader(int(codes.OK))
 }
 
@@ -192,9 +192,9 @@ func OKInterceptorStatusHandler(ctx context.Context, txn *newrelic.Transaction, 
 // with the relevant error messages and
 // contextual information gleaned from the error value received from the RPC call.
 //
-func ErrorInterceptorStatusHandler(ctx context.Context, txn *newrelic.Transaction, s *status.Status) {
+func ErrorInterceptorStatusHandler(ctx context.Context, txn *oldfritter.Transaction, s *status.Status) {
 	txn.SetWebResponse(nil).WriteHeader(int(codes.OK))
-	txn.NoticeError(&newrelic.Error{
+	txn.NoticeError(&oldfritter.Error{
 		Message: s.Message(),
 		Class:   "gRPC Status: " + s.Code().String(),
 	})
@@ -210,7 +210,7 @@ func ErrorInterceptorStatusHandler(ctx context.Context, txn *newrelic.Transactio
 // Reports the transaction's status with attributes containing information gleaned
 // from the error value returned, but does not count this as an error.
 //
-func WarningInterceptorStatusHandler(ctx context.Context, txn *newrelic.Transaction, s *status.Status) {
+func WarningInterceptorStatusHandler(ctx context.Context, txn *oldfritter.Transaction, s *status.Status) {
 	txn.SetWebResponse(nil).WriteHeader(int(codes.OK))
 	txn.AddAttribute("GrpcStatusLevel", "warning")
 	txn.AddAttribute("GrpcStatusMessage", s.Message())
@@ -224,7 +224,7 @@ func WarningInterceptorStatusHandler(ctx context.Context, txn *newrelic.Transact
 // Reports the transaction's status with attributes containing information gleaned
 // from the error value returned, but does not count this as an error.
 //
-func InfoInterceptorStatusHandler(ctx context.Context, txn *newrelic.Transaction, s *status.Status) {
+func InfoInterceptorStatusHandler(ctx context.Context, txn *oldfritter.Transaction, s *status.Status) {
 	txn.SetWebResponse(nil).WriteHeader(int(codes.OK))
 	txn.AddAttribute("GrpcStatusLevel", "info")
 	txn.AddAttribute("GrpcStatusMessage", s.Message())
@@ -241,7 +241,7 @@ var DefaultInterceptorStatusHandler = InfoInterceptorStatusHandler
 //
 // reportInterceptorStatus is the common routine for reporting any kind of interceptor.
 //
-func reportInterceptorStatus(ctx context.Context, txn *newrelic.Transaction, handlers statusHandlerMap, err error) {
+func reportInterceptorStatus(ctx context.Context, txn *oldfritter.Transaction, handlers statusHandlerMap, err error) {
 	grpcStatus := status.Convert(err)
 	handler, ok := handlers[grpcStatus.Code()]
 	if !ok {
@@ -252,7 +252,7 @@ func reportInterceptorStatus(ctx context.Context, txn *newrelic.Transaction, han
 
 // UnaryServerInterceptor instruments server unary RPCs.
 //
-// Use this function with grpc.UnaryInterceptor and a newrelic.Application to
+// Use this function with grpc.UnaryInterceptor and a oldfritter.Application to
 // create a grpc.ServerOption to pass to grpc.NewServer.  This interceptor
 // records each unary call with a transaction.  You must use both
 // UnaryServerInterceptor and StreamServerInterceptor to instrument unary and
@@ -260,10 +260,10 @@ func reportInterceptorStatus(ctx context.Context, txn *newrelic.Transaction, han
 //
 // Example:
 //
-//	app, _ := newrelic.NewApplication(
-//		newrelic.ConfigAppName("gRPC Server"),
-//		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-//		newrelic.ConfigDebugLogger(os.Stdout),
+//	app, _ := oldfritter.NewApplication(
+//		oldfritter.ConfigAppName("gRPC Server"),
+//		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+//		oldfritter.ConfigDebugLogger(os.Stdout),
 //	)
 //	server := grpc.NewServer(
 //		grpc.UnaryInterceptor(nrgrpc.UnaryServerInterceptor(app)),
@@ -271,11 +271,11 @@ func reportInterceptorStatus(ctx context.Context, txn *newrelic.Transaction, han
 //	)
 //
 // These interceptors add the transaction to the call context so it may be
-// accessed in your method handlers using newrelic.FromContext.
+// accessed in your method handlers using oldfritter.FromContext.
 //
 // The nrgrpc integration has a built-in set of handlers for each gRPC status
 // code encountered. Serious errors are reported as error traces à la the
-// newrelic.NoticeError function, while the others are reported but not
+// oldfritter.NoticeError function, while the others are reported but not
 // counted as errors.
 //
 // If you wish to change this behavior, you may do so at a global level for
@@ -291,7 +291,7 @@ func reportInterceptorStatus(ctx context.Context, txn *newrelic.Transaction, han
 // In this case, those two handlers are used (along with the current defaults for the other status
 // codes) only for that interceptor.
 //
-func UnaryServerInterceptor(app *newrelic.Application, options ...HandlerOption) grpc.UnaryServerInterceptor {
+func UnaryServerInterceptor(app *oldfritter.Application, options ...HandlerOption) grpc.UnaryServerInterceptor {
 	if app == nil {
 		return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 			return handler(ctx, req)
@@ -310,7 +310,7 @@ func UnaryServerInterceptor(app *newrelic.Application, options ...HandlerOption)
 		txn := startTransaction(ctx, app, info.FullMethod)
 		defer txn.End()
 
-		ctx = newrelic.NewContext(ctx, txn)
+		ctx = oldfritter.NewContext(ctx, txn)
 		resp, err = handler(ctx, req)
 		reportInterceptorStatus(ctx, txn, localHandlerMap, err)
 		return
@@ -319,15 +319,15 @@ func UnaryServerInterceptor(app *newrelic.Application, options ...HandlerOption)
 
 type wrappedServerStream struct {
 	grpc.ServerStream
-	txn *newrelic.Transaction
+	txn *oldfritter.Transaction
 }
 
 func (s wrappedServerStream) Context() context.Context {
 	ctx := s.ServerStream.Context()
-	return newrelic.NewContext(ctx, s.txn)
+	return oldfritter.NewContext(ctx, s.txn)
 }
 
-func newWrappedServerStream(stream grpc.ServerStream, txn *newrelic.Transaction) grpc.ServerStream {
+func newWrappedServerStream(stream grpc.ServerStream, txn *oldfritter.Transaction) grpc.ServerStream {
 	return wrappedServerStream{
 		ServerStream: stream,
 		txn:          txn,
@@ -336,7 +336,7 @@ func newWrappedServerStream(stream grpc.ServerStream, txn *newrelic.Transaction)
 
 // StreamServerInterceptor instruments server streaming RPCs.
 //
-// Use this function with grpc.StreamInterceptor and a newrelic.Application to
+// Use this function with grpc.StreamInterceptor and a oldfritter.Application to
 // create a grpc.ServerOption to pass to grpc.NewServer.  This interceptor
 // records each streaming call with a transaction.  You must use both
 // UnaryServerInterceptor and StreamServerInterceptor to instrument unary and
@@ -344,7 +344,7 @@ func newWrappedServerStream(stream grpc.ServerStream, txn *newrelic.Transaction)
 //
 // See the notes and examples for the UnaryServerInterceptor function.
 //
-func StreamServerInterceptor(app *newrelic.Application, options ...HandlerOption) grpc.StreamServerInterceptor {
+func StreamServerInterceptor(app *oldfritter.Application, options ...HandlerOption) grpc.StreamServerInterceptor {
 	if app == nil {
 		return func(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 			return handler(srv, ss)

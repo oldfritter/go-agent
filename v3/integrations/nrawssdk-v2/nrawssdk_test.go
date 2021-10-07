@@ -17,9 +17,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/lambda/types"
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/integrationsupport"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/integrationsupport"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func testApp() integrationsupport.ExpectApp {
@@ -59,7 +59,7 @@ var fakeCreds = func() interface{} {
 	return fakeCredsWithContext{}
 }()
 
-func newConfig(ctx context.Context, txn *newrelic.Transaction) aws.Config {
+func newConfig(ctx context.Context, txn *oldfritter.Transaction) aws.Config {
 	cfg, _ := config.LoadDefaultConfig(ctx)
 	cfg.Credentials = fakeCreds.(aws.CredentialsProvider)
 	cfg.Region = awsRegion
@@ -191,8 +191,8 @@ var (
 type testTableEntry struct {
 	Name string
 
-	BuildContext func(txn *newrelic.Transaction) context.Context
-	BuildConfig  func(ctx context.Context, txn *newrelic.Transaction) aws.Config
+	BuildContext func(txn *oldfritter.Transaction) context.Context
+	BuildConfig  func(ctx context.Context, txn *oldfritter.Transaction) aws.Config
 }
 
 func runTestTable(t *testing.T, table []*testTableEntry, executeEntry func(t *testing.T, entry *testTableEntry)) {
@@ -211,7 +211,7 @@ func TestInstrumentRequestExternal(t *testing.T) {
 			{
 				Name: "with manually set transaction",
 
-				BuildContext: func(txn *newrelic.Transaction) context.Context {
+				BuildContext: func(txn *oldfritter.Transaction) context.Context {
 					return context.Background()
 				},
 				BuildConfig: newConfig,
@@ -219,10 +219,10 @@ func TestInstrumentRequestExternal(t *testing.T) {
 			{
 				Name: "with transaction set in context",
 
-				BuildContext: func(txn *newrelic.Transaction) context.Context {
-					return newrelic.NewContext(context.Background(), txn)
+				BuildContext: func(txn *oldfritter.Transaction) context.Context {
+					return oldfritter.NewContext(context.Background(), txn)
 				},
-				BuildConfig: func(ctx context.Context, txn *newrelic.Transaction) aws.Config {
+				BuildConfig: func(ctx context.Context, txn *oldfritter.Transaction) aws.Config {
 					return newConfig(ctx, nil) // Set txn to nil to ensure transaction is retrieved from the context
 				},
 			},
@@ -263,7 +263,7 @@ func TestInstrumentRequestDatastore(t *testing.T) {
 			{
 				Name: "with manually set transaction",
 
-				BuildContext: func(txn *newrelic.Transaction) context.Context {
+				BuildContext: func(txn *oldfritter.Transaction) context.Context {
 					return context.Background()
 				},
 				BuildConfig: newConfig,
@@ -271,10 +271,10 @@ func TestInstrumentRequestDatastore(t *testing.T) {
 			{
 				Name: "with transaction set in context",
 
-				BuildContext: func(txn *newrelic.Transaction) context.Context {
-					return newrelic.NewContext(context.Background(), txn)
+				BuildContext: func(txn *oldfritter.Transaction) context.Context {
+					return oldfritter.NewContext(context.Background(), txn)
 				},
-				BuildConfig: func(ctx context.Context, txn *newrelic.Transaction) aws.Config {
+				BuildConfig: func(ctx context.Context, txn *oldfritter.Transaction) aws.Config {
 					return newConfig(ctx, nil) // Set txn to nil to ensure transaction is retrieved from the context
 				},
 			},
@@ -331,7 +331,7 @@ func TestRetrySend(t *testing.T) {
 			{
 				Name: "with manually set transaction",
 
-				BuildContext: func(txn *newrelic.Transaction) context.Context {
+				BuildContext: func(txn *oldfritter.Transaction) context.Context {
 					return context.Background()
 				},
 				BuildConfig: newConfig,
@@ -339,10 +339,10 @@ func TestRetrySend(t *testing.T) {
 			{
 				Name: "with transaction set in context",
 
-				BuildContext: func(txn *newrelic.Transaction) context.Context {
-					return newrelic.NewContext(context.Background(), txn)
+				BuildContext: func(txn *oldfritter.Transaction) context.Context {
+					return oldfritter.NewContext(context.Background(), txn)
 				},
-				BuildConfig: func(ctx context.Context, txn *newrelic.Transaction) aws.Config {
+				BuildConfig: func(ctx context.Context, txn *oldfritter.Transaction) aws.Config {
 					return newConfig(ctx, nil) // Set txn to nil to ensure transaction is retrieved from the context
 				},
 			},
@@ -452,7 +452,7 @@ func TestRequestSentTwice(t *testing.T) {
 			{
 				Name: "with manually set transaction",
 
-				BuildContext: func(txn *newrelic.Transaction) context.Context {
+				BuildContext: func(txn *oldfritter.Transaction) context.Context {
 					return context.Background()
 				},
 				BuildConfig: newConfig,
@@ -460,10 +460,10 @@ func TestRequestSentTwice(t *testing.T) {
 			{
 				Name: "with transaction set in context",
 
-				BuildContext: func(txn *newrelic.Transaction) context.Context {
-					return newrelic.NewContext(context.Background(), txn)
+				BuildContext: func(txn *oldfritter.Transaction) context.Context {
+					return oldfritter.NewContext(context.Background(), txn)
 				},
-				BuildConfig: func(ctx context.Context, txn *newrelic.Transaction) aws.Config {
+				BuildConfig: func(ctx context.Context, txn *oldfritter.Transaction) aws.Config {
 					return newConfig(ctx, nil) // Set txn to nil to ensure transaction is retrieved from the context
 				},
 			},
@@ -530,7 +530,7 @@ func TestNoRequestIDFound(t *testing.T) {
 			{
 				Name: "with manually set transaction",
 
-				BuildContext: func(txn *newrelic.Transaction) context.Context {
+				BuildContext: func(txn *oldfritter.Transaction) context.Context {
 					return context.Background()
 				},
 				BuildConfig: newConfig,
@@ -538,10 +538,10 @@ func TestNoRequestIDFound(t *testing.T) {
 			{
 				Name: "with transaction set in context",
 
-				BuildContext: func(txn *newrelic.Transaction) context.Context {
-					return newrelic.NewContext(context.Background(), txn)
+				BuildContext: func(txn *oldfritter.Transaction) context.Context {
+					return oldfritter.NewContext(context.Background(), txn)
 				},
-				BuildConfig: func(ctx context.Context, txn *newrelic.Transaction) aws.Config {
+				BuildConfig: func(ctx context.Context, txn *oldfritter.Transaction) aws.Config {
 					return newConfig(ctx, nil) // Set txn to nil to ensure transaction is retrieved from the context
 				},
 			},

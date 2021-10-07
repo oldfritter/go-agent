@@ -15,8 +15,8 @@ import (
 	"github.com/graph-gophers/graphql-go/errors"
 	"github.com/graph-gophers/graphql-go/introspection"
 	"github.com/graph-gophers/graphql-go/trace"
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func init() { internal.TrackUsage("integration", "framework", "graph-gophers") }
@@ -76,7 +76,7 @@ func (t *tracer) stopField(id requestID) {
 }
 
 func (t *tracer) TraceQuery(ctx context.Context, queryString string, operationName string, variables map[string]interface{}, varTypes map[string]*introspection.Type) (context.Context, trace.TraceQueryFinishFunc) {
-	txn := newrelic.FromContext(ctx)
+	txn := oldfritter.FromContext(ctx)
 	if nil == txn {
 		return ctx, func([]*errors.QueryError) {}
 	}
@@ -103,7 +103,7 @@ func (t *tracer) TraceQuery(ctx context.Context, queryString string, operationNa
 }
 
 func (t *tracer) TraceField(ctx context.Context, label, typeName, fieldName string, trivial bool, args map[string]interface{}) (context.Context, trace.TraceFieldFinishFunc) {
-	txn := newrelic.FromContext(ctx)
+	txn := oldfritter.FromContext(ctx)
 	if nil == txn {
 		return ctx, func(*errors.QueryError) {}
 	}
@@ -117,7 +117,7 @@ func (t *tracer) TraceField(ctx context.Context, label, typeName, fieldName stri
 		txn = txn.NewGoroutine()
 		// Update the context with the async transaction in case it is
 		// possible to make segments inside the field handling code.
-		ctx = newrelic.NewContext(ctx, txn)
+		ctx = oldfritter.NewContext(ctx, txn)
 	}
 
 	segment := txn.StartSegment(fieldName)

@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/micro/go-micro"
-	"github.com/newrelic/go-agent/v3/integrations/nrmicro"
-	proto "github.com/newrelic/go-agent/v3/integrations/nrmicro/example/proto"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/nrmicro"
+	proto "github.com/oldfritter/go-agent/v3/integrations/nrmicro/example/proto"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func subEv(ctx context.Context, msg *proto.HelloRequest) error {
@@ -21,13 +21,13 @@ func subEv(ctx context.Context, msg *proto.HelloRequest) error {
 	return nil
 }
 
-func publish(s micro.Service, app *newrelic.Application) {
+func publish(s micro.Service, app *oldfritter.Application) {
 	c := s.Client()
 
 	for range time.NewTicker(time.Second).C {
 		txn := app.StartTransaction("publish")
 		msg := c.NewMessage("example.topic.pubsub", &proto.HelloRequest{Name: "Sally"})
-		ctx := newrelic.NewContext(context.Background(), txn)
+		ctx := oldfritter.NewContext(context.Background(), txn)
 		fmt.Println("Sending message")
 		if err := c.Publish(ctx, msg); nil != err {
 			log.Fatal(err)
@@ -37,10 +37,10 @@ func publish(s micro.Service, app *newrelic.Application) {
 }
 
 func main() {
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("Micro Pub/Sub"),
-		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-		newrelic.ConfigDebugLogger(os.Stdout),
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("Micro Pub/Sub"),
+		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		oldfritter.ConfigDebugLogger(os.Stdout),
 	)
 	if nil != err {
 		panic(err)

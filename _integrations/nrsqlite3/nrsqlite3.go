@@ -23,7 +23,7 @@
 // Then change the side-effect import to this package, and open "nrsqlite3" instead:
 //
 //	import (
-//		_ "github.com/newrelic/go-agent/_integrations/nrsqlite3"
+//		_ "github.com/oldfritter/go-agent/_integrations/nrsqlite3"
 //	)
 //
 //	func main() {
@@ -54,7 +54,7 @@
 //		db, err := sql.Open("sqlite3_with_extensions", ":memory:")
 //	}
 //
-// 2. Provide a context containing a newrelic.Transaction to all exec and query
+// 2. Provide a context containing a oldfritter.Transaction to all exec and query
 // methods on sql.DB, sql.Conn, sql.Tx, and sql.Stmt.  This requires using the
 // context methods ExecContext, QueryContext, and QueryRowContext in place of
 // Exec, Query, and QueryRow respectively.  For example, instead of the
@@ -64,11 +64,11 @@
 //
 // Do this:
 //
-//	ctx := newrelic.NewContext(context.Background(), txn)
+//	ctx := oldfritter.NewContext(context.Background(), txn)
 //	row := db.QueryRowContext(ctx, "SELECT count(*) from tables")
 //
 // A working example is shown here:
-// https://github.com/newrelic/go-agent/tree/master/_integrations/nrsqlite3/example/main.go
+// https://github.com/oldfritter/go-agent/tree/master/_integrations/nrsqlite3/example/main.go
 package nrsqlite3
 
 import (
@@ -78,15 +78,15 @@ import (
 	"strings"
 
 	sqlite3 "github.com/mattn/go-sqlite3"
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/internal"
-	"github.com/newrelic/go-agent/internal/sqlparse"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal/sqlparse"
 )
 
 var (
-	baseBuilder = newrelic.SQLDriverSegmentBuilder{
-		BaseSegment: newrelic.DatastoreSegment{
-			Product: newrelic.DatastoreSQLite,
+	baseBuilder = oldfritter.SQLDriverSegmentBuilder{
+		BaseSegment: oldfritter.DatastoreSegment{
+			Product: oldfritter.DatastoreSQLite,
 		},
 		ParseQuery: sqlparse.ParseQuery,
 		ParseDSN:   parseDSN,
@@ -118,7 +118,7 @@ func init() {
 //		}))
 //
 func InstrumentSQLDriver(d *sqlite3.SQLiteDriver) driver.Driver {
-	return newrelic.InstrumentSQLDriver(d, baseBuilder)
+	return oldfritter.InstrumentSQLDriver(d, baseBuilder)
 }
 
 func getPortPathOrID(dsn string) (ppoid string) {
@@ -135,8 +135,8 @@ func getPortPathOrID(dsn string) (ppoid string) {
 }
 
 // ParseDSN accepts a DSN string and sets the Host, PortPathOrID, and
-// DatabaseName fields on a newrelic.DatastoreSegment.
-func parseDSN(s *newrelic.DatastoreSegment, dsn string) {
+// DatabaseName fields on a oldfritter.DatastoreSegment.
+func parseDSN(s *oldfritter.DatastoreSegment, dsn string) {
 	// See https://godoc.org/github.com/mattn/go-sqlite3#SQLiteDriver.Open
 	s.Host = "localhost"
 	s.PortPathOrID = getPortPathOrID(dsn)

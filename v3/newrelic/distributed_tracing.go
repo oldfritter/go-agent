@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"encoding/base64"
@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/newrelic/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal"
 )
 
 type distTraceVersion [2]int
@@ -152,13 +152,13 @@ func (p payload) text(v distTraceVersion) []byte {
 	return js
 }
 
-// NRText implements newrelic.DistributedTracePayload.
+// NRText implements oldfritter.DistributedTracePayload.
 func (p payload) NRText() string {
 	t := p.text(currentDistTraceVersion)
 	return string(t)
 }
 
-// NRHTTPSafe implements newrelic.DistributedTracePayload.
+// NRHTTPSafe implements oldfritter.DistributedTracePayload.
 func (p payload) NRHTTPSafe() string {
 	t := p.text(currentDistTraceVersion)
 	return base64.StdEncoding.EncodeToString(t)

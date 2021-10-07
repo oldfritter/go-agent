@@ -9,8 +9,8 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/newrelic/go-agent/v3/integrations/nrgorilla"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/nrgorilla"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func makeHandler(text string) http.Handler {
@@ -20,10 +20,10 @@ func makeHandler(text string) http.Handler {
 }
 
 func main() {
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("Gorilla App"),
-		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-		newrelic.ConfigDebugLogger(os.Stdout),
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("Gorilla App"),
+		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		oldfritter.ConfigDebugLogger(os.Stdout),
 	)
 	if nil != err {
 		fmt.Println(err)
@@ -45,8 +45,8 @@ func main() {
 
 	// The NotFoundHandler and MethodNotAllowedHandler must be instrumented
 	// separately.
-	_, r.NotFoundHandler = newrelic.WrapHandle(app, "NotFoundHandler", makeHandler("not found"))
-	_, r.MethodNotAllowedHandler = newrelic.WrapHandle(app, "MethodNotAllowedHandler", makeHandler("method not allowed"))
+	_, r.NotFoundHandler = oldfritter.WrapHandle(app, "NotFoundHandler", makeHandler("not found"))
+	_, r.MethodNotAllowedHandler = oldfritter.WrapHandle(app, "MethodNotAllowedHandler", makeHandler("method not allowed"))
 
 	http.ListenAndServe(":8000", r)
 }

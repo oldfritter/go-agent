@@ -9,7 +9,7 @@
 // Server
 //
 // To instrument a gRPC server, use UnaryServerInterceptor and
-// StreamServerInterceptor with your newrelic.Application to create server
+// StreamServerInterceptor with your oldfritter.Application to create server
 // interceptors to pass to grpc.NewServer.
 //
 // The results of these calls are reported as errors or as informational
@@ -18,10 +18,10 @@
 //
 // In the simplest case, simply add interceptors as in the following example:
 //
-//  app, _ := newrelic.NewApplication(
-//     newrelic.ConfigAppName("gRPC Server"),
-//     newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-//     newrelic.ConfigDebugLogger(os.Stdout),
+//  app, _ := oldfritter.NewApplication(
+//     oldfritter.ConfigAppName("gRPC Server"),
+//     oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+//     oldfritter.ConfigDebugLogger(os.Stdout),
 //  )
 //  server := grpc.NewServer(
 //     grpc.UnaryInterceptor(nrgrpc.UnaryServerInterceptor(app)),
@@ -65,13 +65,13 @@
 //
 // These interceptors create transactions for inbound calls.  The transaction is
 // added to the call context and can be accessed in your method handlers
-// using newrelic.FromContext.
+// using oldfritter.FromContext.
 //
 //	// handler is your gRPC server handler. Access the currently running
-//	// transaction using newrelic.FromContext.
+//	// transaction using oldfritter.FromContext.
 //	func (s *Server) handler(ctx context.Context, msg *pb.Message) (*pb.Message, error) {
 //		if err := processMsg(msg); err != nil {
-//			txn := newrelic.FromContext(ctx)
+//			txn := oldfritter.FromContext(ctx)
 //			txn.NoticeError(err)
 //			return nil, err
 //		}
@@ -79,7 +79,7 @@
 // 	}
 //
 // Full server example:
-// https://github.com/newrelic/go-agent/blob/master/v3/integrations/nrgrpc/example/server/server.go
+// https://github.com/oldfritter/go-agent/blob/master/v3/integrations/nrgrpc/example/server/server.go
 //
 // Client
 //
@@ -95,17 +95,17 @@
 //	)
 //
 // 2. Ensure that calls made with this grpc.ClientConn are done with a context
-// which contains a newrelic.Transaction.
+// which contains a oldfritter.Transaction.
 //
 //	// Add the currently running transaction to the context before making a
 //	// client call.
-//	ctx := newrelic.NewContext(context.Background(), txn)
+//	ctx := oldfritter.NewContext(context.Background(), txn)
 //	msg, err := client.handler(ctx, &pb.Message{"Hello World"})
 //
 // Full client example:
-// https://github.com/newrelic/go-agent/blob/master/v3/integrations/nrgrpc/example/client/client.go
+// https://github.com/oldfritter/go-agent/blob/master/v3/integrations/nrgrpc/example/client/client.go
 package nrgrpc
 
-import "github.com/newrelic/go-agent/v3/internal"
+import "github.com/oldfritter/go-agent/v3/internal"
 
 func init() { internal.TrackUsage("integration", "framework", "grpc") }

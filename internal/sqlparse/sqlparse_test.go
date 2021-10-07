@@ -6,8 +6,8 @@ package sqlparse
 import (
 	"testing"
 
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/internal/crossagent"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/internal/crossagent"
 )
 
 type sqlTestcase struct {
@@ -17,7 +17,7 @@ type sqlTestcase struct {
 }
 
 func (tc sqlTestcase) test(t *testing.T) {
-	var segment newrelic.DatastoreSegment
+	var segment oldfritter.DatastoreSegment
 	ParseQuery(&segment, tc.Input)
 	if tc.Operation == "other" {
 		// Allow for matching of Operation "other" to ""

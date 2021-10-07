@@ -22,28 +22,28 @@ import (
 	"os/exec"
 	"time"
 
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
-func called(app *newrelic.Application, payload string) {
+func called(app *oldfritter.Application, payload string) {
 	txn := app.StartTransaction("called-txn")
 	defer txn.End()
 
 	// Accept the payload that was passed on the command line.
 	hdrs := http.Header{}
-	hdrs.Set(newrelic.DistributedTraceNewRelicHeader, payload)
-	txn.AcceptDistributedTraceHeaders(newrelic.TransportOther, hdrs)
+	hdrs.Set(oldfritter.DistributedTraceNewRelicHeader, payload)
+	txn.AcceptDistributedTraceHeaders(oldfritter.TransportOther, hdrs)
 	time.Sleep(1 * time.Second)
 }
 
-func calling(app *newrelic.Application) {
+func calling(app *oldfritter.Application) {
 	txn := app.StartTransaction("calling-txn")
 	defer txn.End()
 
 	// Create a payload, start the called process and pass the payload.
 	hdrs := http.Header{}
 	txn.InsertDistributedTraceHeaders(hdrs)
-	cmd := exec.Command(os.Args[0], hdrs.Get(newrelic.DistributedTraceNewRelicHeader))
+	cmd := exec.Command(os.Args[0], hdrs.Get(oldfritter.DistributedTraceNewRelicHeader))
 	cmd.Start()
 
 	// Wait until the called process is done, then exit.
@@ -51,12 +51,12 @@ func calling(app *newrelic.Application) {
 	time.Sleep(1 * time.Second)
 }
 
-func makeApplication(name string) (*newrelic.Application, error) {
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName(name),
-		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-		newrelic.ConfigDebugLogger(os.Stdout),
-		newrelic.ConfigDistributedTracerEnabled(true),
+func makeApplication(name string) (*oldfritter.Application, error) {
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName(name),
+		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		oldfritter.ConfigDebugLogger(os.Stdout),
+		oldfritter.ConfigDistributedTracerEnabled(true),
 	)
 	if nil != err {
 		return nil, err

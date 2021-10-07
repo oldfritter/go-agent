@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"errors"
@@ -14,8 +14,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/newrelic/go-agent/internal"
-	"github.com/newrelic/go-agent/internal/logger"
+	"github.com/oldfritter/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal/logger"
 )
 
 type dataConsumer interface {
@@ -417,7 +417,7 @@ func (app *app) setState(run *appRun, err error) {
 	app.err = err
 }
 
-// StartTransaction implements newrelic.Application's StartTransaction.
+// StartTransaction implements oldfritter.Application's StartTransaction.
 func (app *app) StartTransaction(name string, w http.ResponseWriter, r *http.Request) Transaction {
 	run, _ := app.getState()
 	txn := upgradeTxn(newTxn(txnInput{
@@ -439,7 +439,7 @@ var (
 	errCustomEventsRemoteDisabled = errors.New("custom events disabled by server")
 )
 
-// RecordCustomEvent implements newrelic.Application's RecordCustomEvent.
+// RecordCustomEvent implements oldfritter.Application's RecordCustomEvent.
 func (app *app) RecordCustomEvent(eventType string, params map[string]interface{}) error {
 	if app.config.HighSecurity {
 		return errHighSecurityEnabled
@@ -475,7 +475,7 @@ var (
 	errMetricServerless = errors.New("custom metrics are not currently supported in serverless mode")
 )
 
-// RecordCustomMetric implements newrelic.Application's RecordCustomMetric.
+// RecordCustomMetric implements oldfritter.Application's RecordCustomMetric.
 func (app *app) RecordCustomMetric(name string, value float64) error {
 	if app.config.ServerlessMode.Enabled {
 		return errMetricServerless

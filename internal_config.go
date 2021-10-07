@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"encoding/json"
@@ -10,9 +10,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/newrelic/go-agent/internal"
-	"github.com/newrelic/go-agent/internal/logger"
-	"github.com/newrelic/go-agent/internal/utilization"
+	"github.com/oldfritter/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal/logger"
+	"github.com/oldfritter/go-agent/internal/utilization"
 )
 
 func copyDestConfig(c AttributeDestinationConfig) AttributeDestinationConfig {
@@ -136,7 +136,7 @@ func configConnectJSONInternal(c Config, pid int, util *utilization.Data, e inte
 		Labels:          c.Labels,
 		Environment:     e,
 		// This identifier field is provided to avoid:
-		// https://newrelic.atlassian.net/browse/DSCORE-778
+		// https://oldfritter.atlassian.net/browse/DSCORE-778
 		//
 		// This identifier is used by the collector to look up the real
 		// agent. If an identifier isn't provided, the collector will

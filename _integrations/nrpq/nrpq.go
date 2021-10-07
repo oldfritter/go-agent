@@ -23,7 +23,7 @@
 // Then change the side-effect import to this package, and open "nrpostgres" instead:
 //
 //	import (
-//		_ "github.com/newrelic/go-agent/_integrations/nrpq"
+//		_ "github.com/oldfritter/go-agent/_integrations/nrpq"
 //	)
 //
 //	func main() {
@@ -33,7 +33,7 @@
 // If your code is using pq.NewConnector, simply use nrpq.NewConnector
 // instead.
 //
-// 2. Provide a context containing a newrelic.Transaction to all exec and query
+// 2. Provide a context containing a oldfritter.Transaction to all exec and query
 // methods on sql.DB, sql.Conn, and sql.Tx.  This requires using the
 // context methods ExecContext, QueryContext, and QueryRowContext in place of
 // Exec, Query, and QueryRow respectively.  For example, instead of the
@@ -43,7 +43,7 @@
 //
 // Do this:
 //
-//	ctx := newrelic.NewContext(context.Background(), txn)
+//	ctx := oldfritter.NewContext(context.Background(), txn)
 //	row := db.QueryRowContext(ctx, "SELECT count(*) FROM pg_catalog.pg_tables")
 //
 // Unfortunately, sql.Stmt exec and query calls are not supported since pq.stmt
@@ -51,7 +51,7 @@
 // https://github.com/lib/pq/pull/768).
 //
 // A working example is shown here:
-// https://github.com/newrelic/go-agent/tree/master/_integrations/nrpq/example/main.go
+// https://github.com/oldfritter/go-agent/tree/master/_integrations/nrpq/example/main.go
 package nrpq
 
 import (
@@ -63,15 +63,15 @@ import (
 	"strings"
 
 	"github.com/lib/pq"
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/internal"
-	"github.com/newrelic/go-agent/internal/sqlparse"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal/sqlparse"
 )
 
 var (
-	baseBuilder = newrelic.SQLDriverSegmentBuilder{
-		BaseSegment: newrelic.DatastoreSegment{
-			Product: newrelic.DatastorePostgres,
+	baseBuilder = oldfritter.SQLDriverSegmentBuilder{
+		BaseSegment: oldfritter.DatastoreSegment{
+			Product: oldfritter.DatastorePostgres,
 		},
 		ParseQuery: sqlparse.ParseQuery,
 		ParseDSN:   parseDSN(os.Getenv),
@@ -89,11 +89,11 @@ func NewConnector(dsn string) (driver.Connector, error) {
 	}
 	bld := baseBuilder
 	bld.ParseDSN(&bld.BaseSegment, dsn)
-	return newrelic.InstrumentSQLConnector(connector, bld), nil
+	return oldfritter.InstrumentSQLConnector(connector, bld), nil
 }
 
 func init() {
-	sql.Register("nrpostgres", newrelic.InstrumentSQLDriver(&pq.Driver{}, baseBuilder))
+	sql.Register("nrpostgres", oldfritter.InstrumentSQLDriver(&pq.Driver{}, baseBuilder))
 	internal.TrackUsage("integration", "driver", "postgres")
 }
 
@@ -105,8 +105,8 @@ func getFirstHost(value string) string {
 	return host
 }
 
-func parseDSN(getenv func(string) string) func(*newrelic.DatastoreSegment, string) {
-	return func(s *newrelic.DatastoreSegment, dsn string) {
+func parseDSN(getenv func(string) string) func(*oldfritter.DatastoreSegment, string) {
+	return func(s *oldfritter.DatastoreSegment, dsn string) {
 		if strings.HasPrefix(dsn, "postgres://") || strings.HasPrefix(dsn, "postgresql://") {
 			var err error
 			dsn, err = pq.ParseURL(dsn)

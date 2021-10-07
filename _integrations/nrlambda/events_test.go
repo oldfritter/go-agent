@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/aws/aws-lambda-go/events"
-	newrelic "github.com/newrelic/go-agent"
+	oldfritter "github.com/oldfritter/go-agent"
 )
 
 func TestGetEventAttributes(t *testing.T) {
@@ -83,7 +83,7 @@ func TestEventWebRequest(t *testing.T) {
 		numHeaders int
 		method     string
 		urlString  string
-		transport  newrelic.TransportType
+		transport  oldfritter.TransportType
 	}{
 		{
 			testname:   "empty proxy request",
@@ -91,7 +91,7 @@ func TestEventWebRequest(t *testing.T) {
 			numHeaders: 0,
 			method:     "",
 			urlString:  "",
-			transport:  newrelic.TransportUnknown,
+			transport:  oldfritter.TransportUnknown,
 		},
 		{
 			testname: "populated proxy request",
@@ -106,7 +106,7 @@ func TestEventWebRequest(t *testing.T) {
 			numHeaders: 2,
 			method:     "GET",
 			urlString:  "//:4000/the/path",
-			transport:  newrelic.TransportHTTPS,
+			transport:  oldfritter.TransportHTTPS,
 		},
 		{
 			testname:   "empty alb request",
@@ -114,7 +114,7 @@ func TestEventWebRequest(t *testing.T) {
 			numHeaders: 0,
 			method:     "",
 			urlString:  "",
-			transport:  newrelic.TransportUnknown,
+			transport:  oldfritter.TransportUnknown,
 		},
 		{
 			testname: "populated alb request",
@@ -129,7 +129,7 @@ func TestEventWebRequest(t *testing.T) {
 			numHeaders: 2,
 			method:     "GET",
 			urlString:  "//:3000/the/path",
-			transport:  newrelic.TransportHTTP,
+			transport:  oldfritter.TransportHTTP,
 		},
 	}
 

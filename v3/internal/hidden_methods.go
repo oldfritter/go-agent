@@ -9,7 +9,7 @@ import "io"
 // Application but not exposed as public methods so they will only be used in
 // integration packages.
 
-// ServerlessWriter is implemented by newrelic.Application.
+// ServerlessWriter is implemented by oldfritter.Application.
 type ServerlessWriter interface {
 	ServerlessWrite(arn string, writer io.Writer)
 }

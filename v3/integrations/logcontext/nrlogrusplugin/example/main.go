@@ -8,17 +8,17 @@ import (
 	"os"
 	"time"
 
-	"github.com/newrelic/go-agent/v3/integrations/logcontext/nrlogrusplugin"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/logcontext/nrlogrusplugin"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 	"github.com/sirupsen/logrus"
 )
 
-func doFunction2(txn *newrelic.Transaction, e *logrus.Entry) {
+func doFunction2(txn *oldfritter.Transaction, e *logrus.Entry) {
 	defer txn.StartSegment("doFunction2").End()
 	e.Error("In doFunction2")
 }
 
-func doFunction1(txn *newrelic.Transaction, e *logrus.Entry) {
+func doFunction1(txn *oldfritter.Transaction, e *logrus.Entry) {
 	defer txn.StartSegment("doFunction1").End()
 	e.Trace("In doFunction1")
 	doFunction2(txn, e)
@@ -33,10 +33,10 @@ func main() {
 
 	log.Debug("Logger created")
 
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("Logrus Log Decoration"),
-		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-		newrelic.ConfigDistributedTracerEnabled(true),
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("Logrus Log Decoration"),
+		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		oldfritter.ConfigDistributedTracerEnabled(true),
 	)
 	if nil != err {
 		log.Panic("Failed to create application", err)
@@ -56,7 +56,7 @@ func main() {
 
 	// Add the transaction context to the logger. Only once this happens will
 	// the logs be properly decorated with all required fields.
-	e := log.WithContext(newrelic.NewContext(context.Background(), txn))
+	e := log.WithContext(oldfritter.NewContext(context.Background(), txn))
 
 	doFunction1(txn, e)
 

@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/labstack/echo"
-	"github.com/newrelic/go-agent/v3/integrations/nrecho-v3"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/echo"
+	"github.com/oldfritter/go-agent/v3/integrations/nrecho-v3"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func getUser(c echo.Context) error {
@@ -23,10 +23,10 @@ func getUser(c echo.Context) error {
 }
 
 func main() {
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("Echo App"),
-		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-		newrelic.ConfigDebugLogger(os.Stdout),
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("Echo App"),
+		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		oldfritter.ConfigDebugLogger(os.Stdout),
 	)
 	if nil != err {
 		fmt.Println(err)

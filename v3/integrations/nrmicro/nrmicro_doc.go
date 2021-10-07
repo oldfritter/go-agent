@@ -10,22 +10,22 @@
 //
 // To instrument a Micro Server, use the `micro.WrapHandler`
 // (https://godoc.org/github.com/micro/go-micro#WrapHandler) option with
-// `nrmicro.HandlerWrapper` and your `newrelic.Application` and pass it to the
+// `nrmicro.HandlerWrapper` and your `oldfritter.Application` and pass it to the
 // `micro.NewService` method.  Example:
 //
-//	cfg := newrelic.NewConfig("Micro Server", os.Getenv("NEW_RELIC_LICENSE_KEY"))
-//	app, _ := newrelic.NewApplication(cfg)
+//	cfg := oldfritter.NewConfig("Micro Server", os.Getenv("NEW_RELIC_LICENSE_KEY"))
+//	app, _ := oldfritter.NewApplication(cfg)
 //	service := micro.NewService(
 //		micro.WrapHandler(nrmicro.HandlerWrapper(app)),
 //	)
 //
 // Alternatively, use the `server.WrapHandler`
 // (https://godoc.org/github.com/micro/go-micro/server#WrapHandler) option with
-// `nrmicro.HandlerWrapper` and your `newrelic.Application` and pass it to the
+// `nrmicro.HandlerWrapper` and your `oldfritter.Application` and pass it to the
 // `server.NewServer` method.  Example:
 //
-//	cfg := newrelic.NewConfig("Micro Server", os.Getenv("NEW_RELIC_LICENSE_KEY"))
-//	app, _ := newrelic.NewApplication(cfg)
+//	cfg := oldfritter.NewConfig("Micro Server", os.Getenv("NEW_RELIC_LICENSE_KEY"))
+//	app, _ := oldfritter.NewApplication(cfg)
 //	svr := server.NewServer(
 //		server.WrapHandler(nrmicro.HandlerWrapper(app)),
 //	)
@@ -36,20 +36,20 @@
 //
 // This wrapper creates transactions for inbound calls.  The transaction is
 // added to the call context and can be accessed in your method handlers using
-// `newrelic.FromContext`
-// (https://godoc.org/github.com/newrelic/go-agent#FromContext).
+// `oldfritter.FromContext`
+// (https://godoc.org/github.com/oldfritter/go-agent#FromContext).
 //
 // When an error is returned and it is of type Micro `errors.Error`
 // (https://godoc.org/github.com/micro/go-micro/errors#Error), the error that
 // is recorded is based on the HTTP response code (found in the Code field).
 // Values above 400 or below 100 that are not in the IgnoreStatusCodes
-// (https://godoc.org/github.com/newrelic/go-agent#Config) configuration list
+// (https://godoc.org/github.com/oldfritter/go-agent#Config) configuration list
 // are recorded as errors. A 500 response code and corresponding error is
 // recorded when the error is of any other type. A 200 response code is
 // recorded if no error is returned.
 //
 // Full server example:
-// https://github.com/newrelic/go-agent/blob/master/v3/integrations/nrmicro/example/server/server.go
+// https://github.com/oldfritter/go-agent/blob/master/v3/integrations/nrmicro/example/server/server.go
 //
 // Micro Clients
 //
@@ -58,9 +58,9 @@
 //
 // No matter which way the Micro `client.Client` is wrapped, all calls to
 // `Client.Call`, `Client.Publish`, or `Client.Stream` must be done with a
-// context which contains a `newrelic.Transaction`.
+// context which contains a `oldfritter.Transaction`.
 //
-//	ctx = newrelic.NewContext(ctx, txn)
+//	ctx = oldfritter.NewContext(ctx, txn)
 //	err := cli.Call(ctx, req, &rsp)
 //
 // 1. The first option is to wrap the `Call`, `Publish`, and `Stream` methods
@@ -118,7 +118,7 @@
 //	cli = nrmicro.ClientWrapper()(cli)
 //
 // Full client example:
-// https://github.com/newrelic/go-agent/blob/master/v3/integrations/nrmicro/example/client/client.go
+// https://github.com/oldfritter/go-agent/blob/master/v3/integrations/nrmicro/example/client/client.go
 //
 // Micro Producers
 //
@@ -126,7 +126,7 @@
 // `nrmico.ClientWrapper` as described in option 1 or 3 above.
 // `MessageProducerSegment`s will be created each time a `Publish` method is
 // called on the client.  Be sure the context passed to the `Publish` method
-// contains a `newrelic.Transaction`.
+// contains a `oldfritter.Transaction`.
 //
 //	service := micro.NewService(
 //		micro.WrapClient(nrmicro.ClientWrapper()),
@@ -134,33 +134,33 @@
 //	cli := service.Client()
 //
 //	// Add the transaction to the context
-//	ctx := newrelic.NewContext(context.Background(), txn)
+//	ctx := oldfritter.NewContext(context.Background(), txn)
 //	msg := cli.NewMessage("my.example.topic", "hello world")
 //	err := cli.Publish(ctx, msg)
 //
 // Full Publisher/Subscriber example:
-// https://github.com/newrelic/go-agent/blob/master/v3/integrations/nrmicro/example/pubsub/main.go
+// https://github.com/oldfritter/go-agent/blob/master/v3/integrations/nrmicro/example/pubsub/main.go
 //
 // Micro Subscribers
 //
 // To instrument a Micro Subscriber use the `micro.WrapSubscriber`
 // (https://godoc.org/github.com/micro/go-micro#WrapSubscriber) option with
-// `nrmicro.SubscriberWrapper` and your `newrelic.Application` and pass it to
+// `nrmicro.SubscriberWrapper` and your `oldfritter.Application` and pass it to
 // the `micro.NewService` method.  Example:
 //
-//	cfg := newrelic.NewConfig("Micro Subscriber", os.Getenv("NEW_RELIC_LICENSE_KEY"))
-//	app, _ := newrelic.NewApplication(cfg)
+//	cfg := oldfritter.NewConfig("Micro Subscriber", os.Getenv("NEW_RELIC_LICENSE_KEY"))
+//	app, _ := oldfritter.NewApplication(cfg)
 //	service := micro.NewService(
 //		micro.WrapSubscriber(nrmicro.SubscriberWrapper(app)),
 //	)
 //
 // Alternatively, use the `server.WrapSubscriber`
 // (https://godoc.org/github.com/micro/go-micro/server#WrapSubscriber) option
-// with `nrmicro.SubscriberWrapper` and your `newrelic.Application` and pass it
+// with `nrmicro.SubscriberWrapper` and your `oldfritter.Application` and pass it
 // to the `server.NewServer` method.  Example:
 //
-//	cfg := newrelic.NewConfig("Micro Subscriber", os.Getenv("NEW_RELIC_LICENSE_KEY"))
-//	app, _ := newrelic.NewApplication(cfg)
+//	cfg := oldfritter.NewConfig("Micro Subscriber", os.Getenv("NEW_RELIC_LICENSE_KEY"))
+//	app, _ := oldfritter.NewApplication(cfg)
 //	svr := server.NewServer(
 //		server.WrapSubscriber(nrmicro.SubscriberWrapper(app)),
 //	)
@@ -171,14 +171,14 @@
 //
 // This wrapper creates background transactions for inbound calls.  The
 // transaction is added to the subscriber context and can be accessed in your
-// subscriber handlers using `newrelic.FromContext`.
+// subscriber handlers using `oldfritter.FromContext`.
 //
 // If a Subscriber returns an error, it will be recorded and reported.
 //
 // Full Publisher/Subscriber example:
-// https://github.com/newrelic/go-agent/blob/master/v3/integrations/nrmicro/example/pubsub/main.go
+// https://github.com/oldfritter/go-agent/blob/master/v3/integrations/nrmicro/example/pubsub/main.go
 package nrmicro
 
-import "github.com/newrelic/go-agent/v3/internal"
+import "github.com/oldfritter/go-agent/v3/internal"
 
 func init() { internal.TrackUsage("integration", "framework", "micro") }

@@ -3,13 +3,13 @@
 
 // +build go1.7
 
-package newrelic
+package oldfritter
 
 import (
 	"context"
 	"net/http"
 
-	"github.com/newrelic/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal"
 )
 
 // NewContext returns a new Context that carries the provided transaction.

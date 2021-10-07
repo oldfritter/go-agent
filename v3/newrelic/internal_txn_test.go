@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"errors"
@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/cat"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/cat"
 )
 
 func TestShouldSaveTrace(t *testing.T) {
@@ -767,7 +767,7 @@ func TestErrorAttrsAreOverwritten(t *testing.T) {
 	app.ExpectSpanEvents(t, []internal.WantEvent{
 		{
 			AgentAttributes: map[string]interface{}{
-				SpanAttributeErrorClass:   "newrelic.sampleErrorClass",
+				SpanAttributeErrorClass:   "oldfritter.sampleErrorClass",
 				SpanAttributeErrorMessage: "Custom error message",
 			},
 			Intrinsics: map[string]interface{}{
@@ -830,7 +830,7 @@ func TestErrMsgDisallowed_ErrorMsgIsNotAdded(t *testing.T) {
 			app.ExpectSpanEvents(t, []internal.WantEvent{
 				{
 					AgentAttributes: map[string]interface{}{
-						SpanAttributeErrorClass:   "newrelic.sampleErrorClass",
+						SpanAttributeErrorClass:   "oldfritter.sampleErrorClass",
 						SpanAttributeErrorMessage: testCase.message,
 					},
 					Intrinsics: map[string]interface{}{
@@ -866,7 +866,7 @@ func TestErrAttrsAddedToRootSpan(t *testing.T) {
 	app.ExpectSpanEvents(t, []internal.WantEvent{
 		{
 			AgentAttributes: map[string]interface{}{
-				SpanAttributeErrorClass:   "newrelic.sampleErrorClass",
+				SpanAttributeErrorClass:   "oldfritter.sampleErrorClass",
 				SpanAttributeErrorMessage: "Custom error message",
 			},
 			Intrinsics: map[string]interface{}{

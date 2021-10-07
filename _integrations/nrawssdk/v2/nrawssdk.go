@@ -6,8 +6,8 @@ package nrawssdk
 
 import (
 	"github.com/aws/aws-sdk-go-v2/aws"
-	internal "github.com/newrelic/go-agent/_integrations/nrawssdk/internal"
-	agentinternal "github.com/newrelic/go-agent/internal"
+	internal "github.com/oldfritter/go-agent/_integrations/nrawssdk/internal"
+	agentinternal "github.com/oldfritter/go-agent/internal"
 )
 
 func init() { agentinternal.TrackUsage("integration", "library", "aws-sdk-go-v2") }
@@ -33,8 +33,8 @@ func endSegment(req *aws.Request) {
 // A Segment will be created for each out going request. The Transaction must
 // be added to the `http.Request`'s Context in order for the segment to be
 // recorded.  For DynamoDB calls, these segments will be
-// `newrelic.DatastoreSegment` type and for all others they will be
-// `newrelic.ExternalSegment` type.
+// `oldfritter.DatastoreSegment` type and for all others they will be
+// `oldfritter.ExternalSegment` type.
 //
 // Additional attributes will be added to Transaction Trace Segments and Span
 // Events: aws.region, aws.requestId, and aws.operation.
@@ -57,7 +57,7 @@ func endSegment(req *aws.Request) {
 //        Payload:        []byte("{}"),
 //    }
 //    // Add txn to http.Request's context
-//    ctx := newrelic.NewContext(req.Context(), txn)
+//    ctx := oldfritter.NewContext(req.Context(), txn)
 //    resp, err := req.Send(ctx)
 //
 // To add instrumentation to a Request and see a segment created just for the
@@ -74,7 +74,7 @@ func endSegment(req *aws.Request) {
 //    // Add instrumentation to handlers
 //    nrawssdk.InstrumentHandlers(&req.Handlers)
 //    // Add txn to http.Request's context
-//    ctx := newrelic.NewContext(req.Context(), txn)
+//    ctx := oldfritter.NewContext(req.Context(), txn)
 //    resp, err := req.Send(ctx)
 func InstrumentHandlers(handlers *aws.Handlers) {
 	handlers.Send.SetFrontNamed(aws.NamedHandler{

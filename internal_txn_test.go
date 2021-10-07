@@ -1,15 +1,15 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"testing"
 	"time"
 
-	"github.com/newrelic/go-agent/internal"
-	"github.com/newrelic/go-agent/internal/cat"
-	"github.com/newrelic/go-agent/internal/sysinfo"
+	"github.com/oldfritter/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal/cat"
+	"github.com/oldfritter/go-agent/internal/sysinfo"
 )
 
 func TestShouldSaveTrace(t *testing.T) {

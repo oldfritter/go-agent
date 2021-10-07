@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"encoding/json"
@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/newrelic/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal"
 )
 
 type myError struct{}
@@ -25,11 +25,11 @@ func TestNoticeErrorBackground(t *testing.T) {
 	app.ExpectErrors(t, []internal.WantError{{
 		TxnName: "OtherTransaction/Go/hello",
 		Msg:     "my msg",
-		Klass:   "newrelic.myError",
+		Klass:   "oldfritter.myError",
 	}})
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.myError",
+			"error.class":     "oldfritter.myError",
 			"error.message":   "my msg",
 			"transactionName": "OtherTransaction/Go/hello",
 		},
@@ -47,11 +47,11 @@ func TestNoticeErrorWeb(t *testing.T) {
 	app.ExpectErrors(t, []internal.WantError{{
 		TxnName: "WebTransaction/Go/hello",
 		Msg:     "my msg",
-		Klass:   "newrelic.myError",
+		Klass:   "oldfritter.myError",
 	}})
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.myError",
+			"error.class":     "oldfritter.myError",
 			"error.message":   "my msg",
 			"transactionName": "WebTransaction/Go/hello",
 		},
@@ -84,11 +84,11 @@ func TestNoticeErrorHighSecurity(t *testing.T) {
 	app.ExpectErrors(t, []internal.WantError{{
 		TxnName: "OtherTransaction/Go/hello",
 		Msg:     highSecurityErrorMsg,
-		Klass:   "newrelic.myError",
+		Klass:   "oldfritter.myError",
 	}})
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.myError",
+			"error.class":     "oldfritter.myError",
 			"error.message":   highSecurityErrorMsg,
 			"transactionName": "OtherTransaction/Go/hello",
 		},
@@ -106,11 +106,11 @@ func TestNoticeErrorMessageSecurityPolicy(t *testing.T) {
 	app.ExpectErrors(t, []internal.WantError{{
 		TxnName: "OtherTransaction/Go/hello",
 		Msg:     securityPolicyErrorMsg,
-		Klass:   "newrelic.myError",
+		Klass:   "oldfritter.myError",
 	}})
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.myError",
+			"error.class":     "oldfritter.myError",
 			"error.message":   securityPolicyErrorMsg,
 			"transactionName": "OtherTransaction/Go/hello",
 		},
@@ -166,11 +166,11 @@ func TestErrorsEnabledByServerSideConfig(t *testing.T) {
 	app.ExpectErrors(t, []internal.WantError{{
 		TxnName: "OtherTransaction/Go/hello",
 		Msg:     "my msg",
-		Klass:   "newrelic.myError",
+		Klass:   "oldfritter.myError",
 	}})
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.myError",
+			"error.class":     "oldfritter.myError",
 			"error.message":   "my msg",
 			"transactionName": "OtherTransaction/Go/hello",
 		},
@@ -192,7 +192,7 @@ func TestNoticeErrorTracedErrorsRemotelyDisabled(t *testing.T) {
 	app.ExpectErrors(t, []internal.WantError{})
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.myError",
+			"error.class":     "oldfritter.myError",
 			"error.message":   "my msg",
 			"transactionName": "OtherTransaction/Go/hello",
 		},
@@ -225,7 +225,7 @@ func TestNoticeErrorEventsLocallyDisabled(t *testing.T) {
 	app.ExpectErrors(t, []internal.WantError{{
 		TxnName: "OtherTransaction/Go/hello",
 		Msg:     "my msg",
-		Klass:   "newrelic.myError",
+		Klass:   "oldfritter.myError",
 	}})
 	app.ExpectErrorEvents(t, []internal.WantEvent{})
 	app.ExpectMetrics(t, backgroundErrorMetrics)
@@ -241,7 +241,7 @@ func TestNoticeErrorEventsRemotelyDisabled(t *testing.T) {
 	app.ExpectErrors(t, []internal.WantError{{
 		TxnName: "OtherTransaction/Go/hello",
 		Msg:     "my msg",
-		Klass:   "newrelic.myError",
+		Klass:   "oldfritter.myError",
 	}})
 	app.ExpectErrorEvents(t, []internal.WantEvent{})
 	app.ExpectMetrics(t, backgroundErrorMetrics)
@@ -282,11 +282,11 @@ func TestErrorWithClasserReturnsEmpty(t *testing.T) {
 	app.ExpectErrors(t, []internal.WantError{{
 		TxnName: "OtherTransaction/Go/hello",
 		Msg:     "my msg",
-		Klass:   "newrelic.errorWithClass",
+		Klass:   "oldfritter.errorWithClass",
 	}})
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.errorWithClass",
+			"error.class":     "oldfritter.errorWithClass",
 			"error.message":   "my msg",
 			"transactionName": "OtherTransaction/Go/hello",
 		},
@@ -317,11 +317,11 @@ func TestErrorWithStackTrace(t *testing.T) {
 	app.ExpectErrors(t, []internal.WantError{{
 		TxnName: "OtherTransaction/Go/hello",
 		Msg:     "my msg",
-		Klass:   "newrelic.withStackTrace",
+		Klass:   "oldfritter.withStackTrace",
 	}})
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.withStackTrace",
+			"error.class":     "oldfritter.withStackTrace",
 			"error.message":   "my msg",
 			"transactionName": "OtherTransaction/Go/hello",
 		},
@@ -339,11 +339,11 @@ func TestErrorWithStackTraceReturnsNil(t *testing.T) {
 	app.ExpectErrors(t, []internal.WantError{{
 		TxnName: "OtherTransaction/Go/hello",
 		Msg:     "my msg",
-		Klass:   "newrelic.withStackTrace",
+		Klass:   "oldfritter.withStackTrace",
 	}})
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.withStackTrace",
+			"error.class":     "oldfritter.withStackTrace",
 			"error.message":   "my msg",
 			"transactionName": "OtherTransaction/Go/hello",
 		},
@@ -609,13 +609,13 @@ func TestErrorClass(t *testing.T) {
 		Error  error
 		Expect string
 	}{
-		{Error: basicError{}, Expect: "newrelic.basicError"},
+		{Error: basicError{}, Expect: "oldfritter.basicError"},
 		{Error: errWithClass("zap"), Expect: "zap"},
-		{Error: errWithClass(""), Expect: "newrelic.withClass"},
+		{Error: errWithClass(""), Expect: "oldfritter.withClass"},
 		{Error: wrapWithClass(errWithClass("zap"), "zip"), Expect: "zip"},
 		{Error: wrapWithClass(errWithClass("zap"), ""), Expect: "zap"},
-		{Error: wrapWithClass(errWithClass(""), ""), Expect: "newrelic.withClass"},
-		{Error: wrapError(basicError{}), Expect: "newrelic.basicError"},
+		{Error: wrapWithClass(errWithClass(""), ""), Expect: "oldfritter.withClass"},
+		{Error: wrapError(basicError{}), Expect: "oldfritter.basicError"},
 		{Error: wrapError(errWithClass("zap")), Expect: "zap"},
 	}
 
@@ -640,11 +640,11 @@ func TestNoticeErrorSpanID(t *testing.T) {
 	app.ExpectErrors(t, []internal.WantError{{
 		TxnName: "OtherTransaction/Go/hello",
 		Msg:     "my msg",
-		Klass:   "newrelic.myError",
+		Klass:   "oldfritter.myError",
 	}})
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.myError",
+			"error.class":     "oldfritter.myError",
 			"error.message":   "my msg",
 			"guid":            "52fdfc072182654f",
 			"priority":        1.437714,

@@ -10,8 +10,8 @@ import (
 	"os"
 	"time"
 
-	newrelic "github.com/newrelic/go-agent"
-	_ "github.com/newrelic/go-agent/_integrations/nrsqlite3"
+	oldfritter "github.com/oldfritter/go-agent"
+	_ "github.com/oldfritter/go-agent/_integrations/nrsqlite3"
 )
 
 func mustGetEnv(key string) string {
@@ -31,16 +31,16 @@ func main() {
 	db.Exec("CREATE TABLE zaps ( zap_num INTEGER )")
 	db.Exec("INSERT INTO zaps (zap_num) VALUES (22)")
 
-	cfg := newrelic.NewConfig("SQLite App", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
-	cfg.Logger = newrelic.NewDebugLogger(os.Stdout)
-	app, err := newrelic.NewApplication(cfg)
+	cfg := oldfritter.NewConfig("SQLite App", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
+	cfg.Logger = oldfritter.NewDebugLogger(os.Stdout)
+	app, err := oldfritter.NewApplication(cfg)
 	if nil != err {
 		panic(err)
 	}
 	app.WaitForConnection(5 * time.Second)
 	txn := app.StartTransaction("sqliteQuery", nil, nil)
 
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	row := db.QueryRowContext(ctx, "SELECT count(*) from zaps")
 	var count int
 	row.Scan(&count)

@@ -10,19 +10,19 @@ import (
 	"time"
 
 	"github.com/nats-io/nats.go"
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/_integrations/nrnats"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/_integrations/nrnats"
 )
 
-var app newrelic.Application
+var app oldfritter.Application
 
-func doAsync(nc *nats.Conn, txn newrelic.Transaction) {
+func doAsync(nc *nats.Conn, txn oldfritter.Transaction) {
 	wg := sync.WaitGroup{}
 	subj := "async"
 
 	// Simple Async Subscriber
 	// Use the nrnats.SubWrapper to wrap the nats.MsgHandler and create a
-	// newrelic.Transaction with each processed nats.Msg
+	// oldfritter.Transaction with each processed nats.Msg
 	_, err := nc.Subscribe(subj, nrnats.SubWrapper(app, func(m *nats.Msg) {
 		defer wg.Done()
 		fmt.Println("Received async message:", string(m.Data))
@@ -34,7 +34,7 @@ func doAsync(nc *nats.Conn, txn newrelic.Transaction) {
 	// Simple Publisher
 	wg.Add(1)
 	// Use nrnats.StartPublishSegment to create a
-	// newrelic.MessageProducerSegment for the call to nc.Publish
+	// oldfritter.MessageProducerSegment for the call to nc.Publish
 	seg := nrnats.StartPublishSegment(txn, nc, subj)
 	err = nc.Publish(subj, []byte("Hello World"))
 	seg.End()
@@ -45,13 +45,13 @@ func doAsync(nc *nats.Conn, txn newrelic.Transaction) {
 	wg.Wait()
 }
 
-func doQueue(nc *nats.Conn, txn newrelic.Transaction) {
+func doQueue(nc *nats.Conn, txn oldfritter.Transaction) {
 	wg := sync.WaitGroup{}
 	subj := "queue"
 
 	// Queue Subscriber
 	// Use the nrnats.SubWrapper to wrap the nats.MsgHandler and create a
-	// newrelic.Transaction with each processed nats.Msg
+	// oldfritter.Transaction with each processed nats.Msg
 	_, err := nc.QueueSubscribe(subj, "myQueueName", nrnats.SubWrapper(app, func(m *nats.Msg) {
 		defer wg.Done()
 		fmt.Println("Received queue message:", string(m.Data))
@@ -62,7 +62,7 @@ func doQueue(nc *nats.Conn, txn newrelic.Transaction) {
 
 	wg.Add(1)
 	// Use nrnats.StartPublishSegment to create a
-	// newrelic.MessageProducerSegment for the call to nc.Publish
+	// oldfritter.MessageProducerSegment for the call to nc.Publish
 	seg := nrnats.StartPublishSegment(txn, nc, subj)
 	err = nc.Publish(subj, []byte("Hello World"))
 	seg.End()
@@ -73,7 +73,7 @@ func doQueue(nc *nats.Conn, txn newrelic.Transaction) {
 	wg.Wait()
 }
 
-func doSync(nc *nats.Conn, txn newrelic.Transaction) {
+func doSync(nc *nats.Conn, txn oldfritter.Transaction) {
 	subj := "sync"
 
 	// Simple Sync Subscriber
@@ -82,7 +82,7 @@ func doSync(nc *nats.Conn, txn newrelic.Transaction) {
 		panic(err)
 	}
 	// Use nrnats.StartPublishSegment to create a
-	// newrelic.MessageProducerSegment for the call to nc.Publish
+	// oldfritter.MessageProducerSegment for the call to nc.Publish
 	seg := nrnats.StartPublishSegment(txn, nc, subj)
 	err = nc.Publish(subj, []byte("Hello World"))
 	seg.End()
@@ -96,7 +96,7 @@ func doSync(nc *nats.Conn, txn newrelic.Transaction) {
 	fmt.Println("Received sync message:", string(m.Data))
 }
 
-func doChan(nc *nats.Conn, txn newrelic.Transaction) {
+func doChan(nc *nats.Conn, txn oldfritter.Transaction) {
 	subj := "chan"
 
 	// Channel Subscriber
@@ -107,7 +107,7 @@ func doChan(nc *nats.Conn, txn newrelic.Transaction) {
 	}
 
 	// Use nrnats.StartPublishSegment to create a
-	// newrelic.MessageProducerSegment for the call to nc.Publish
+	// oldfritter.MessageProducerSegment for the call to nc.Publish
 	seg := nrnats.StartPublishSegment(txn, nc, subj)
 	err = nc.Publish(subj, []byte("Hello World"))
 	seg.End()
@@ -119,13 +119,13 @@ func doChan(nc *nats.Conn, txn newrelic.Transaction) {
 	fmt.Println("Received chan message:", string(m.Data))
 }
 
-func doReply(nc *nats.Conn, txn newrelic.Transaction) {
+func doReply(nc *nats.Conn, txn oldfritter.Transaction) {
 	subj := "reply"
 
 	// Replies
 	nc.Subscribe(subj, func(m *nats.Msg) {
 		// Use nrnats.StartPublishSegment to create a
-		// newrelic.MessageProducerSegment for the call to nc.Publish
+		// oldfritter.MessageProducerSegment for the call to nc.Publish
 		seg := nrnats.StartPublishSegment(txn, nc, m.Reply)
 		nc.Publish(m.Reply, []byte("Hello World"))
 		seg.End()
@@ -133,7 +133,7 @@ func doReply(nc *nats.Conn, txn newrelic.Transaction) {
 
 	// Requests
 	// Use nrnats.StartPublishSegment to create a
-	// newrelic.MessageProducerSegment for the call to nc.Request
+	// oldfritter.MessageProducerSegment for the call to nc.Request
 	seg := nrnats.StartPublishSegment(txn, nc, subj)
 	m, err := nc.Request(subj, []byte("request"), time.Second)
 	seg.End()
@@ -143,12 +143,12 @@ func doReply(nc *nats.Conn, txn newrelic.Transaction) {
 	fmt.Println("Received reply message:", string(m.Data))
 }
 
-func doRespond(nc *nats.Conn, txn newrelic.Transaction) {
+func doRespond(nc *nats.Conn, txn oldfritter.Transaction) {
 	subj := "respond"
 	// Respond
 	nc.Subscribe(subj, func(m *nats.Msg) {
 		// Use nrnats.StartPublishSegment to create a
-		// newrelic.MessageProducerSegment for the call to m.Respond
+		// oldfritter.MessageProducerSegment for the call to m.Respond
 		seg := nrnats.StartPublishSegment(txn, nc, m.Reply)
 		m.Respond([]byte("Hello World"))
 		seg.End()
@@ -156,7 +156,7 @@ func doRespond(nc *nats.Conn, txn newrelic.Transaction) {
 
 	// Requests
 	// Use nrnats.StartPublishSegment to create a
-	// newrelic.MessageProducerSegment for the call to nc.Request
+	// oldfritter.MessageProducerSegment for the call to nc.Request
 	seg := nrnats.StartPublishSegment(txn, nc, subj)
 	m, err := nc.Request(subj, []byte("request"), time.Second)
 	seg.End()
@@ -175,10 +175,10 @@ func mustGetEnv(key string) string {
 
 func main() {
 	// Initialize agent
-	cfg := newrelic.NewConfig("NATS App", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
-	cfg.Logger = newrelic.NewDebugLogger(os.Stdout)
+	cfg := oldfritter.NewConfig("NATS App", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
+	cfg.Logger = oldfritter.NewDebugLogger(os.Stdout)
 	var err error
-	app, err = newrelic.NewApplication(cfg)
+	app, err = oldfritter.NewApplication(cfg)
 	if nil != err {
 		panic(err)
 	}

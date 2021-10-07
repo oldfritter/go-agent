@@ -1,12 +1,12 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"net/http"
 
-	"github.com/newrelic/go-agent/v3/internal/cat"
+	"github.com/oldfritter/go-agent/v3/internal/cat"
 )
 
 // InboundHTTPRequest adds the inbound request metadata to the txnCrossProcess.

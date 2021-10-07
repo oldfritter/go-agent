@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/go-sql-driver/mysql"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func TestParseDSN(t *testing.T) {
@@ -93,7 +93,7 @@ func TestParseDSN(t *testing.T) {
 	}
 
 	for _, test := range testcases {
-		s := &newrelic.DatastoreSegment{}
+		s := &oldfritter.DatastoreSegment{}
 		parseDSN(s, test.dsn)
 		if test.expHost != s.Host {
 			t.Errorf(`incorrect host, expected="%s", actual="%s"`, test.expHost, s.Host)
@@ -165,7 +165,7 @@ func TestParseConfig(t *testing.T) {
 	}
 
 	for _, test := range testcases {
-		s := &newrelic.DatastoreSegment{}
+		s := &oldfritter.DatastoreSegment{}
 		cfg := &mysql.Config{
 			Net:    test.cfgNet,
 			Addr:   test.cfgAddr,

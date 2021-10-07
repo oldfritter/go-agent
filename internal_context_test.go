@@ -3,13 +3,13 @@
 
 // +build go1.7
 
-package newrelic
+package oldfritter
 
 import (
 	"net/http"
 	"testing"
 
-	"github.com/newrelic/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal"
 )
 
 func TestWrapHandlerContext(t *testing.T) {

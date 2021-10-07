@@ -3,7 +3,7 @@
 
 // +build go1.10
 
-package newrelic
+package oldfritter
 
 import "database/sql/driver"
 

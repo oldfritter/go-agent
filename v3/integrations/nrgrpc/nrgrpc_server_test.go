@@ -13,16 +13,16 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/test/bufconn"
 
-	"github.com/newrelic/go-agent/v3/integrations/nrgrpc/testapp"
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/nrgrpc/testapp"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 // newTestServerAndConn creates a new *grpc.Server and *grpc.ClientConn for use
 // in testing. It adds instrumentation to both. If app is nil, then
 // instrumentation is not applied to the server. Be sure to Stop() the server
 // and Close() the connection when done with them.
-func newTestServerAndConn(t *testing.T, app *newrelic.Application) (*grpc.Server, *grpc.ClientConn) {
+func newTestServerAndConn(t *testing.T, app *oldfritter.Application) (*grpc.Server, *grpc.ClientConn) {
 	s := grpc.NewServer(
 		grpc.UnaryInterceptor(UnaryServerInterceptor(app)),
 		grpc.StreamInterceptor(StreamServerInterceptor(app)),
@@ -60,7 +60,7 @@ func TestUnaryServerInterceptor(t *testing.T) {
 
 	client := testapp.NewTestApplicationClient(conn)
 	txn := app.StartTransaction("client")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	_, err := client.DoUnaryUnary(ctx, &testapp.Message{})
 	if err != nil {
 		t.Fatal("unable to call client DoUnaryUnary", err)
@@ -231,7 +231,7 @@ func TestUnaryStreamServerInterceptor(t *testing.T) {
 
 	client := testapp.NewTestApplicationClient(conn)
 	txn := app.StartTransaction("client")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	stream, err := client.DoUnaryStream(ctx, &testapp.Message{})
 	if err != nil {
 		t.Fatal("client call to DoUnaryStream failed", err)
@@ -337,7 +337,7 @@ func TestStreamUnaryServerInterceptor(t *testing.T) {
 
 	client := testapp.NewTestApplicationClient(conn)
 	txn := app.StartTransaction("client")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	stream, err := client.DoStreamUnary(ctx)
 	if err != nil {
 		t.Fatal("client call to DoStreamUnary failed", err)
@@ -441,7 +441,7 @@ func TestStreamStreamServerInterceptor(t *testing.T) {
 
 	client := testapp.NewTestApplicationClient(conn)
 	txn := app.StartTransaction("client")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	stream, err := client.DoStreamStream(ctx)
 	if err != nil {
 		t.Fatal("client call to DoStreamStream failed", err)

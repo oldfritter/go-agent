@@ -11,7 +11,7 @@ import (
 	"os"
 )
 
-// Logger matches newrelic.Logger to allow implementations to be passed to
+// Logger matches oldfritter.Logger to allow implementations to be passed to
 // internal packages.
 type Logger interface {
 	Error(msg string, context map[string]interface{})

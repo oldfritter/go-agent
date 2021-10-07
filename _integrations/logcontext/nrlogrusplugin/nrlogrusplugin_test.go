@@ -12,10 +12,10 @@ import (
 	"testing"
 	"time"
 
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/internal"
-	"github.com/newrelic/go-agent/internal/integrationsupport"
-	"github.com/newrelic/go-agent/internal/sysinfo"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal/integrationsupport"
+	"github.com/oldfritter/go-agent/internal/sysinfo"
 	"github.com/sirupsen/logrus"
 )
 
@@ -95,7 +95,7 @@ func BenchmarkWithTransaction(b *testing.B) {
 	app := integrationsupport.NewTestApp(nil, nil)
 	txn := app.StartTransaction("TestLogDistributedTracingDisabled", nil, nil)
 	log := newTestLogger(bytes.NewBuffer([]byte("")))
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	b.ResetTimer()
 	b.ReportAllocs()
@@ -114,7 +114,7 @@ func TestLogNoContext(t *testing.T) {
 		"line.number": matchAnything,
 		"log.level":   "info",
 		"message":     "Hello World!",
-		"method.name": "github.com/newrelic/go-agent/_integrations/logcontext/nrlogrusplugin.TestLogNoContext",
+		"method.name": "github.com/oldfritter/go-agent/_integrations/logcontext/nrlogrusplugin.TestLogNoContext",
 		"timestamp":   float64(1417136460000),
 	})
 }
@@ -128,7 +128,7 @@ func TestLogNoTxn(t *testing.T) {
 		"line.number": matchAnything,
 		"log.level":   "info",
 		"message":     "Hello World!",
-		"method.name": "github.com/newrelic/go-agent/_integrations/logcontext/nrlogrusplugin.TestLogNoTxn",
+		"method.name": "github.com/oldfritter/go-agent/_integrations/logcontext/nrlogrusplugin.TestLogNoTxn",
 		"timestamp":   float64(1417136460000),
 	})
 }
@@ -138,7 +138,7 @@ func TestLogDistributedTracingDisabled(t *testing.T) {
 	txn := app.StartTransaction("TestLogDistributedTracingDisabled", nil, nil)
 	out := bytes.NewBuffer([]byte{})
 	log := newTestLogger(out)
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	host, _ := sysinfo.Hostname()
 	log.WithTime(testTime).WithContext(ctx).Info("Hello World!")
 	validateOutput(t, out, map[string]interface{}{
@@ -149,7 +149,7 @@ func TestLogDistributedTracingDisabled(t *testing.T) {
 		"line.number": matchAnything,
 		"log.level":   "info",
 		"message":     "Hello World!",
-		"method.name": "github.com/newrelic/go-agent/_integrations/logcontext/nrlogrusplugin.TestLogDistributedTracingDisabled",
+		"method.name": "github.com/oldfritter/go-agent/_integrations/logcontext/nrlogrusplugin.TestLogDistributedTracingDisabled",
 		"timestamp":   float64(1417136460000),
 	})
 }
@@ -160,14 +160,14 @@ func TestLogSampledFalse(t *testing.T) {
 			reply.AdaptiveSampler = internal.SampleNothing{}
 			reply.TraceIDGenerator = internal.NewTraceIDGenerator(12345)
 		},
-		func(cfg *newrelic.Config) {
+		func(cfg *oldfritter.Config) {
 			cfg.DistributedTracer.Enabled = true
 			cfg.CrossApplicationTracer.Enabled = false
 		})
 	txn := app.StartTransaction("TestLogSampledFalse", nil, nil)
 	out := bytes.NewBuffer([]byte{})
 	log := newTestLogger(out)
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	host, _ := sysinfo.Hostname()
 	log.WithTime(testTime).WithContext(ctx).Info("Hello World!")
 	validateOutput(t, out, map[string]interface{}{
@@ -178,7 +178,7 @@ func TestLogSampledFalse(t *testing.T) {
 		"line.number": matchAnything,
 		"log.level":   "info",
 		"message":     "Hello World!",
-		"method.name": "github.com/newrelic/go-agent/_integrations/logcontext/nrlogrusplugin.TestLogSampledFalse",
+		"method.name": "github.com/oldfritter/go-agent/_integrations/logcontext/nrlogrusplugin.TestLogSampledFalse",
 		"timestamp":   float64(1417136460000),
 		"trace.id":    "d9466896a525ccbf",
 	})
@@ -190,14 +190,14 @@ func TestLogSampledTrue(t *testing.T) {
 			reply.AdaptiveSampler = internal.SampleEverything{}
 			reply.TraceIDGenerator = internal.NewTraceIDGenerator(12345)
 		},
-		func(cfg *newrelic.Config) {
+		func(cfg *oldfritter.Config) {
 			cfg.DistributedTracer.Enabled = true
 			cfg.CrossApplicationTracer.Enabled = false
 		})
 	txn := app.StartTransaction("TestLogSampledTrue", nil, nil)
 	out := bytes.NewBuffer([]byte{})
 	log := newTestLogger(out)
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	host, _ := sysinfo.Hostname()
 	log.WithTime(testTime).WithContext(ctx).Info("Hello World!")
 	validateOutput(t, out, map[string]interface{}{
@@ -208,7 +208,7 @@ func TestLogSampledTrue(t *testing.T) {
 		"line.number": matchAnything,
 		"log.level":   "info",
 		"message":     "Hello World!",
-		"method.name": "github.com/newrelic/go-agent/_integrations/logcontext/nrlogrusplugin.TestLogSampledTrue",
+		"method.name": "github.com/oldfritter/go-agent/_integrations/logcontext/nrlogrusplugin.TestLogSampledTrue",
 		"span.id":     "bcfb32e050b264b8",
 		"timestamp":   float64(1417136460000),
 		"trace.id":    "d9466896a525ccbf",
@@ -226,12 +226,12 @@ func TestEntryUsedTwice(t *testing.T) {
 			reply.AdaptiveSampler = internal.SampleEverything{}
 			reply.TraceIDGenerator = internal.NewTraceIDGenerator(12345)
 		},
-		func(cfg *newrelic.Config) {
+		func(cfg *oldfritter.Config) {
 			cfg.DistributedTracer.Enabled = true
 			cfg.CrossApplicationTracer.Enabled = false
 		})
 	txn := app.StartTransaction("TestEntryUsedTwice1", nil, nil)
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	host, _ := sysinfo.Hostname()
 	entry.WithContext(ctx).Info("Hello World!")
 	validateOutput(t, out, map[string]interface{}{
@@ -242,7 +242,7 @@ func TestEntryUsedTwice(t *testing.T) {
 		"line.number": matchAnything,
 		"log.level":   "info",
 		"message":     "Hello World!",
-		"method.name": "github.com/newrelic/go-agent/_integrations/logcontext/nrlogrusplugin.TestEntryUsedTwice",
+		"method.name": "github.com/oldfritter/go-agent/_integrations/logcontext/nrlogrusplugin.TestEntryUsedTwice",
 		"span.id":     "bcfb32e050b264b8",
 		"timestamp":   float64(1417136460000),
 		"trace.id":    "d9466896a525ccbf",
@@ -251,11 +251,11 @@ func TestEntryUsedTwice(t *testing.T) {
 	// First log has dt enabled, ensure trace.id and span.id are included
 	out.Reset()
 	app = integrationsupport.NewTestApp(nil,
-		func(cfg *newrelic.Config) {
+		func(cfg *oldfritter.Config) {
 			cfg.DistributedTracer.Enabled = false
 		})
 	txn = app.StartTransaction("TestEntryUsedTwice2", nil, nil)
-	ctx = newrelic.NewContext(context.Background(), txn)
+	ctx = oldfritter.NewContext(context.Background(), txn)
 	host, _ = sysinfo.Hostname()
 	entry.WithContext(ctx).Info("Hello World! Again!")
 	validateOutput(t, out, map[string]interface{}{
@@ -266,7 +266,7 @@ func TestEntryUsedTwice(t *testing.T) {
 		"line.number": matchAnything,
 		"log.level":   "info",
 		"message":     "Hello World! Again!",
-		"method.name": "github.com/newrelic/go-agent/_integrations/logcontext/nrlogrusplugin.TestEntryUsedTwice",
+		"method.name": "github.com/oldfritter/go-agent/_integrations/logcontext/nrlogrusplugin.TestEntryUsedTwice",
 		"timestamp":   float64(1417136460000),
 	})
 }
@@ -276,7 +276,7 @@ func TestEntryError(t *testing.T) {
 	txn := app.StartTransaction("TestEntryError", nil, nil)
 	out := bytes.NewBuffer([]byte{})
 	log := newTestLogger(out)
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	host, _ := sysinfo.Hostname()
 	log.WithTime(testTime).WithContext(ctx).WithField("func", func() {}).Info("Hello World!")
 	validateOutput(t, out, map[string]interface{}{
@@ -289,7 +289,7 @@ func TestEntryError(t *testing.T) {
 		// Since the err field on the Entry is private we cannot record it.
 		//"logrus_error": `can not add field "func"`,
 		"message":     "Hello World!",
-		"method.name": "github.com/newrelic/go-agent/_integrations/logcontext/nrlogrusplugin.TestEntryError",
+		"method.name": "github.com/oldfritter/go-agent/_integrations/logcontext/nrlogrusplugin.TestEntryError",
 		"timestamp":   float64(1417136460000),
 	})
 }
@@ -299,7 +299,7 @@ func TestWithCustomField(t *testing.T) {
 	txn := app.StartTransaction("TestWithCustomField", nil, nil)
 	out := bytes.NewBuffer([]byte{})
 	log := newTestLogger(out)
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	host, _ := sysinfo.Hostname()
 	log.WithTime(testTime).WithContext(ctx).WithField("zip", "zap").Info("Hello World!")
 	validateOutput(t, out, map[string]interface{}{
@@ -310,7 +310,7 @@ func TestWithCustomField(t *testing.T) {
 		"line.number": matchAnything,
 		"log.level":   "info",
 		"message":     "Hello World!",
-		"method.name": "github.com/newrelic/go-agent/_integrations/logcontext/nrlogrusplugin.TestWithCustomField",
+		"method.name": "github.com/oldfritter/go-agent/_integrations/logcontext/nrlogrusplugin.TestWithCustomField",
 		"timestamp":   float64(1417136460000),
 		"zip":         "zap",
 	})

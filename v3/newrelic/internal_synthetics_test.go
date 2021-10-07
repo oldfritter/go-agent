@@ -1,14 +1,14 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"net/http"
 	"testing"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/cat"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/cat"
 )
 
 // This collection of top-level tests affirms, for all possible combinations of
@@ -39,7 +39,7 @@ func inboundSyntheticsRequestBuilder(oldCatEnabled bool, betterCatEnabled bool) 
 	}
 	app := testApp(syntheticsConnectReplyFn, cfgFn, nil)
 	txn := app.StartTransaction("requester")
-	req, err := http.NewRequest("GET", "newrelic.com", nil)
+	req, err := http.NewRequest("GET", "oldfritter.com", nil)
 	if nil != err {
 		panic(err)
 	}
@@ -81,7 +81,7 @@ func TestSyntheticsOldCAT(t *testing.T) {
 	clientTxn := app.StartTransaction("helloOldCAT")
 	clientTxn.SetWebRequestHTTP(inboundSyntheticsRequestBuilder(true, false))
 
-	req, err := http.NewRequest("GET", "newrelic.com", nil)
+	req, err := http.NewRequest("GET", "oldfritter.com", nil)
 
 	if nil != err {
 		panic(err)
@@ -122,7 +122,7 @@ func TestSyntheticsBetterCAT(t *testing.T) {
 	clientTxn := app.StartTransaction("helloBetterCAT")
 	clientTxn.SetWebRequestHTTP(inboundSyntheticsRequestBuilder(false, true))
 
-	req, err := http.NewRequest("GET", "newrelic.com", nil)
+	req, err := http.NewRequest("GET", "oldfritter.com", nil)
 
 	if nil != err {
 		panic(err)
@@ -161,7 +161,7 @@ func TestSyntheticsStandalone(t *testing.T) {
 	clientTxn := app.StartTransaction("helloSynthetics")
 	clientTxn.SetWebRequestHTTP(inboundSyntheticsRequestBuilder(false, false))
 
-	req, err := http.NewRequest("GET", "newrelic.com", nil)
+	req, err := http.NewRequest("GET", "oldfritter.com", nil)
 
 	if nil != err {
 		panic(err)

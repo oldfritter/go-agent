@@ -7,16 +7,16 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func init() { internal.TrackUsage("integration", "b3") }
 
 // NewRoundTripper creates an `http.RoundTripper` to instrument external
 // requests.  The RoundTripper returned creates an external segment and adds B3
-// tracing headers to each request if and only if a `newrelic.Transaction`
-// (https://godoc.org/github.com/newrelic/go-agent#Transaction) is found in the
+// tracing headers to each request if and only if a `oldfritter.Transaction`
+// (https://godoc.org/github.com/oldfritter/go-agent#Transaction) is found in the
 // `http.Request`'s context.  It then delegates to the original RoundTripper
 // provided (or http.DefaultTransport if none is provided).
 func NewRoundTripper(original http.RoundTripper) http.RoundTripper {
@@ -48,7 +48,7 @@ type b3Transport struct {
 	original http.RoundTripper
 }
 
-func txnSampled(txn *newrelic.Transaction) string {
+func txnSampled(txn *oldfritter.Transaction) string {
 	if txn.IsSampled() {
 		return "1"
 	}
@@ -62,10 +62,10 @@ func addHeader(request *http.Request, key, val string) {
 }
 
 func (t *b3Transport) RoundTrip(request *http.Request) (*http.Response, error) {
-	if txn := newrelic.FromContext(request.Context()); nil != txn {
+	if txn := oldfritter.FromContext(request.Context()); nil != txn {
 		// The specification of http.RoundTripper requires that the request is never modified.
 		request = cloneRequest(request)
-		segment := &newrelic.ExternalSegment{
+		segment := &oldfritter.ExternalSegment{
 			StartTime: txn.StartSegmentNow(),
 			Request:   request,
 		}

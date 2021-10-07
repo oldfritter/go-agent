@@ -1,10 +1,10 @@
 # Contributing
 
 Contributions are always welcome. Before contributing please read the
-[code of conduct](https://opensource.newrelic.com/code-of-conduct/) and [search the issue tracker](../../issues); your issue may have already been discussed or fixed in `master`. To contribute,
+[code of conduct](https://opensource.oldfritter.com/code-of-conduct/) and [search the issue tracker](../../issues); your issue may have already been discussed or fixed in `master`. To contribute,
 [fork](https://help.github.com/articles/fork-a-repo/) this repository, commit your changes, and [send a Pull Request](https://help.github.com/articles/using-pull-requests/).
 
-Note that our [code of conduct](https://opensource.newrelic.com/code-of-conduct/) applies to all platforms and venues related to this project; please follow it in all your interactions with the project and its participants.
+Note that our [code of conduct](https://opensource.oldfritter.com/code-of-conduct/) applies to all platforms and venues related to this project; please follow it in all your interactions with the project and its participants.
 
 Please note, we only accept pull request for versions 3.8.0 of this project or greater.
 
@@ -26,15 +26,15 @@ Before submitting an Issue, please search for similar ones in the
 
 Pull requests must pass all automated tests and must be reviewed by at least one maintaining engineer before being merged.
 
-When contributing a new integration package, please follow the [Writing a New Integration Package](https://github.com/newrelic/go-agent/wiki/Writing-a-New-Integration-Package) wiki page.
+When contributing a new integration package, please follow the [Writing a New Integration Package](https://github.com/oldfritter/go-agent/wiki/Writing-a-New-Integration-Package) wiki page.
 
 ## Contributor License Agreement
 
-Keep in mind that when you submit your Pull Request, you'll need to sign the CLA via the click-through using CLA-Assistant. If you'd like to execute our corporate CLA, or if you have any questions, please drop us an email at opensource@newrelic.com.
+Keep in mind that when you submit your Pull Request, you'll need to sign the CLA via the click-through using CLA-Assistant. If you'd like to execute our corporate CLA, or if you have any questions, please drop us an email at opensource@oldfritter.com.
 
 For more information about CLAs, please check out Alex Russell’s excellent post,
 [“Why Do I Need to Sign This?”](https://infrequently.org/2008/06/why-do-i-need-to-sign-this/).
 
 ## Slack
 
-We host a public Slack with a dedicated channel for contributors and maintainers of open source projects hosted by New Relic.  If you are contributing to this project, you're welcome to request access to the #oss-contributors channel in the newrelicusers.slack.com workspace.  To request access, see https://newrelicusers-signup.herokuapp.com/.
+We host a public Slack with a dedicated channel for contributors and maintainers of open source projects hosted by New Relic.  If you are contributing to this project, you're welcome to request access to the #oss-contributors channel in the oldfritterusers.slack.com workspace.  To request access, see https://oldfritterusers-signup.herokuapp.com/.

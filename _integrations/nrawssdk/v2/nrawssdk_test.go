@@ -15,9 +15,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws/external"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/internal"
-	"github.com/newrelic/go-agent/internal/integrationsupport"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal/integrationsupport"
 )
 
 func testApp() integrationsupport.ExpectApp {
@@ -199,7 +199,7 @@ func TestInstrumentRequestExternal(t *testing.T) {
 	}
 	req := client.InvokeRequest(input)
 	InstrumentHandlers(&req.Handlers)
-	ctx := newrelic.NewContext(req.Context(), txn)
+	ctx := oldfritter.NewContext(req.Context(), txn)
 
 	_, err := req.Send(ctx)
 	if nil != err {
@@ -224,7 +224,7 @@ func TestInstrumentRequestDatastore(t *testing.T) {
 
 	req := client.DescribeTableRequest(input)
 	InstrumentHandlers(&req.Handlers)
-	ctx := newrelic.NewContext(req.Context(), txn)
+	ctx := oldfritter.NewContext(req.Context(), txn)
 
 	_, err := req.Send(ctx)
 	if nil != err {
@@ -289,7 +289,7 @@ func TestInstrumentConfigExternal(t *testing.T) {
 	}
 
 	req := client.InvokeRequest(input)
-	ctx := newrelic.NewContext(req.Context(), txn)
+	ctx := oldfritter.NewContext(req.Context(), txn)
 
 	_, err := req.Send(ctx)
 	if nil != err {
@@ -314,7 +314,7 @@ func TestInstrumentConfigDatastore(t *testing.T) {
 	}
 
 	req := client.DescribeTableRequest(input)
-	ctx := newrelic.NewContext(req.Context(), txn)
+	ctx := oldfritter.NewContext(req.Context(), txn)
 
 	_, err := req.Send(ctx)
 	if nil != err {
@@ -469,7 +469,7 @@ func TestRetrySend(t *testing.T) {
 	}
 	req := client.InvokeRequest(input)
 	InstrumentHandlers(&req.Handlers)
-	ctx := newrelic.NewContext(req.Context(), txn)
+	ctx := oldfritter.NewContext(req.Context(), txn)
 
 	_, err := req.Send(ctx)
 	if nil != err {
@@ -508,7 +508,7 @@ func TestRequestSentTwice(t *testing.T) {
 	}
 	req := client.InvokeRequest(input)
 	InstrumentHandlers(&req.Handlers)
-	ctx := newrelic.NewContext(req.Context(), txn)
+	ctx := oldfritter.NewContext(req.Context(), txn)
 
 	_, firstErr := req.Send(ctx)
 	if nil != firstErr {
@@ -567,7 +567,7 @@ func TestNoRequestIDFound(t *testing.T) {
 	}
 	req := client.InvokeRequest(input)
 	InstrumentHandlers(&req.Handlers)
-	ctx := newrelic.NewContext(req.Context(), txn)
+	ctx := oldfritter.NewContext(req.Context(), txn)
 
 	_, err := req.Send(ctx)
 	if nil != err {

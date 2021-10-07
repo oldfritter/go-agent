@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"net/http"
@@ -16,13 +16,13 @@ import (
 //
 // Perform this replacement:
 //
-//    http.Handle(newrelic.WrapHandle(app, "/foo", myHandler))
+//    http.Handle(oldfritter.WrapHandle(app, "/foo", myHandler))
 //
 // WrapHandle adds the Transaction to the request's context.  Access it using
 // FromContext to add attributes, create segments, or notice errors:
 //
 //	func myHandler(rw ResponseWriter, req *Request) {
-//		txn := newrelic.FromContext(req.Context())
+//		txn := oldfritter.FromContext(req.Context())
 //		txn.AddAttribute("customerLevel", "gold")
 //		io.WriteString(w, "users page")
 //	}
@@ -54,15 +54,15 @@ func WrapHandle(app *Application, pattern string, handler http.Handler) (string,
 //
 // Perform this replacement:
 //
-//	http.HandleFunc(newrelic.WrapHandleFunc(app, "/users", func(w http.ResponseWriter, req *http.Request) {
+//	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/users", func(w http.ResponseWriter, req *http.Request) {
 //		io.WriteString(w, "users page")
 //	}))
 //
 // WrapHandleFunc adds the Transaction to the request's context.  Access it using
 // FromContext to add attributes, create segments, or notice errors:
 //
-//	http.HandleFunc(newrelic.WrapHandleFunc(app, "/users", func(w http.ResponseWriter, req *http.Request) {
-//		txn := newrelic.FromContext(req.Context())
+//	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/users", func(w http.ResponseWriter, req *http.Request) {
+//		txn := oldfritter.FromContext(req.Context())
 //		txn.AddAttribute("customerLevel", "gold")
 //		io.WriteString(w, "users page")
 //	}))

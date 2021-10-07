@@ -9,8 +9,8 @@ import (
 	"os"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/newrelic/go-agent/v3/integrations/nrhttprouter"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/nrhttprouter"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -22,10 +22,10 @@ func hello(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
 func main() {
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("httprouter App"),
-		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-		newrelic.ConfigDebugLogger(os.Stdout),
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("httprouter App"),
+		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		oldfritter.ConfigDebugLogger(os.Stdout),
 	)
 	if nil != err {
 		fmt.Println(err)

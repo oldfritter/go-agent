@@ -12,11 +12,11 @@ import (
 	"os"
 	"time"
 
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 type handler struct {
-	App *newrelic.Application
+	App *oldfritter.Application
 }
 
 func (h *handler) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
@@ -45,12 +45,12 @@ func (h *handler) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func makeApplication() (*newrelic.Application, error) {
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("HTTP Server App"),
-		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-		newrelic.ConfigDebugLogger(os.Stdout),
-		newrelic.ConfigDistributedTracerEnabled(true),
+func makeApplication() (*oldfritter.Application, error) {
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("HTTP Server App"),
+		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		oldfritter.ConfigDebugLogger(os.Stdout),
+		oldfritter.ConfigDistributedTracerEnabled(true),
 	)
 	if nil != err {
 		return nil, err

@@ -84,7 +84,7 @@ func parseDockerID(r io.Reader) (string, error) {
 func isCPUCol(col []byte) bool {
 	// Sometimes we have multiple subsystems in one line, as in this example
 	// from:
-	// https://source.datanerd.us/newrelic/cross_agent_tests/blob/master/docker_container_id/docker-1.1.2-native-driver-systemd.txt
+	// https://source.datanerd.us/oldfritter/cross_agent_tests/blob/master/docker_container_id/docker-1.1.2-native-driver-systemd.txt
 	//
 	// 3:cpuacct,cpu:/system.slice/docker-67f98c9e6188f9c1818672a15dbe46237b6ee7e77f834d40d41c5fb3c2f84a2f.scope
 	splitCSV := func(r rune) bool { return r == ',' }

@@ -10,9 +10,9 @@ import (
 	"testing"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/integrationsupport"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/integrationsupport"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func TestMethodFunctions(t *testing.T) {
@@ -80,7 +80,7 @@ func TestHandle(t *testing.T) {
 		// Test that the Transaction is used as the response writer.
 		w.WriteHeader(500)
 		w.Write([]byte(fmt.Sprintf("hi %s", ps.ByName("name"))))
-		txn := newrelic.FromContext(r.Context())
+		txn := oldfritter.FromContext(r.Context())
 		txn.AddAttribute("color", "purple")
 	})
 	response := httptest.NewRecorder()
@@ -124,7 +124,7 @@ func TestHandler(t *testing.T) {
 		// Test that the Transaction is used as the response writer.
 		w.WriteHeader(500)
 		w.Write([]byte("hi there"))
-		txn := newrelic.FromContext(r.Context())
+		txn := oldfritter.FromContext(r.Context())
 		txn.AddAttribute("color", "purple")
 	}))
 	response := httptest.NewRecorder()
@@ -211,7 +211,7 @@ func TestNotFound(t *testing.T) {
 		// Test that the Transaction is used as the response writer.
 		w.WriteHeader(500)
 		w.Write([]byte("not found!"))
-		txn := newrelic.FromContext(r.Context())
+		txn := oldfritter.FromContext(r.Context())
 		txn.AddAttribute("color", "purple")
 	})
 	response := httptest.NewRecorder()

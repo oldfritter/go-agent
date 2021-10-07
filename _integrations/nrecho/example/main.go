@@ -8,10 +8,10 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
-	"github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/_integrations/nrecho"
+	"github.com/oldfritter/echo"
+	"github.com/oldfritter/echo/middleware"
+	"github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/_integrations/nrecho"
 )
 
 func mustGetEnv(key string) string {
@@ -32,9 +32,9 @@ func getUser(c echo.Context) error {
 }
 
 func main() {
-	cfg := newrelic.NewConfig("Echo App", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
-	cfg.Logger = newrelic.NewDebugLogger(os.Stdout)
-	app, err := newrelic.NewApplication(cfg)
+	cfg := oldfritter.NewConfig("Echo App", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
+	cfg.Logger = oldfritter.NewDebugLogger(os.Stdout)
+	app, err := oldfritter.NewApplication(cfg)
 	if nil != err {
 		fmt.Println(err)
 		os.Exit(1)

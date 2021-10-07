@@ -3,7 +3,7 @@
 
 // +build !go1.13
 
-package newrelic
+package oldfritter
 
 import (
 	"net"

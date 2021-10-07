@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 const (
 	apdexRollup = "Apdex"
@@ -26,7 +26,7 @@ const (
 
 	instanceReporting = "Instance/Reporting"
 
-	// https://newrelic.atlassian.net/wiki/display/eng/Custom+Events+in+New+Relic+Agents
+	// https://oldfritter.atlassian.net/wiki/display/eng/Custom+Events+in+New+Relic+Agents
 	customEventsSeen = "Supportability/Events/Customer/Seen"
 	customEventsSent = "Supportability/Events/Customer/Sent"
 

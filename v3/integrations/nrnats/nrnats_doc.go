@@ -13,7 +13,7 @@
 // `StartPublishSegment` method. The resulting segment will also need to be ended. Example:
 //
 //	nc, _ := nats.Connect(nats.DefaultURL)
-//	txn := currentTransaction()  // current newrelic.Transaction
+//	txn := currentTransaction()  // current oldfritter.Transaction
 //	subject := "testing.subject"
 //	seg := nrnats.StartPublishSegment(txn, nc, subject)
 //	err := nc.Publish(subject, []byte("Hello World"))
@@ -25,7 +25,7 @@
 // Or:
 //
 //	nc, _ := nats.Connect(nats.DefaultURL)
-//	txn := currentTransaction()  // current newrelic.Transaction
+//	txn := currentTransaction()  // current oldfritter.Transaction
 //	subject := "testing.subject"
 //	defer nrnats.StartPublishSegment(txn, nc, subject).End()
 //	nc.Publish(subject, []byte("Hello World"))
@@ -49,18 +49,18 @@
 // https://godoc.org/github.com/nats-io/go-nats#EncodedConn.Subscribe)
 // and `nats.QueueSubscribe` (https://godoc.org/github.com/nats-io/go-nats#Conn.QueueSubscribe or
 // https://godoc.org/github.com/nats-io/go-nats#EncodedConn.QueueSubscribe)
-// If the `newrelic.Application` parameter is non-nil, it will create a `newrelic.Transaction` and end the transaction
+// If the `oldfritter.Application` parameter is non-nil, it will create a `oldfritter.Transaction` and end the transaction
 // when the passed function is complete.  Example:
 //
 //	nc, _ := nats.Connect(nats.DefaultURL)
-//	app := createNRApp()  // newrelic.Application
+//	app := createNRApp()  // oldfritter.Application
 //	subject := "testing.subject"
 //	nc.Subscribe(subject, nrnats.SubWrapper(app, myMessageHandler))
 //
 // Full Publisher/Subscriber example:
-// https://github.com/newrelic/go-agent/blob/master/v3/integrations/nrnats/examples/main.go
+// https://github.com/oldfritter/go-agent/blob/master/v3/integrations/nrnats/examples/main.go
 package nrnats
 
-import "github.com/newrelic/go-agent/v3/internal"
+import "github.com/oldfritter/go-agent/v3/internal"
 
 func init() { internal.TrackUsage("integration", "framework", "nats") }

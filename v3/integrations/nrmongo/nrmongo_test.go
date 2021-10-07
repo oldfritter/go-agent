@@ -7,10 +7,10 @@ import (
 	"context"
 	"testing"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/integrationsupport"
-	"github.com/newrelic/go-agent/v3/internal/sysinfo"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/integrationsupport"
+	"github.com/oldfritter/go-agent/v3/internal/sysinfo"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/event"
@@ -110,12 +110,12 @@ func TestMonitor(t *testing.T) {
 		Failed:    func(ctx context.Context, e *event.CommandFailedEvent) { failed = true },
 	}
 	nrMonitor := mongoMonitor{
-		segmentMap:  make(map[int64]*newrelic.DatastoreSegment),
+		segmentMap:  make(map[int64]*oldfritter.DatastoreSegment),
 		origCommMon: origMonitor,
 	}
 	app := createTestApp()
 	txn := app.StartTransaction("txnName")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	nrMonitor.started(ctx, ste)
 	if !started {
 		t.Error("Original monitor not started")
@@ -181,7 +181,7 @@ func TestMonitor(t *testing.T) {
 	})
 
 	txn = app.StartTransaction("txnName")
-	ctx = newrelic.NewContext(context.Background(), txn)
+	ctx = oldfritter.NewContext(context.Background(), txn)
 	nrMonitor.started(ctx, ste)
 	if len(nrMonitor.segmentMap) != 1 {
 		t.Errorf("Wrong number of segments, expected 1 but got %d", len(nrMonitor.segmentMap))

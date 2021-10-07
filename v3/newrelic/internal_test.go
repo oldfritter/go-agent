@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"encoding/json"
@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/newrelic/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal"
 )
 
 var (
@@ -800,11 +800,11 @@ func TestQueueTime(t *testing.T) {
 	app.ExpectErrors(t, []internal.WantError{{
 		TxnName: "WebTransaction/Go/hello",
 		Msg:     "my msg",
-		Klass:   "newrelic.myError",
+		Klass:   "oldfritter.myError",
 	}})
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.myError",
+			"error.class":     "oldfritter.myError",
 			"error.message":   "my msg",
 			"transactionName": "WebTransaction/Go/hello",
 			"queueDuration":   internal.MatchAnything,
@@ -852,11 +852,11 @@ func TestIgnoreAlreadyEnded(t *testing.T) {
 	app.ExpectErrors(t, []internal.WantError{{
 		TxnName: "OtherTransaction/Go/hello",
 		Msg:     "my msg",
-		Klass:   "newrelic.myError",
+		Klass:   "oldfritter.myError",
 	}})
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.myError",
+			"error.class":     "oldfritter.myError",
 			"error.message":   "my msg",
 			"transactionName": "OtherTransaction/Go/hello",
 		},
@@ -1159,7 +1159,7 @@ func TestTraceDatastore(t *testing.T) {
 	}, webErrorMetrics...))
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":       "newrelic.myError",
+			"error.class":       "oldfritter.myError",
 			"error.message":     "my msg",
 			"transactionName":   "WebTransaction/Go/hello",
 			"databaseCallCount": 1,
@@ -1201,7 +1201,7 @@ func TestTraceDatastoreBackground(t *testing.T) {
 	}, backgroundErrorMetrics...))
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":       "newrelic.myError",
+			"error.class":       "oldfritter.myError",
 			"error.message":     "my msg",
 			"transactionName":   "OtherTransaction/Go/hello",
 			"databaseCallCount": 1,
@@ -1239,7 +1239,7 @@ func TestTraceDatastoreMissingProductOperationCollection(t *testing.T) {
 	}, webErrorMetrics...))
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":       "newrelic.myError",
+			"error.class":       "oldfritter.myError",
 			"error.message":     "my msg",
 			"transactionName":   "WebTransaction/Go/hello",
 			"databaseCallCount": 1,
@@ -1271,7 +1271,7 @@ func TestTraceDatastoreNilTxn(t *testing.T) {
 	app.ExpectMetrics(t, webErrorMetrics)
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.myError",
+			"error.class":     "oldfritter.myError",
 			"error.message":   "my msg",
 			"transactionName": "WebTransaction/Go/hello",
 		},
@@ -1303,7 +1303,7 @@ func TestTraceDatastoreTxnEnded(t *testing.T) {
 	app.ExpectMetrics(t, webErrorMetrics)
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.myError",
+			"error.class":     "oldfritter.myError",
 			"error.message":   "my msg",
 			"transactionName": "WebTransaction/Go/hello",
 		},
@@ -1337,7 +1337,7 @@ func TestTraceExternal(t *testing.T) {
 	}, webErrorMetrics...))
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":       "newrelic.myError",
+			"error.class":       "oldfritter.myError",
 			"error.message":     "my msg",
 			"transactionName":   "WebTransaction/Go/hello",
 			"externalCallCount": 1,
@@ -1573,7 +1573,7 @@ func TestTraceExternalBadURL(t *testing.T) {
 	app.ExpectMetrics(t, webErrorMetrics)
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.myError",
+			"error.class":     "oldfritter.myError",
 			"error.message":   "my msg",
 			"transactionName": "WebTransaction/Go/hello",
 		},
@@ -1606,7 +1606,7 @@ func TestTraceExternalBackground(t *testing.T) {
 	}, backgroundErrorMetrics...))
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":       "newrelic.myError",
+			"error.class":       "oldfritter.myError",
 			"error.message":     "my msg",
 			"transactionName":   "OtherTransaction/Go/hello",
 			"externalCallCount": 1,
@@ -1642,7 +1642,7 @@ func TestTraceExternalMissingURL(t *testing.T) {
 	}, webErrorMetrics...))
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":       "newrelic.myError",
+			"error.class":       "oldfritter.myError",
 			"error.message":     "my msg",
 			"transactionName":   "WebTransaction/Go/hello",
 			"externalCallCount": 1,
@@ -1671,7 +1671,7 @@ func TestTraceExternalNilTxn(t *testing.T) {
 	app.ExpectMetrics(t, webErrorMetrics)
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.myError",
+			"error.class":     "oldfritter.myError",
 			"error.message":   "my msg",
 			"transactionName": "WebTransaction/Go/hello",
 		},
@@ -1701,7 +1701,7 @@ func TestTraceExternalTxnEnded(t *testing.T) {
 	app.ExpectMetrics(t, webErrorMetrics)
 	app.ExpectErrorEvents(t, []internal.WantEvent{{
 		Intrinsics: map[string]interface{}{
-			"error.class":     "newrelic.myError",
+			"error.class":     "oldfritter.myError",
 			"error.message":   "my msg",
 			"transactionName": "WebTransaction/Go/hello",
 		},

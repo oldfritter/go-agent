@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"os"
 
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/_integrations/nrlogrus"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/_integrations/nrlogrus"
 	"github.com/sirupsen/logrus"
 )
 
@@ -22,17 +22,17 @@ func mustGetEnv(key string) string {
 }
 
 func main() {
-	cfg := newrelic.NewConfig("Logrus App", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
+	cfg := oldfritter.NewConfig("Logrus App", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
 	logrus.SetLevel(logrus.DebugLevel)
 	cfg.Logger = nrlogrus.StandardLogger()
 
-	app, err := newrelic.NewApplication(cfg)
+	app, err := oldfritter.NewApplication(cfg)
 	if nil != err {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/", func(w http.ResponseWriter, r *http.Request) {
 		io.WriteString(w, "hello world")
 	}))
 

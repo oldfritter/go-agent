@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func index(w http.ResponseWriter, r *http.Request) {
@@ -21,21 +21,21 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 
 func versionHandler(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, "New Relic Go Agent Version: "+newrelic.Version)
+	io.WriteString(w, "New Relic Go Agent Version: "+oldfritter.Version)
 }
 
 func noticeError(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "noticing an error")
 
-	txn := newrelic.FromContext(r.Context())
+	txn := oldfritter.FromContext(r.Context())
 	txn.NoticeError(errors.New("my error message"))
 }
 
 func noticeErrorWithAttributes(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "noticing an error")
 
-	txn := newrelic.FromContext(r.Context())
-	txn.NoticeError(newrelic.Error{
+	txn := oldfritter.FromContext(r.Context())
+	txn.NoticeError(oldfritter.Error{
 		Message: "uh oh. something went very wrong",
 		Class:   "errors are aggregated by class",
 		Attributes: map[string]interface{}{
@@ -46,7 +46,7 @@ func noticeErrorWithAttributes(w http.ResponseWriter, r *http.Request) {
 }
 
 func customEvent(w http.ResponseWriter, r *http.Request) {
-	txn := newrelic.FromContext(r.Context())
+	txn := oldfritter.FromContext(r.Context())
 
 	io.WriteString(w, "recording a custom event")
 
@@ -61,14 +61,14 @@ func customEvent(w http.ResponseWriter, r *http.Request) {
 func setName(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "changing the transaction's name")
 
-	txn := newrelic.FromContext(r.Context())
+	txn := oldfritter.FromContext(r.Context())
 	txn.SetName("other-name")
 }
 
 func addAttribute(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "adding attributes")
 
-	txn := newrelic.FromContext(r.Context())
+	txn := oldfritter.FromContext(r.Context())
 	txn.AddAttribute("myString", "hello")
 	txn.AddAttribute("myInt", 123)
 }
@@ -76,7 +76,7 @@ func addAttribute(w http.ResponseWriter, r *http.Request) {
 func addSpanAttribute(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "adding span attributes")
 
-	txn := newrelic.FromContext(r.Context())
+	txn := oldfritter.FromContext(r.Context())
 	sgmt := txn.StartSegment("segment1")
 	defer sgmt.End()
 	sgmt.AddAttribute("mySpanString", "hello")
@@ -85,7 +85,7 @@ func addSpanAttribute(w http.ResponseWriter, r *http.Request) {
 
 func ignore(w http.ResponseWriter, r *http.Request) {
 	if coinFlip := (0 == rand.Intn(2)); coinFlip {
-		txn := newrelic.FromContext(r.Context())
+		txn := oldfritter.FromContext(r.Context())
 		txn.Ignore()
 		io.WriteString(w, "ignoring the transaction")
 	} else {
@@ -94,7 +94,7 @@ func ignore(w http.ResponseWriter, r *http.Request) {
 }
 
 func segments(w http.ResponseWriter, r *http.Request) {
-	txn := newrelic.FromContext(r.Context())
+	txn := oldfritter.FromContext(r.Context())
 
 	func() {
 		defer txn.StartSegment("f1").End()
@@ -111,13 +111,13 @@ func segments(w http.ResponseWriter, r *http.Request) {
 }
 
 func mysql(w http.ResponseWriter, r *http.Request) {
-	txn := newrelic.FromContext(r.Context())
-	s := newrelic.DatastoreSegment{
+	txn := oldfritter.FromContext(r.Context())
+	s := oldfritter.DatastoreSegment{
 		StartTime: txn.StartSegmentNow(),
 		// Product, Collection, and Operation are the most important
 		// fields to populate because they are used in the breakdown
 		// metrics.
-		Product:    newrelic.DatastoreMySQL,
+		Product:    oldfritter.DatastoreMySQL,
 		Collection: "users",
 		Operation:  "INSERT",
 
@@ -137,11 +137,11 @@ func mysql(w http.ResponseWriter, r *http.Request) {
 }
 
 func message(w http.ResponseWriter, r *http.Request) {
-	txn := newrelic.FromContext(r.Context())
-	s := newrelic.MessageProducerSegment{
+	txn := oldfritter.FromContext(r.Context())
+	s := oldfritter.MessageProducerSegment{
 		StartTime:       txn.StartSegmentNow(),
 		Library:         "RabbitMQ",
-		DestinationType: newrelic.MessageQueue,
+		DestinationType: oldfritter.MessageQueue,
 		DestinationName: "myQueue",
 	}
 	defer s.End()
@@ -151,7 +151,7 @@ func message(w http.ResponseWriter, r *http.Request) {
 }
 
 func external(w http.ResponseWriter, r *http.Request) {
-	txn := newrelic.FromContext(r.Context())
+	txn := oldfritter.FromContext(r.Context())
 	req, _ := http.NewRequest("GET", "http://example.com", nil)
 
 	// Using StartExternalSegment is recommended because it does distributed
@@ -159,12 +159,12 @@ func external(w http.ResponseWriter, r *http.Request) {
 	// instead only have a url string then you can start the external
 	// segment like this:
 	//
-	// es := newrelic.ExternalSegment{
+	// es := oldfritter.ExternalSegment{
 	// 	StartTime: txn.StartSegmentNow(),
 	// 	URL:       urlString,
 	// }
 	//
-	es := newrelic.StartExternalSegment(txn, req)
+	es := oldfritter.StartExternalSegment(txn, req)
 	resp, err := http.DefaultClient.Do(req)
 	es.End()
 
@@ -184,7 +184,7 @@ func roundtripper(w http.ResponseWriter, r *http.Request) {
 	// FromContext). This is recommended because it allows you to reuse the
 	// same client for multiple transactions.
 	client := &http.Client{}
-	client.Transport = newrelic.NewRoundTripper(client.Transport)
+	client.Transport = oldfritter.NewRoundTripper(client.Transport)
 
 	request, _ := http.NewRequest("GET", "http://example.com", nil)
 	// Since the transaction is already added to the inbound request's
@@ -195,8 +195,8 @@ func roundtripper(w http.ResponseWriter, r *http.Request) {
 	// wanted just to add the transaction to the external request's context,
 	// you could do that like this:
 	//
-	//	txn := newrelic.FromContext(r.Context())
-	//	request = newrelic.RequestWithTransactionContext(request, txn)
+	//	txn := oldfritter.FromContext(r.Context())
+	//	request = oldfritter.RequestWithTransactionContext(request, txn)
 
 	resp, err := client.Do(request)
 	if nil != err {
@@ -208,10 +208,10 @@ func roundtripper(w http.ResponseWriter, r *http.Request) {
 }
 
 func async(w http.ResponseWriter, r *http.Request) {
-	txn := newrelic.FromContext(r.Context())
+	txn := oldfritter.FromContext(r.Context())
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
-	go func(txn *newrelic.Transaction) {
+	go func(txn *oldfritter.Transaction) {
 		defer wg.Done()
 		defer txn.StartSegment("async").End()
 		time.Sleep(100 * time.Millisecond)
@@ -224,7 +224,7 @@ func async(w http.ResponseWriter, r *http.Request) {
 }
 
 func customMetric(w http.ResponseWriter, r *http.Request) {
-	txn := newrelic.FromContext(r.Context())
+	txn := oldfritter.FromContext(r.Context())
 	for _, vals := range r.Header {
 		for _, v := range vals {
 			// This custom metric will have the name
@@ -236,7 +236,7 @@ func customMetric(w http.ResponseWriter, r *http.Request) {
 }
 
 func browser(w http.ResponseWriter, r *http.Request) {
-	txn := newrelic.FromContext(r.Context())
+	txn := oldfritter.FromContext(r.Context())
 	hdr := txn.BrowserTimingHeader()
 	// BrowserTimingHeader() will always return a header whose methods can
 	// be safely called.
@@ -247,33 +247,33 @@ func browser(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("Example App"),
-		newrelic.ConfigFromEnvironment(),
-		newrelic.ConfigDebugLogger(os.Stdout),
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("Example App"),
+		oldfritter.ConfigFromEnvironment(),
+		oldfritter.ConfigDebugLogger(os.Stdout),
 	)
 	if nil != err {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/", index))
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/version", versionHandler))
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/notice_error", noticeError))
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/notice_error_with_attributes", noticeErrorWithAttributes))
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/custom_event", customEvent))
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/set_name", setName))
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/add_attribute", addAttribute))
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/add_span_attribute", addSpanAttribute))
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/ignore", ignore))
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/segments", segments))
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/mysql", mysql))
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/external", external))
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/roundtripper", roundtripper))
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/custommetric", customMetric))
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/browser", browser))
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/async", async))
-	http.HandleFunc(newrelic.WrapHandleFunc(app, "/message", message))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/", index))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/version", versionHandler))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/notice_error", noticeError))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/notice_error_with_attributes", noticeErrorWithAttributes))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/custom_event", customEvent))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/set_name", setName))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/add_attribute", addAttribute))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/add_span_attribute", addSpanAttribute))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/ignore", ignore))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/segments", segments))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/mysql", mysql))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/external", external))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/roundtripper", roundtripper))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/custommetric", customMetric))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/browser", browser))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/async", async))
+	http.HandleFunc(oldfritter.WrapHandleFunc(app, "/message", message))
 
 	http.HandleFunc("/background", func(w http.ResponseWriter, req *http.Request) {
 		// Transactions started without an http.Request are classified as

@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"net/http"
@@ -29,7 +29,7 @@ type DatastoreSegment struct {
 	// used for aggregate metrics:
 	//
 	// Product is the datastore type.  See the constants in
-	// https://github.com/newrelic/go-agent/blob/master/datastore.go.  Product
+	// https://github.com/oldfritter/go-agent/blob/master/datastore.go.  Product
 	// is one of the fields primarily responsible for the grouping of Datastore
 	// metrics.
 	Product DatastoreProduct
@@ -156,8 +156,8 @@ func StartSegmentNow(txn Transaction) SegmentStartTime {
 // StartSegment makes it easy to instrument segments.  To time a function, do
 // the following:
 //
-//	func timeMe(txn newrelic.Transaction) {
-//		defer newrelic.StartSegment(txn, "timeMe").End()
+//	func timeMe(txn oldfritter.Transaction) {
+//		defer oldfritter.StartSegment(txn, "timeMe").End()
 //		// ... function code here ...
 //	}
 //

@@ -33,12 +33,12 @@ import (
 	awsmiddle "github.com/aws/aws-sdk-go-v2/aws/middleware"
 	smithymiddle "github.com/aws/smithy-go/middleware"
 	smithyhttp "github.com/aws/smithy-go/transport/http"
-	"github.com/newrelic/go-agent/v3/internal/integrationsupport"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal/integrationsupport"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 type nrMiddleware struct {
-	txn *newrelic.Transaction
+	txn *oldfritter.Transaction
 }
 
 type endable interface{ End() }
@@ -52,7 +52,7 @@ func (m nrMiddleware) deserializeMiddleware(stack *smithymiddle.Stack) error {
 
 		txn := m.txn
 		if txn == nil {
-			txn = newrelic.FromContext(ctx)
+			txn = oldfritter.FromContext(ctx)
 		}
 
 		smithyRequest := in.Request.(*smithyhttp.Request)
@@ -66,8 +66,8 @@ func (m nrMiddleware) deserializeMiddleware(stack *smithymiddle.Stack) error {
 		var segment endable
 		// Service name capitalization is different for v1 and v2.
 		if serviceName == "dynamodb" || serviceName == "DynamoDB" {
-			segment = &newrelic.DatastoreSegment{
-				Product:            newrelic.DatastoreDynamoDB,
+			segment = &oldfritter.DatastoreSegment{
+				Product:            oldfritter.DatastoreDynamoDB,
 				Collection:         "", // AWS SDK V2 doesn't expose TableName
 				Operation:          operation,
 				ParameterizedQuery: "",
@@ -78,7 +78,7 @@ func (m nrMiddleware) deserializeMiddleware(stack *smithymiddle.Stack) error {
 				StartTime:          txn.StartSegmentNow(),
 			}
 		} else {
-			segment = newrelic.StartExternalSegment(txn, httpRequest)
+			segment = oldfritter.StartExternalSegment(txn, httpRequest)
 		}
 
 		// Hand off execution to other middlewares and then perform the request
@@ -90,15 +90,15 @@ func (m nrMiddleware) deserializeMiddleware(stack *smithymiddle.Stack) error {
 		if ok {
 			// Set additional span attributes
 			integrationsupport.AddAgentSpanAttribute(txn,
-				newrelic.AttributeResponseCode, strconv.Itoa(response.StatusCode))
+				oldfritter.AttributeResponseCode, strconv.Itoa(response.StatusCode))
 			integrationsupport.AddAgentSpanAttribute(txn,
-				newrelic.SpanAttributeAWSOperation, operation)
+				oldfritter.SpanAttributeAWSOperation, operation)
 			integrationsupport.AddAgentSpanAttribute(txn,
-				newrelic.SpanAttributeAWSRegion, region)
+				oldfritter.SpanAttributeAWSRegion, region)
 			requestID, ok := awsmiddle.GetRequestIDMetadata(metadata)
 			if ok {
 				integrationsupport.AddAgentSpanAttribute(txn,
-					newrelic.AttributeAWSRequestID, requestID)
+					oldfritter.AttributeAWSRequestID, requestID)
 			}
 		}
 		segment.End()
@@ -111,7 +111,7 @@ func (m nrMiddleware) deserializeMiddleware(stack *smithymiddle.Stack) error {
 // the AWS SDK V2 for Go. It must be called only once per AWS configuration.
 //
 // If `txn` is provided as nil, the New Relic transaction will be retrieved
-// using `newrelic.FromContext`.
+// using `oldfritter.FromContext`.
 //
 // Additional attributes will be added to transaction trace segments and span
 // events: aws.region, aws.requestId, and aws.operation. In addition,
@@ -138,7 +138,7 @@ func (m nrMiddleware) deserializeMiddleware(stack *smithymiddle.Stack) error {
 //
 //  txn := loadNewRelicTransaction()
 //  nraws.AppendMiddlewares(&awsConfig.APIOptions, txn)
-func AppendMiddlewares(apiOptions *[]func(*smithymiddle.Stack) error, txn *newrelic.Transaction) {
+func AppendMiddlewares(apiOptions *[]func(*smithymiddle.Stack) error, txn *oldfritter.Transaction) {
 	m := nrMiddleware{txn: txn}
 	*apiOptions = append(*apiOptions, m.deserializeMiddleware)
 }

@@ -13,8 +13,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/newrelic/go-agent/internal/crossagent"
-	"github.com/newrelic/go-agent/internal/logger"
+	"github.com/oldfritter/go-agent/internal/crossagent"
+	"github.com/oldfritter/go-agent/internal/logger"
 )
 
 func TestResponseCodeError(t *testing.T) {
@@ -407,7 +407,7 @@ func TestCalculatePreconnectHost(t *testing.T) {
 		t.Error(host)
 	}
 	// override present
-	override := "other-collector.newrelic.com"
+	override := "other-collector.oldfritter.com"
 	host = calculatePreconnectHost("0123456789012345678901234567890123456789", override)
 	if host != override {
 		t.Error(host)

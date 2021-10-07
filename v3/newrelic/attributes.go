@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 // This file contains the names of the automatically captured attributes.
 // Attributes are key value pairs attached to transaction events, error events,
@@ -11,7 +11,7 @@ package newrelic
 // These attribute names are exposed here to facilitate configuration.
 //
 // For more information, see:
-// https://docs.newrelic.com/docs/agents/manage-apm-agents/agent-metrics/agent-attributes
+// https://docs.oldfritter.com/docs/agents/manage-apm-agents/agent-metrics/agent-attributes
 
 // Attributes destined for Transaction Events, Errors, and Transaction Traces:
 const (
@@ -75,30 +75,30 @@ const (
 //
 // When a message is consumed (for example from Kafka or RabbitMQ), supported
 // instrumentation packages -- i.e. those found in the v3/integrations
-// (https://godoc.org/github.com/newrelic/go-agent/v3/integrations) directory --
+// (https://godoc.org/github.com/oldfritter/go-agent/v3/integrations) directory --
 // will add these attributes automatically.  AttributeMessageExchangeType,
 // AttributeMessageReplyTo, and AttributeMessageCorrelationID are disabled
 // by default.  To see these attributes added to all destinations, you must add
 // include them in your config settings:
 //
 //	cfg.Attributes.Include = append(cfg.Attributes.Include,
-//		newrelic.AttributeMessageExchangeType,
-//		newrelic.AttributeMessageReplyTo,
-//		newrelic.AttributeMessageCorrelationID,
+//		oldfritter.AttributeMessageExchangeType,
+//		oldfritter.AttributeMessageReplyTo,
+//		oldfritter.AttributeMessageCorrelationID,
 //	)
 //
 // When not using a supported instrumentation package, you can add these
 // attributes manually using the Transaction.AddAttribute
-// (https://godoc.org/github.com/newrelic/go-agent/v3/newrelic#Transaction.AddAttribute)
+// (https://godoc.org/github.com/oldfritter/go-agent/v3/oldfritter#Transaction.AddAttribute)
 // API.  In this case, these attributes will be included on all destintations
 // by default.
 //
 //	txn := app.StartTransaction("Message/RabbitMQ/Exchange/Named/MyExchange")
-//	txn.AddAttribute(newrelic.AttributeMessageRoutingKey, "myRoutingKey")
-//	txn.AddAttribute(newrelic.AttributeMessageQueueName, "myQueueName")
-//	txn.AddAttribute(newrelic.AttributeMessageExchangeType, "myExchangeType")
-//	txn.AddAttribute(newrelic.AttributeMessageReplyTo, "myReplyTo")
-//	txn.AddAttribute(newrelic.AttributeMessageCorrelationID, "myCorrelationID")
+//	txn.AddAttribute(oldfritter.AttributeMessageRoutingKey, "myRoutingKey")
+//	txn.AddAttribute(oldfritter.AttributeMessageQueueName, "myQueueName")
+//	txn.AddAttribute(oldfritter.AttributeMessageExchangeType, "myExchangeType")
+//	txn.AddAttribute(oldfritter.AttributeMessageReplyTo, "myReplyTo")
+//	txn.AddAttribute(oldfritter.AttributeMessageCorrelationID, "myCorrelationID")
 //	// ... consume a message ...
 //	txn.End()
 //
@@ -125,7 +125,7 @@ const (
 // for example, modify your Config like this:
 //
 //	cfg.SpanEvents.Attributes.Exclude = append(cfg.SpanEvents.Attributes.Exclude,
-//		newrelic.SpanAttributeDBStatement)
+//		oldfritter.SpanAttributeDBStatement)
 const (
 	SpanAttributeDBStatement             = "db.statement"
 	SpanAttributeDBInstance              = "db.instance"

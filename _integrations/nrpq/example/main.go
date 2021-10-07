@@ -10,8 +10,8 @@ import (
 	"os"
 	"time"
 
-	newrelic "github.com/newrelic/go-agent"
-	_ "github.com/newrelic/go-agent/_integrations/nrpq"
+	oldfritter "github.com/oldfritter/go-agent"
+	_ "github.com/oldfritter/go-agent/_integrations/nrpq"
 )
 
 func mustGetEnv(key string) string {
@@ -28,16 +28,16 @@ func main() {
 		panic(err)
 	}
 
-	cfg := newrelic.NewConfig("PostgreSQL App", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
-	cfg.Logger = newrelic.NewDebugLogger(os.Stdout)
-	app, err := newrelic.NewApplication(cfg)
+	cfg := oldfritter.NewConfig("PostgreSQL App", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
+	cfg.Logger = oldfritter.NewDebugLogger(os.Stdout)
+	app, err := oldfritter.NewApplication(cfg)
 	if nil != err {
 		panic(err)
 	}
 	app.WaitForConnection(5 * time.Second)
 	txn := app.StartTransaction("postgresQuery", nil, nil)
 
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	row := db.QueryRowContext(ctx, "SELECT count(*) FROM pg_catalog.pg_tables")
 	var count int
 	row.Scan(&count)

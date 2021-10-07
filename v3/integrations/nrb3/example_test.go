@@ -8,11 +8,11 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/newrelic/go-agent/v3/integrations/nrb3"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/nrb3"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
-func currentTxn() *newrelic.Transaction {
+func currentTxn() *oldfritter.Transaction {
 	return nil
 }
 
@@ -33,7 +33,7 @@ func ExampleNewRoundTripper() {
 
 	// Be sure to add the transaction to the request context.  This step is
 	// required.
-	req = newrelic.RequestWithTransactionContext(req, txn)
+	req = oldfritter.RequestWithTransactionContext(req, txn)
 	resp, err := client.Do(req)
 	if nil != err {
 		log.Fatalln(err)

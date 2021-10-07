@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"encoding/json"
@@ -9,8 +9,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/cat"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/cat"
 )
 
 var (
@@ -37,7 +37,7 @@ func inboundCrossProcessRequestFactory() *http.Request {
 	cfgFn := func(cfg *Config) { cfg.CrossApplicationTracer.Enabled = true }
 	app := testApp(crossProcessReplyFn, cfgFn, nil)
 	clientTxn := app.StartTransaction("client")
-	req, err := http.NewRequest("GET", "newrelic.com", nil)
+	req, err := http.NewRequest("GET", "oldfritter.com", nil)
 	StartExternalSegment(clientTxn, req)
 	if "" == req.Header.Get(cat.NewRelicIDName) {
 		panic("missing cat header NewRelicIDName: " + req.Header.Get(cat.NewRelicIDName))
@@ -85,7 +85,7 @@ func TestCrossProcessWriteHeaderSuccess(t *testing.T) {
 			"request.method":   "GET",
 			"httpResponseCode": 200,
 			"http.statusCode":  200,
-			"request.uri":      "newrelic.com",
+			"request.uri":      "oldfritter.com",
 		},
 		UserAttributes: map[string]interface{}{},
 	}})

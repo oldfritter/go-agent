@@ -21,7 +21,7 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/newrelic/go-agent"
+	"github.com/oldfritter/go-agent"
 )
 
 func mustGetEnv(key string) string {
@@ -31,16 +31,16 @@ func mustGetEnv(key string) string {
 	panic(fmt.Sprintf("environment variable %s unset", key))
 }
 
-func called(app newrelic.Application, payload string) {
+func called(app oldfritter.Application, payload string) {
 	txn := app.StartTransaction("called-txn", nil, nil)
 	defer txn.End()
 
 	// Accept the payload that was passed on the command line.
-	txn.AcceptDistributedTracePayload(newrelic.TransportOther, payload)
+	txn.AcceptDistributedTracePayload(oldfritter.TransportOther, payload)
 	time.Sleep(1 * time.Second)
 }
 
-func calling(app newrelic.Application) {
+func calling(app oldfritter.Application) {
 	txn := app.StartTransaction("calling-txn", nil, nil)
 	defer txn.End()
 
@@ -54,15 +54,15 @@ func calling(app newrelic.Application) {
 	time.Sleep(1 * time.Second)
 }
 
-func makeApplication(name string) (newrelic.Application, error) {
-	cfg := newrelic.NewConfig(name, mustGetEnv("NEW_RELIC_LICENSE_KEY"))
-	cfg.Logger = newrelic.NewDebugLogger(os.Stdout)
+func makeApplication(name string) (oldfritter.Application, error) {
+	cfg := oldfritter.NewConfig(name, mustGetEnv("NEW_RELIC_LICENSE_KEY"))
+	cfg.Logger = oldfritter.NewDebugLogger(os.Stdout)
 
 	// Distributed Tracing and Cross Application Tracing cannot both be
 	// enabled at the same time.
 	cfg.DistributedTracer.Enabled = true
 
-	app, err := newrelic.NewApplication(cfg)
+	app, err := oldfritter.NewApplication(cfg)
 
 	if nil != err {
 		return nil, err

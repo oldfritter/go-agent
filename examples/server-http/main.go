@@ -12,11 +12,11 @@ import (
 	"os"
 	"time"
 
-	newrelic "github.com/newrelic/go-agent"
+	oldfritter "github.com/oldfritter/go-agent"
 )
 
 type handler struct {
-	App newrelic.Application
+	App oldfritter.Application
 }
 
 func (h *handler) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
@@ -26,10 +26,10 @@ func (h *handler) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 	defer txn.End()
 
 	if req.URL.String() == "/segments" {
-		defer newrelic.StartSegment(txn, "f1").End()
+		defer oldfritter.StartSegment(txn, "f1").End()
 
 		func() {
-			defer newrelic.StartSegment(txn, "f2").End()
+			defer oldfritter.StartSegment(txn, "f2").End()
 
 			io.WriteString(writer, "segments!")
 			time.Sleep(10 * time.Millisecond)
@@ -49,11 +49,11 @@ func mustGetEnv(key string) string {
 	panic(fmt.Sprintf("environment variable %s unset", key))
 }
 
-func makeApplication() (newrelic.Application, error) {
-	cfg := newrelic.NewConfig("HTTP Server App", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
-	cfg.Logger = newrelic.NewDebugLogger(os.Stdout)
+func makeApplication() (oldfritter.Application, error) {
+	cfg := oldfritter.NewConfig("HTTP Server App", mustGetEnv("NEW_RELIC_LICENSE_KEY"))
+	cfg.Logger = oldfritter.NewDebugLogger(os.Stdout)
 	cfg.DistributedTracer.Enabled = true
-	app, err := newrelic.NewApplication(cfg)
+	app, err := oldfritter.NewApplication(cfg)
 
 	if nil != err {
 		return nil, err

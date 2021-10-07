@@ -16,17 +16,17 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambdacontext"
-	"github.com/newrelic/go-agent/v3/internal"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
-func testApp(getenv func(string) string, t *testing.T) *newrelic.Application {
+func testApp(getenv func(string) string, t *testing.T) *oldfritter.Application {
 	if nil == getenv {
 		getenv = func(string) string { return "" }
 	}
 	cfg := newConfigInternal(getenv)
 
-	app, err := newrelic.NewApplication(cfg)
+	app, err := oldfritter.NewApplication(cfg)
 	if nil != err {
 		t.Fatal(err)
 	}
@@ -536,7 +536,7 @@ func TestAPIGatewayProxyResponse(t *testing.T) {
 
 func TestCustomEvent(t *testing.T) {
 	originalHandler := func(c context.Context) {
-		txn := newrelic.FromContext(c)
+		txn := oldfritter.FromContext(c)
 		txn.Application().RecordCustomEvent("myEvent", map[string]interface{}{
 			"zip": "zap",
 		})
@@ -575,7 +575,7 @@ func TestDefaultWriterProvider(t *testing.T) {
 		}
 	})
 
-	const telemetryFile = "/tmp/newrelic-telemetry"
+	const telemetryFile = "/tmp/oldfritter-telemetry"
 	defer os.Remove(telemetryFile)
 	file, err := os.Create(telemetryFile)
 	if err != nil {

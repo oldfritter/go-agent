@@ -23,14 +23,14 @@
 // Then change the side-effect import to this package, and open "nrsnowflake" instead:
 //
 //	import (
-//		_ "github.com/newrelic/go-agent/v3/integrations/nrsnowflake"
+//		_ "github.com/oldfritter/go-agent/v3/integrations/nrsnowflake"
 //	)
 //
 //	func main() {
 //		db, err := sql.Open("nrsnowflake", "user@unix(/path/to/socket)/dbname")
 //	}
 //
-// 2. Provide a context containing a newrelic.Transaction to all exec and query
+// 2. Provide a context containing a oldfritter.Transaction to all exec and query
 // methods on sql.DB, sql.Conn, sql.Tx, and sql.Stmt.  This requires using the
 // context methods ExecContext, QueryContext, and QueryRowContext in place of
 // Exec, Query, and QueryRow respectively.  For example, instead of the
@@ -40,27 +40,27 @@
 //
 // Do this:
 //
-//	ctx := newrelic.NewContext(context.Background(), txn)
+//	ctx := oldfritter.NewContext(context.Background(), txn)
 //	row := db.QueryRowContext(ctx, "SELECT count(*) from tables")
 //
 // A working example is shown here:
-// https://github.com/newrelic/go-agent/tree/master/v3/integrations/nrsnowflake/example/main.go
+// https://github.com/oldfritter/go-agent/tree/master/v3/integrations/nrsnowflake/example/main.go
 package nrsnowflake
 
 import (
 	"database/sql"
 	"strconv"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
-	"github.com/newrelic/go-agent/v3/newrelic/sqlparse"
+	"github.com/oldfritter/go-agent/v3/internal"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
+	"github.com/oldfritter/go-agent/v3/oldfritter/sqlparse"
 	"github.com/snowflakedb/gosnowflake"
 )
 
 var (
-	baseBuilder = newrelic.SQLDriverSegmentBuilder{
-		BaseSegment: newrelic.DatastoreSegment{
-			Product: newrelic.DatastoreSnowflake,
+	baseBuilder = oldfritter.SQLDriverSegmentBuilder{
+		BaseSegment: oldfritter.DatastoreSegment{
+			Product: oldfritter.DatastoreSnowflake,
 		},
 		ParseQuery: sqlparse.ParseQuery,
 		ParseDSN:   parseDSN,
@@ -68,11 +68,11 @@ var (
 )
 
 func init() {
-	sql.Register("nrsnowflake", newrelic.InstrumentSQLDriver(gosnowflake.SnowflakeDriver{}, baseBuilder))
+	sql.Register("nrsnowflake", oldfritter.InstrumentSQLDriver(gosnowflake.SnowflakeDriver{}, baseBuilder))
 	internal.TrackUsage("integration", "driver", "snowflake")
 }
 
-func parseDSN(s *newrelic.DatastoreSegment, dsn string) {
+func parseDSN(s *oldfritter.DatastoreSegment, dsn string) {
 	cfg, err := gosnowflake.ParseDSN(dsn)
 	if nil != err {
 		return
@@ -80,7 +80,7 @@ func parseDSN(s *newrelic.DatastoreSegment, dsn string) {
 	parseConfig(s, cfg)
 }
 
-func parseConfig(s *newrelic.DatastoreSegment, cfg *gosnowflake.Config) {
+func parseConfig(s *oldfritter.DatastoreSegment, cfg *gosnowflake.Config) {
 	sPort := strconv.Itoa(cfg.Port)
 	if cfg.Port == 0 {
 		sPort = ""

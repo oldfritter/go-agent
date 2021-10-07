@@ -23,14 +23,14 @@
 // Then change the side-effect import to this package, and open "nrmysql" instead:
 //
 //	import (
-//		_ "github.com/newrelic/go-agent/_integrations/nrmysql"
+//		_ "github.com/oldfritter/go-agent/_integrations/nrmysql"
 //	)
 //
 //	func main() {
 //		db, err := sql.Open("nrmysql", "user@unix(/path/to/socket)/dbname")
 //	}
 //
-// 2. Provide a context containing a newrelic.Transaction to all exec and query
+// 2. Provide a context containing a oldfritter.Transaction to all exec and query
 // methods on sql.DB, sql.Conn, sql.Tx, and sql.Stmt.  This requires using the
 // context methods ExecContext, QueryContext, and QueryRowContext in place of
 // Exec, Query, and QueryRow respectively.  For example, instead of the
@@ -40,11 +40,11 @@
 //
 // Do this:
 //
-//	ctx := newrelic.NewContext(context.Background(), txn)
+//	ctx := oldfritter.NewContext(context.Background(), txn)
 //	row := db.QueryRowContext(ctx, "SELECT count(*) from tables")
 //
 // A working example is shown here:
-// https://github.com/newrelic/go-agent/tree/master/_integrations/nrmysql/example/main.go
+// https://github.com/oldfritter/go-agent/tree/master/_integrations/nrmysql/example/main.go
 package nrmysql
 
 import (
@@ -52,15 +52,15 @@ import (
 	"net"
 
 	"github.com/go-sql-driver/mysql"
-	newrelic "github.com/newrelic/go-agent"
-	"github.com/newrelic/go-agent/internal"
-	"github.com/newrelic/go-agent/internal/sqlparse"
+	oldfritter "github.com/oldfritter/go-agent"
+	"github.com/oldfritter/go-agent/internal"
+	"github.com/oldfritter/go-agent/internal/sqlparse"
 )
 
 var (
-	baseBuilder = newrelic.SQLDriverSegmentBuilder{
-		BaseSegment: newrelic.DatastoreSegment{
-			Product: newrelic.DatastoreMySQL,
+	baseBuilder = oldfritter.SQLDriverSegmentBuilder{
+		BaseSegment: oldfritter.DatastoreSegment{
+			Product: oldfritter.DatastoreMySQL,
 		},
 		ParseQuery: sqlparse.ParseQuery,
 		ParseDSN:   parseDSN,
@@ -68,11 +68,11 @@ var (
 )
 
 func init() {
-	sql.Register("nrmysql", newrelic.InstrumentSQLDriver(mysql.MySQLDriver{}, baseBuilder))
+	sql.Register("nrmysql", oldfritter.InstrumentSQLDriver(mysql.MySQLDriver{}, baseBuilder))
 	internal.TrackUsage("integration", "driver", "mysql")
 }
 
-func parseDSN(s *newrelic.DatastoreSegment, dsn string) {
+func parseDSN(s *oldfritter.DatastoreSegment, dsn string) {
 	cfg, err := mysql.ParseDSN(dsn)
 	if nil != err {
 		return
@@ -80,7 +80,7 @@ func parseDSN(s *newrelic.DatastoreSegment, dsn string) {
 	parseConfig(s, cfg)
 }
 
-func parseConfig(s *newrelic.DatastoreSegment, cfg *mysql.Config) {
+func parseConfig(s *oldfritter.DatastoreSegment, cfg *mysql.Config) {
 	s.DatabaseName = cfg.DBName
 
 	var host, ppoid string

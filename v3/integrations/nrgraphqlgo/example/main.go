@@ -13,8 +13,8 @@ import (
 	"github.com/graphql-go/graphql"
 	handler "github.com/graphql-go/graphql-go-handler"
 
-	"github.com/newrelic/go-agent/v3/integrations/nrgraphqlgo"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/nrgraphqlgo"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 var schema = func() graphql.Schema {
@@ -56,10 +56,10 @@ var schema = func() graphql.Schema {
 
 func main() {
 	// 2. Create the New Relic application
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("Example GraphQL App"),
-		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-		newrelic.ConfigDebugLogger(os.Stdout),
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("Example GraphQL App"),
+		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		oldfritter.ConfigDebugLogger(os.Stdout),
 	)
 	if nil != err {
 		fmt.Println(err)
@@ -75,7 +75,7 @@ func main() {
 	// 3. Make sure to instrument your HTTP handler, which will
 	// create/end transactions, record error codes, and add
 	// the transactions to the context.
-	http.Handle(newrelic.WrapHandle(app, "/graphql", h))
+	http.Handle(oldfritter.WrapHandle(app, "/graphql", h))
 
 	// You can test your example query with curl:
 	//   curl -X POST \

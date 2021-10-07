@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/micro/go-micro"
-	"github.com/newrelic/go-agent/v3/integrations/nrmicro"
-	proto "github.com/newrelic/go-agent/v3/integrations/nrmicro/example/proto"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/nrmicro"
+	proto "github.com/oldfritter/go-agent/v3/integrations/nrmicro/example/proto"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 // Greeter is the server struct
@@ -22,7 +22,7 @@ type Greeter struct{}
 // Hello is the method on the server being called
 func (g *Greeter) Hello(ctx context.Context, req *proto.HelloRequest, rsp *proto.HelloResponse) error {
 	name := req.GetName()
-	txn := newrelic.FromContext(ctx)
+	txn := oldfritter.FromContext(ctx)
 	txn.AddAttribute("Name", name)
 	fmt.Println("Request received from", name)
 	rsp.Greeting = "Hello " + name
@@ -30,10 +30,10 @@ func (g *Greeter) Hello(ctx context.Context, req *proto.HelloRequest, rsp *proto
 }
 
 func main() {
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("Micro Server"),
-		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-		newrelic.ConfigDebugLogger(os.Stdout),
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("Micro Server"),
+		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		oldfritter.ConfigDebugLogger(os.Stdout),
 	)
 	if nil != err {
 		panic(err)

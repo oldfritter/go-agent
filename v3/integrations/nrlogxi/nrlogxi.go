@@ -9,8 +9,8 @@ package nrlogxi
 
 import (
 	log "github.com/mgutz/logxi/v1"
-	"github.com/newrelic/go-agent/v3/internal"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func init() { internal.TrackUsage("integration", "logging", "logxi", "v1") }
@@ -43,16 +43,16 @@ func convert(c map[string]interface{}) []interface{} {
 	return output
 }
 
-// New returns a newrelic.Logger which forwards agent log messages to the
+// New returns a oldfritter.Logger which forwards agent log messages to the
 // provided logxi Logger.
-func New(l log.Logger) newrelic.Logger {
+func New(l log.Logger) oldfritter.Logger {
 	return &shim{
 		e: l,
 	}
 }
 
-// ConfigLogger configures the newrelic.Application to send log messsages to the
+// ConfigLogger configures the oldfritter.Application to send log messsages to the
 // provided logxi logger.
-func ConfigLogger(l log.Logger) newrelic.ConfigOption {
-	return newrelic.ConfigLogger(New(l))
+func ConfigLogger(l log.Logger) oldfritter.ConfigOption {
+	return oldfritter.ConfigLogger(New(l))
 }

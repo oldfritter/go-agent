@@ -10,8 +10,8 @@ import (
 
 	graphql "github.com/graph-gophers/graphql-go"
 	"github.com/graph-gophers/graphql-go/relay"
-	"github.com/newrelic/go-agent/v3/integrations/nrgraphgophers"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/nrgraphgophers"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 type query struct{}
@@ -20,10 +20,10 @@ func (*query) Hello() string { return "hello world" }
 
 func Example() {
 	// First create your New Relic Application:
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("GraphQL App"),
-		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-		newrelic.ConfigDebugLogger(os.Stdout),
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("GraphQL App"),
+		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		oldfritter.ConfigDebugLogger(os.Stdout),
 	)
 	if nil != err {
 		panic(err)
@@ -36,8 +36,8 @@ func Example() {
 	opt := graphql.Tracer(nrgraphgophers.NewTracer())
 	schema := graphql.MustParseSchema(querySchema, &query{}, opt)
 
-	// Finally, instrument your request handler using newrelic.WrapHandle
+	// Finally, instrument your request handler using oldfritter.WrapHandle
 	// to create transactions for requests:
-	http.Handle(newrelic.WrapHandle(app, "/", &relay.Handler{Schema: schema}))
+	http.Handle(oldfritter.WrapHandle(app, "/", &relay.Handler{Schema: schema}))
 	log.Fatal(http.ListenAndServe(":8000", nil))
 }

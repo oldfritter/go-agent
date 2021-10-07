@@ -11,16 +11,16 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func init() { internal.TrackUsage("integration", "datastore", "elasticsearch") }
 
-func parseRequest(r *http.Request) (segment newrelic.DatastoreSegment) {
+func parseRequest(r *http.Request) (segment oldfritter.DatastoreSegment) {
 
-	segment.StartTime = newrelic.FromContext(r.Context()).StartSegmentNow()
-	segment.Product = newrelic.DatastoreElasticsearch
+	segment.StartTime = oldfritter.FromContext(r.Context()).StartSegmentNow()
+	segment.Product = oldfritter.DatastoreElasticsearch
 
 	path := strings.TrimPrefix(r.URL.Path, "/")
 	method := r.Method

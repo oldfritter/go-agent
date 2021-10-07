@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"net/http"
@@ -16,13 +16,13 @@ import (
 //
 // Perform this replacement:
 //
-//    http.Handle(newrelic.WrapHandle(app, "/foo", myHandler))
+//    http.Handle(oldfritter.WrapHandle(app, "/foo", myHandler))
 //
 // WrapHandle adds the Transaction to the request's context.  Access it using
 // FromContext to add attributes, create segments, or notice errors:
 //
 //	func myHandler(rw ResponseWriter, req *Request) {
-//		if txn := newrelic.FromContext(req.Context()); nil != txn {
+//		if txn := oldfritter.FromContext(req.Context()); nil != txn {
 //			txn.AddAttribute("customerLevel", "gold")
 //		}
 //	}
@@ -59,7 +59,7 @@ func WrapHandle(app Application, pattern string, handler http.Handler) (string, 
 // FromContext to add attributes, create segments, or notice errors:
 //
 //	http.HandleFunc(WrapHandleFunc(app, "/users", func(w http.ResponseWriter, req *http.Request) {
-//		if txn := newrelic.FromContext(req.Context()); nil != txn {
+//		if txn := oldfritter.FromContext(req.Context()); nil != txn {
 //			txn.AddAttribute("customerLevel", "gold")
 //		}
 //		io.WriteString(w, "users page")

@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"runtime"
@@ -50,7 +50,7 @@ func TestStackTrace(t *testing.T) {
 	// First choice is any StackTrace() of the immediate error.
 	// Second choice is any StackTrace() of the error's cause.
 	// Final choice is stack trace of the current location.
-	getStackTraceFrame := "github.com/newrelic/go-agent/v3/newrelic.getStackTrace"
+	getStackTraceFrame := "github.com/oldfritter/go-agent/v3/oldfritter.getStackTrace"
 	testcases := []struct {
 		Error          error
 		ExpectTopFrame string

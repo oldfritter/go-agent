@@ -14,9 +14,9 @@ import (
 	graphql "github.com/graph-gophers/graphql-go"
 	"github.com/graph-gophers/graphql-go/introspection"
 	"github.com/graph-gophers/graphql-go/relay"
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/integrationsupport"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/integrationsupport"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func TestFieldManagementSync(t *testing.T) {
@@ -86,7 +86,7 @@ func TestQueryWithAsyncFields(t *testing.T) {
 	tracer := NewTracer()
 	txn := app.StartTransaction("hello")
 	txn.SetWebRequestHTTP(nil)
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	ctx, queryFinish := tracer.TraceQuery(ctx, "queryString", "MyOperation", map[string]interface{}{}, map[string]*introspection.Type{})
 
 	_, fieldFinish1 := tracer.TraceField(ctx, "label", "typeName", "field1", true, map[string]interface{}{})
@@ -140,7 +140,7 @@ func TestQueryRequest(t *testing.T) {
 	schema := graphql.MustParseSchema(querySchema, &query{}, opt)
 	handler := &relay.Handler{Schema: schema}
 	mux := http.NewServeMux()
-	mux.Handle(newrelic.WrapHandle(app.Application, "/", handler))
+	mux.Handle(oldfritter.WrapHandle(app.Application, "/", handler))
 	body := `{
 			"query": "query HelloOperation { hello }",
 			"operationName": "HelloOperation"
@@ -177,7 +177,7 @@ func TestQueryRequestUnknownOperation(t *testing.T) {
 	schema := graphql.MustParseSchema(querySchema, &query{}, opt)
 	handler := &relay.Handler{Schema: schema}
 	mux := http.NewServeMux()
-	mux.Handle(newrelic.WrapHandle(app.Application, "/", handler))
+	mux.Handle(oldfritter.WrapHandle(app.Application, "/", handler))
 	body := `{
 			"query": "query HelloOperation { hello }"
 		}`
@@ -211,7 +211,7 @@ func TestQueryRequestError(t *testing.T) {
 	schema := graphql.MustParseSchema(querySchema, &query{}, opt)
 	handler := &relay.Handler{Schema: schema}
 	mux := http.NewServeMux()
-	mux.Handle(newrelic.WrapHandle(app.Application, "/", handler))
+	mux.Handle(oldfritter.WrapHandle(app.Application, "/", handler))
 	body := `{
 			"query": "query ProblemOperation { problem }",
 			"operationName": "ProblemOperation"
@@ -254,7 +254,7 @@ func TestQueryRequestMultipleFields(t *testing.T) {
 	schema := graphql.MustParseSchema(querySchema, &query{}, opt)
 	handler := &relay.Handler{Schema: schema}
 	mux := http.NewServeMux()
-	mux.Handle(newrelic.WrapHandle(app.Application, "/", handler))
+	mux.Handle(oldfritter.WrapHandle(app.Application, "/", handler))
 	body := `{
 			"query": "query Multiple { zip zap }",
 			"operationName": "Multiple"

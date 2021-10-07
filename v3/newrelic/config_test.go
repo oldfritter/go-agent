@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"encoding/json"
@@ -13,9 +13,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/crossagent"
-	"github.com/newrelic/go-agent/v3/internal/utilization"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/crossagent"
+	"github.com/oldfritter/go-agent/v3/internal/utilization"
 )
 
 type labelsTestCase struct {
@@ -585,8 +585,8 @@ func TestPreconnectHost(t *testing.T) {
 		},
 		{ // override present
 			license:  "0123456789012345678901234567890123456789",
-			override: "other-collector.newrelic.com",
-			expect:   "other-collector.newrelic.com",
+			override: "other-collector.oldfritter.com",
+			expect:   "other-collector.oldfritter.com",
 		},
 		{ // four letter region
 			license:  "eu01xx6789012345678901234567890123456789",

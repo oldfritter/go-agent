@@ -10,10 +10,10 @@ import (
 
 	"github.com/nats-io/nats-streaming-server/server"
 	stan "github.com/nats-io/stan.go"
-	"github.com/newrelic/go-agent/v3/integrations/nrstan"
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/integrationsupport"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/nrstan"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/integrationsupport"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 const (
@@ -34,13 +34,13 @@ func createTestApp() integrationsupport.ExpectApp {
 	return integrationsupport.NewTestApp(integrationsupport.SampleEverythingReplyFn, integrationsupport.ConfigFullTraces, cfgFn)
 }
 
-var cfgFn = func(cfg *newrelic.Config) {
+var cfgFn = func(cfg *oldfritter.Config) {
 	cfg.Attributes.Include = append(cfg.Attributes.Include,
-		newrelic.AttributeMessageRoutingKey,
-		newrelic.AttributeMessageQueueName,
-		newrelic.AttributeMessageExchangeType,
-		newrelic.AttributeMessageReplyTo,
-		newrelic.AttributeMessageCorrelationID,
+		oldfritter.AttributeMessageRoutingKey,
+		oldfritter.AttributeMessageQueueName,
+		oldfritter.AttributeMessageExchangeType,
+		oldfritter.AttributeMessageReplyTo,
+		oldfritter.AttributeMessageCorrelationID,
 	)
 }
 

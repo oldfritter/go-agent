@@ -20,11 +20,11 @@ import (
 	rmemory "github.com/micro/go-micro/registry/memory"
 	"github.com/micro/go-micro/server"
 
-	proto "github.com/newrelic/go-agent/v3/integrations/nrmicro/example/proto"
+	proto "github.com/oldfritter/go-agent/v3/integrations/nrmicro/example/proto"
 
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/integrationsupport"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/integrationsupport"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 const (
@@ -48,7 +48,7 @@ type TestHandler struct{}
 
 func (t *TestHandler) Method(ctx context.Context, req *TestRequest, rsp *TestResponse) error {
 	rsp.RequestHeaders = getDTRequestHeaderVal(ctx)
-	defer newrelic.FromContext(ctx).StartSegment("Method").End()
+	defer oldfritter.FromContext(ctx).StartSegment("Method").End()
 	return nil
 }
 
@@ -78,7 +78,7 @@ func (t *TestHandlerWithNonMicroError) Method(ctx context.Context, req *TestRequ
 
 func getDTRequestHeaderVal(ctx context.Context) string {
 	if md, ok := metadata.FromContext(ctx); ok {
-		if dtHeader, ok := md[newrelic.DistributedTraceNewRelicHeader]; ok {
+		if dtHeader, ok := md[oldfritter.DistributedTraceNewRelicHeader]; ok {
 			return dtHeader
 		}
 		return missingHeaders
@@ -97,17 +97,17 @@ var replyFn = func(reply *internal.ConnectReply) {
 	reply.PrimaryAppID = "456"
 }
 
-var cfgFn = func(cfg *newrelic.Config) {
+var cfgFn = func(cfg *oldfritter.Config) {
 	cfg.Attributes.Include = append(cfg.Attributes.Include,
-		newrelic.AttributeMessageRoutingKey,
-		newrelic.AttributeMessageQueueName,
-		newrelic.AttributeMessageExchangeType,
-		newrelic.AttributeMessageReplyTo,
-		newrelic.AttributeMessageCorrelationID,
+		oldfritter.AttributeMessageRoutingKey,
+		oldfritter.AttributeMessageQueueName,
+		oldfritter.AttributeMessageExchangeType,
+		oldfritter.AttributeMessageReplyTo,
+		oldfritter.AttributeMessageCorrelationID,
 	)
 }
 
-func newTestWrappedClientAndServer(app *newrelic.Application, wrapperOption client.Option, t *testing.T) (client.Client, server.Server) {
+func newTestWrappedClientAndServer(app *oldfritter.Application, wrapperOption client.Option, t *testing.T) (client.Client, server.Server) {
 	registry := rmemory.NewRegistry()
 	sel := selector.NewSelector(selector.Registry(registry))
 	c := client.NewClient(
@@ -172,7 +172,7 @@ func testClientCallWithTransaction(c client.Client, t *testing.T) {
 	rsp := TestResponse{}
 	app := createTestApp()
 	txn := app.StartTransaction("name")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	if err := c.Call(ctx, req, &rsp); nil != err {
 		t.Fatal("Error calling test client:", err)
 	}
@@ -250,12 +250,12 @@ func TestCallMetadata(t *testing.T) {
 }
 
 func testClientCallMetadata(c client.Client, t *testing.T) {
-	// test that context metadata is not changed by the newrelic wrapper
+	// test that context metadata is not changed by the oldfritter wrapper
 	req := c.NewRequest(serverName, "TestHandler.Method", &TestRequest{}, client.WithContentType("application/json"))
 	rsp := TestResponse{}
 	app := createTestApp()
 	txn := app.StartTransaction("name")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	md := metadata.Metadata{
 		"zip": "zap",
 	}
@@ -292,7 +292,7 @@ func TestClientPublishWithNoTransaction(t *testing.T) {
 	if _, err := b.Subscribe(topic, func(e broker.Event) error {
 		defer wg.Done()
 		h := e.Message().Header
-		if _, ok := h[newrelic.DistributedTraceNewRelicHeader]; ok {
+		if _, ok := h[oldfritter.DistributedTraceNewRelicHeader]; ok {
 			t.Error("Distributed tracing headers found", h)
 		}
 		return nil
@@ -320,7 +320,7 @@ func TestClientPublishWithTransaction(t *testing.T) {
 	if _, err := b.Subscribe(topic, func(e broker.Event) error {
 		defer wg.Done()
 		h := e.Message().Header
-		if _, ok := h[newrelic.DistributedTraceNewRelicHeader]; !ok {
+		if _, ok := h[oldfritter.DistributedTraceNewRelicHeader]; !ok {
 			t.Error("Distributed tracing headers not found", h)
 		}
 		return nil
@@ -330,7 +330,7 @@ func TestClientPublishWithTransaction(t *testing.T) {
 
 	app := createTestApp()
 	txn := app.StartTransaction("name")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	msg := c.NewMessage(topic, "hello world")
 	wg.Add(1)
 	if err := c.Publish(ctx, msg); nil != err {
@@ -468,7 +468,7 @@ func TestClientStreamWrapperWithTransaction(t *testing.T) {
 
 	app := createTestApp()
 	txn := app.StartTransaction("name")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	req := c.NewRequest(
 		serverName,
 		"TestHandler.StreamingMethod",
@@ -580,7 +580,7 @@ func TestServerWrapperWithApp(t *testing.T) {
 	ctx := context.Background()
 	txn := app.StartTransaction("txn")
 	defer txn.End()
-	ctx = newrelic.NewContext(ctx, txn)
+	ctx = oldfritter.NewContext(ctx, txn)
 	req := c.NewRequest(serverName, "TestHandler.Method", &TestRequest{}, client.WithContentType("application/json"))
 	rsp := TestResponse{}
 	if err := c.Call(ctx, req, &rsp); nil != err {
@@ -720,8 +720,8 @@ func TestServerWrapperWithAppReturnsError(t *testing.T) {
 			},
 			UserAttributes: map[string]interface{}{},
 			AgentAttributes: map[string]interface{}{
-				newrelic.SpanAttributeErrorClass:   "401",
-				newrelic.SpanAttributeErrorMessage: "Unauthorized",
+				oldfritter.SpanAttributeErrorClass:   "401",
+				oldfritter.SpanAttributeErrorMessage: "Unauthorized",
 				"request.method":                   "TestHandlerWithError.Method",
 				"request.uri":                      "micro://testing/TestHandlerWithError.Method",
 				"request.headers.accept":           "application/json",
@@ -883,7 +883,7 @@ func TestServerSubscribe(t *testing.T) {
 
 	var wg sync.WaitGroup
 	err := micro.RegisterSubscriber(topic, s, func(ctx context.Context, msg *proto.HelloRequest) error {
-		txn := newrelic.FromContext(ctx)
+		txn := oldfritter.FromContext(ctx)
 		defer txn.StartSegment("segment").End()
 		defer wg.Done()
 		return nil
@@ -899,7 +899,7 @@ func TestServerSubscribe(t *testing.T) {
 	msg := c.NewMessage(topic, &proto.HelloRequest{Name: "test"})
 	wg.Add(1)
 	txn := app.StartTransaction("pub")
-	ctx = newrelic.NewContext(ctx, txn)
+	ctx = oldfritter.NewContext(ctx, txn)
 	if err := c.Publish(ctx, msg); nil != err {
 		t.Fatal("Error calling publish:", err)
 	}
@@ -1038,8 +1038,8 @@ func TestServerSubscribeWithError(t *testing.T) {
 			},
 			UserAttributes: map[string]interface{}{},
 			AgentAttributes: map[string]interface{}{
-				newrelic.SpanAttributeErrorClass:   "*errors.errorString",
-				newrelic.SpanAttributeErrorMessage: "subscriber error",
+				oldfritter.SpanAttributeErrorClass:   "*errors.errorString",
+				oldfritter.SpanAttributeErrorMessage: "subscriber error",
 				"message.routingKey":               "topic",
 			},
 		},
@@ -1075,7 +1075,7 @@ func TestServerSubscribeWithError(t *testing.T) {
 	}})
 }
 
-func newTestClientServerAndBroker(app *newrelic.Application, t *testing.T) (client.Client, server.Server, broker.Broker) {
+func newTestClientServerAndBroker(app *oldfritter.Application, t *testing.T) (client.Client, server.Server, broker.Broker) {
 	b := bmemory.NewBroker()
 	c := client.NewClient(
 		client.Broker(b),

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // Package nrecho instruments applications using
-// https://github.com/labstack/echo v3.
+// https://github.com/oldfritter/echo v3.
 //
 // Use this package to instrument inbound requests handled by an echo.Echo
 // instance.
@@ -11,24 +11,24 @@
 //	// Add the nrecho middleware before other middlewares or routes:
 //	e.Use(nrecho.Middleware(app))
 //
-// Example: https://github.com/newrelic/go-agent/tree/master/v3/integrations/nrecho-v3/example/main.go
+// Example: https://github.com/oldfritter/go-agent/tree/master/v3/integrations/nrecho-v3/example/main.go
 package nrecho
 
 import (
 	"net/http"
 	"reflect"
 
-	"github.com/labstack/echo"
-	"github.com/newrelic/go-agent/v3/internal"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/echo"
+	"github.com/oldfritter/go-agent/v3/internal"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func init() { internal.TrackUsage("integration", "framework", "echo") }
 
 // FromContext returns the Transaction from the context if present, and nil
 // otherwise.
-func FromContext(c echo.Context) *newrelic.Transaction {
-	return newrelic.FromContext(c.Request().Context())
+func FromContext(c echo.Context) *oldfritter.Transaction {
+	return oldfritter.FromContext(c.Request().Context())
 }
 
 func handlerPointer(handler echo.HandlerFunc) uintptr {
@@ -52,7 +52,7 @@ func transactionName(c echo.Context) string {
 //	// Add the nrecho middleware before other middlewares or routes:
 //	e.Use(nrecho.Middleware(app))
 //
-func Middleware(app *newrelic.Application) func(echo.HandlerFunc) echo.HandlerFunc {
+func Middleware(app *oldfritter.Application) func(echo.HandlerFunc) echo.HandlerFunc {
 
 	if nil == app {
 		return func(next echo.HandlerFunc) echo.HandlerFunc {
@@ -71,7 +71,7 @@ func Middleware(app *newrelic.Application) func(echo.HandlerFunc) echo.HandlerFu
 			c.Response().Writer = txn.SetWebResponse(rw)
 
 			// Add txn to c.Request().Context()
-			c.SetRequest(c.Request().WithContext(newrelic.NewContext(c.Request().Context(), txn)))
+			c.SetRequest(c.Request().WithContext(oldfritter.NewContext(c.Request().Context(), txn)))
 
 			err = next(c)
 

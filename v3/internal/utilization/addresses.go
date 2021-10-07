@@ -47,8 +47,8 @@ func nonlocalIPAddressesByInterface() (map[string][]string, error) {
 // * The UDP connection interface is more likely to contain unique external IPs.
 func utilizationIPs() ([]string, error) {
 	// Port choice designed to match
-	// https://source.datanerd.us/java-agent/java_agent/blob/master/newrelic-agent/src/main/java/com/newrelic/agent/config/Hostname.java#L110
-	conn, err := net.Dial("udp", "newrelic.com:10002")
+	// https://source.datanerd.us/java-agent/java_agent/blob/master/oldfritter-agent/src/main/java/com/oldfritter/agent/config/Hostname.java#L110
+	conn, err := net.Dial("udp", "oldfritter.com:10002")
 	if err != nil {
 		return nil, err
 	}

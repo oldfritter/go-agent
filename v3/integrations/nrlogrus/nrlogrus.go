@@ -9,8 +9,8 @@
 // the logrus standard logger, use ConfigStandardLogger when creating your
 // application:
 //
-//	app, err := newrelic.NewApplication(
-//		newrelic.ConfigFromEnvironment(),
+//	app, err := oldfritter.NewApplication(
+//		oldfritter.ConfigFromEnvironment(),
 //		nrlogrus.ConfigStandardLogger(),
 //	)
 //
@@ -18,8 +18,8 @@
 //
 //	l := logrus.New()
 //	l.SetLevel(logrus.DebugLevel)
-//	app, err := newrelic.NewApplication(
-//		newrelic.ConfigFromEnvironment(),
+//	app, err := oldfritter.NewApplication(
+//		oldfritter.ConfigFromEnvironment(),
 //		nrlogrus.ConfigLogger(l),
 //	)
 //
@@ -27,8 +27,8 @@
 package nrlogrus
 
 import (
-	"github.com/newrelic/go-agent/v3/internal"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 	"github.com/sirupsen/logrus"
 )
 
@@ -56,30 +56,30 @@ func (s *shim) DebugEnabled() bool {
 	return lvl >= logrus.DebugLevel
 }
 
-// StandardLogger returns a newrelic.Logger which forwards agent log messages to
+// StandardLogger returns a oldfritter.Logger which forwards agent log messages to
 // the logrus package-level exported logger.
-func StandardLogger() newrelic.Logger {
+func StandardLogger() oldfritter.Logger {
 	return Transform(logrus.StandardLogger())
 }
 
-// Transform turns a *logrus.Logger into a newrelic.Logger.
-func Transform(l *logrus.Logger) newrelic.Logger {
+// Transform turns a *logrus.Logger into a oldfritter.Logger.
+func Transform(l *logrus.Logger) oldfritter.Logger {
 	return &shim{
 		l: l,
 		e: l.WithFields(logrus.Fields{
-			"component": "newrelic",
+			"component": "oldfritter",
 		}),
 	}
 }
 
-// ConfigLogger configures the newrelic.Application to send log messsages to the
+// ConfigLogger configures the oldfritter.Application to send log messsages to the
 // provided logrus logger.
-func ConfigLogger(l *logrus.Logger) newrelic.ConfigOption {
-	return newrelic.ConfigLogger(Transform(l))
+func ConfigLogger(l *logrus.Logger) oldfritter.ConfigOption {
+	return oldfritter.ConfigLogger(Transform(l))
 }
 
-// ConfigStandardLogger configures the newrelic.Application to send log
+// ConfigStandardLogger configures the oldfritter.Application to send log
 // messsages to the standard logrus logger.
-func ConfigStandardLogger() newrelic.ConfigOption {
-	return newrelic.ConfigLogger(StandardLogger())
+func ConfigStandardLogger() oldfritter.ConfigOption {
+	return oldfritter.ConfigLogger(StandardLogger())
 }

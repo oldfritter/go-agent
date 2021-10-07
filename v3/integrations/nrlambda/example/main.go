@@ -7,15 +7,15 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/newrelic/go-agent/v3/integrations/nrlambda"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/integrations/nrlambda"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func handler(ctx context.Context) {
 	// The nrlambda handler instrumentation will add the transaction to the
-	// context.  Access it using newrelic.FromContext to add additional
+	// context.  Access it using oldfritter.FromContext to add additional
 	// instrumentation.
-	txn := newrelic.FromContext(ctx)
+	txn := oldfritter.FromContext(ctx)
 	txn.AddAttribute("userLevel", "gold")
 	txn.Application().RecordCustomEvent("MyEvent", map[string]interface{}{
 		"zip": "zap",
@@ -25,10 +25,10 @@ func handler(ctx context.Context) {
 }
 
 func main() {
-	// Pass nrlambda.ConfigOption() into newrelic.NewApplication to set
+	// Pass nrlambda.ConfigOption() into oldfritter.NewApplication to set
 	// Lambda specific configuration settings including
 	// Config.ServerlessMode.Enabled.
-	app, err := newrelic.NewApplication(nrlambda.ConfigOption())
+	app, err := oldfritter.NewApplication(nrlambda.ConfigOption())
 	if nil != err {
 		fmt.Println("error creating app (invalid config):", err)
 	}

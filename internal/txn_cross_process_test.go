@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/newrelic/go-agent/internal/cat"
+	"github.com/oldfritter/go-agent/internal/cat"
 )
 
 var (

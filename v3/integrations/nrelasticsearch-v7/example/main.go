@@ -11,8 +11,8 @@ import (
 	"time"
 
 	elasticsearch "github.com/elastic/go-elasticsearch/v7"
-	nrelasticsearch "github.com/newrelic/go-agent/v3/integrations/nrelasticsearch-v7"
-	"github.com/newrelic/go-agent/v3/newrelic"
+	nrelasticsearch "github.com/oldfritter/go-agent/v3/integrations/nrelasticsearch-v7"
+	"github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func main() {
@@ -22,10 +22,10 @@ func main() {
 		Transport: nrelasticsearch.NewRoundTripper(nil),
 	}
 
-	app, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("Elastic App"),
-		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
-		newrelic.ConfigDebugLogger(os.Stdout),
+	app, err := oldfritter.NewApplication(
+		oldfritter.ConfigAppName("Elastic App"),
+		oldfritter.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		oldfritter.ConfigDebugLogger(os.Stdout),
 	)
 	if nil != err {
 		panic(err)
@@ -34,8 +34,8 @@ func main() {
 	txn := app.StartTransaction("elastic")
 
 	// Step 2: Ensure that all calls using the elasticsearch client have a
-	// context which includes the newrelic.Transaction.
-	ctx := newrelic.NewContext(context.Background(), txn)
+	// context which includes the oldfritter.Transaction.
+	ctx := oldfritter.NewContext(context.Background(), txn)
 	es, err := elasticsearch.NewClient(cfg)
 	if err != nil {
 		panic(err)

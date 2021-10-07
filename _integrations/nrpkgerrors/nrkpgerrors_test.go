@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	newrelic "github.com/newrelic/go-agent"
+	oldfritter "github.com/oldfritter/go-agent"
 	"github.com/pkg/errors"
 )
 
@@ -47,7 +47,7 @@ func TestWrappedStackTrace(t *testing.T) {
 
 	for idx, tc := range testcases {
 		e := Wrap(tc.Error)
-		st := e.(newrelic.StackTracer).StackTrace()
+		st := e.(oldfritter.StackTracer).StackTrace()
 		fn := topFrameFunction(st)
 		if !strings.Contains(fn, tc.ExpectTopFrame) {
 			t.Errorf("testcase %d: expected %s got %s",
@@ -93,7 +93,7 @@ func TestWrappedErrorClass(t *testing.T) {
 
 	for idx, tc := range testcases {
 		e := Wrap(tc.Error)
-		class := e.(newrelic.ErrorClasser).ErrorClass()
+		class := e.(oldfritter.ErrorClasser).ErrorClass()
 		if class != tc.ExpectClass {
 			t.Errorf("testcase %d: expected %s got %s",
 				idx, tc.ExpectClass, class)

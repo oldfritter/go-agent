@@ -6,7 +6,7 @@ package nrpgx
 import (
 	"testing"
 
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func TestParseDSN(t *testing.T) {
@@ -252,7 +252,7 @@ func TestParseDSN(t *testing.T) {
 			return test.env[env]
 		}
 
-		s := &newrelic.DatastoreSegment{}
+		s := &oldfritter.DatastoreSegment{}
 		parseDSN(getenv)(s, test.dsn)
 
 		if test.expHost != s.Host {

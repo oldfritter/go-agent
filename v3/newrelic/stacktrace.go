@@ -1,7 +1,7 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"bytes"
@@ -30,7 +30,7 @@ type stacktraceFrame struct {
 func (f stacktraceFrame) formattedName() string {
 	if strings.HasPrefix(f.Name, "go.") {
 		// This indicates an anonymous struct. eg.
-		// "go.(*struct { github.com/newrelic/go-agent.threadWithExtras }).NoticeError"
+		// "go.(*struct { github.com/oldfritter/go-agent.threadWithExtras }).NoticeError"
 		return f.Name
 	}
 	return path.Base(f.Name)
@@ -39,9 +39,9 @@ func (f stacktraceFrame) formattedName() string {
 func (f stacktraceFrame) isAgent() bool {
 	// Note this is not a contains conditional rather than a prefix
 	// conditional to handle anonymous functions like:
-	// "go.(*struct { github.com/newrelic/go-agent.threadWithExtras }).NoticeError"
-	return strings.Contains(f.Name, "github.com/newrelic/go-agent/v3/internal.") ||
-		strings.Contains(f.Name, "github.com/newrelic/go-agent/v3/newrelic.")
+	// "go.(*struct { github.com/oldfritter/go-agent.threadWithExtras }).NoticeError"
+	return strings.Contains(f.Name, "github.com/oldfritter/go-agent/v3/internal.") ||
+		strings.Contains(f.Name, "github.com/oldfritter/go-agent/v3/oldfritter.")
 }
 
 func (f stacktraceFrame) WriteJSON(buf *bytes.Buffer) {

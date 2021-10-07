@@ -15,7 +15,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/newrelic/go-agent/internal/logger"
+	"github.com/oldfritter/go-agent/internal/logger"
 )
 
 const (
@@ -218,7 +218,7 @@ const (
 
 var (
 	preconnectHostOverride       = os.Getenv(envHost)
-	preconnectHostDefault        = "collector.newrelic.com"
+	preconnectHostDefault        = "collector.oldfritter.com"
 	preconnectRegionLicenseRegex = regexp.MustCompile(`(^.+?)x`)
 )
 

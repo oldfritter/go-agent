@@ -1,19 +1,19 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package newrelic
+package oldfritter
 
 import (
 	"net/http"
 	"net/url"
 	"testing"
 
-	"github.com/newrelic/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal"
 )
 
 var (
 	sampleHTTPRequest = func() *http.Request {
-		req, err := http.NewRequest("GET", "http://www.newrelic.com", nil)
+		req, err := http.NewRequest("GET", "http://www.oldfritter.com", nil)
 		if nil != err {
 			panic(err)
 		}
@@ -26,7 +26,7 @@ var (
 		return req
 	}()
 	sampleCustomRequest = func() WebRequest {
-		u, err := url.Parse("http://www.newrelic.com")
+		u, err := url.Parse("http://www.oldfritter.com")
 		if nil != err {
 			panic(err)
 		}
@@ -50,7 +50,7 @@ var (
 		AttributeRequestContentType:   "mycontent",
 		AttributeRequestContentLength: 123,
 		AttributeRequestHost:          "myhost",
-		AttributeRequestURI:           "http://www.newrelic.com",
+		AttributeRequestURI:           "http://www.oldfritter.com",
 	}
 )
 
@@ -211,7 +211,7 @@ func TestSetWebRequestWithDistributedTracing(t *testing.T) {
 	app.ExpectTxnEvents(t, []internal.WantEvent{{
 		AgentAttributes: map[string]interface{}{
 			"request.method":       "GET",
-			"request.uri":          "http://www.newrelic.com",
+			"request.uri":          "http://www.oldfritter.com",
 			"request.headers.host": "myhost",
 		},
 		Intrinsics: map[string]interface{}{
@@ -251,7 +251,7 @@ func TestSetWebRequestWithDistributedTracing(t *testing.T) {
 			"parent.transportType":     "HTTP",
 			"parent.type":              "App",
 			"request.method":           "GET",
-			"request.uri":              "http://www.newrelic.com",
+			"request.uri":              "http://www.oldfritter.com",
 			"request.headers.host":     "myhost",
 		},
 	}})

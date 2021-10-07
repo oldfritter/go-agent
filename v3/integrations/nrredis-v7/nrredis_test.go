@@ -9,9 +9,9 @@ import (
 	"testing"
 
 	redis "github.com/go-redis/redis/v7"
-	"github.com/newrelic/go-agent/v3/internal"
-	"github.com/newrelic/go-agent/v3/internal/integrationsupport"
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/oldfritter/go-agent/v3/internal"
+	"github.com/oldfritter/go-agent/v3/internal/integrationsupport"
+	oldfritter "github.com/oldfritter/go-agent/v3/oldfritter"
 )
 
 func emptyDialer(context.Context, string, string) (net.Conn, error) {
@@ -27,7 +27,7 @@ func TestPing(t *testing.T) {
 
 	app := integrationsupport.NewTestApp(nil, nil)
 	txn := app.StartTransaction("txnName")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	client.AddHook(NewHook(nil))
 	client.WithContext(ctx).Ping()
@@ -56,7 +56,7 @@ func TestPingWithOptionsAndAddress(t *testing.T) {
 
 	app := integrationsupport.NewTestApp(nil, nil)
 	txn := app.StartTransaction("txnName")
-	ctx := newrelic.NewContext(context.Background(), txn)
+	ctx := oldfritter.NewContext(context.Background(), txn)
 
 	client.AddHook(NewHook(opts))
 	client.WithContext(ctx).Ping()

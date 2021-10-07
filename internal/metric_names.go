@@ -27,7 +27,7 @@ const (
 
 	instanceReporting = "Instance/Reporting"
 
-	// https://newrelic.atlassian.net/wiki/display/eng/Custom+Events+in+New+Relic+Agents
+	// https://oldfritter.atlassian.net/wiki/display/eng/Custom+Events+in+New+Relic+Agents
 	customEventsSeen = "Supportability/Events/Customer/Seen"
 	customEventsSent = "Supportability/Events/Customer/Sent"
 
